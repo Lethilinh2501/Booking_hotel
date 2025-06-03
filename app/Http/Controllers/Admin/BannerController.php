@@ -23,9 +23,10 @@ class BannerController extends Controller
     public function addPostBanner(Request $req)
     {
         $validated = $req->validate([
-            'name'  => 'required|string|max:255',
+            'title'  => 'required|string|max:255',
             'link'  => 'nullable|url',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'is_use' => 'nullable|boolean',
         ]);
 
         $imagePath = null;
@@ -37,7 +38,7 @@ class BannerController extends Controller
         }
 
         Banner::create([
-            'name'   => $validated['name'],
+            'title'   => $validated['title'],
             'link'   => $validated['link'] ?? null,
             'image'  => $imagePath,
             'is_use' => $req->has('is_use') ? 1 : 0,
@@ -59,14 +60,15 @@ class BannerController extends Controller
         return view('admin.banners.update-banner', compact('banner'));
     }
 
-    public function updatePostBanner($id, Request $req)
+    public function updatePatchBanner($id, Request $req)
     {
         $banner = Banner::findOrFail($id);
 
         $validated = $req->validate([
-            'name'  => 'required|string|max:255',
+            'title'  => 'required|string|max:255',
             'link'  => 'nullable|url',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'is_use' => 'nullable|boolean',
         ]);
 
         $imagePath = $banner->image;
@@ -82,10 +84,10 @@ class BannerController extends Controller
         }
 
         $banner->update([
-            'name'   => $validated['name'],
+            'title'   => $validated['title'],
             'link'   => $validated['link'] ?? null,
             'image'  => $imagePath,
-            'is_use' => $req->has('is_use') ? 1 : 0,
+            'is_use' => $req->input('is_use') == 1 ? 1 : 0,
         ]);
 
         return redirect()->route('admin.banners.listBanner')
