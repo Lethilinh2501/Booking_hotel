@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 // http://127.0.0.1:8000/admin/products/update-products
@@ -23,7 +24,20 @@ Route::group([
         Route::patch('update-banner/{idBanner}', [BannerController::class, 'updatePatchBanner'])->name('updatePatchBanner');
     });
 
-      // Contact routes
+    Route::group([
+        'prefix' => 'staffs',
+        'as' => 'staffs.'
+    ], function () {
+        Route::get('/', [StaffController::class, 'listStaff'])->name('listStaff');
+        Route::get('/add-staff', [StaffController::class, 'addStaff'])->name('addStaff');
+        Route::post('/add-staff', [StaffController::class, 'addPostStaff'])->name('addPostStaff');
+        Route::get('/detail-staff/{idStaff}', [StaffController::class, 'detailStaff'])->name('detailStaff');
+        Route::delete('/delete-staff', [StaffController::class, 'deleteStaff'])->name('deleteStaff');
+        Route::get('update-staff/{idStaff}', [StaffController::class, 'updateStaff'])->name('updateStaff');
+        Route::patch('update-staff/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
+    });
+
+    // Contact routes
     Route::group([
         'prefix' => 'contacts',
         'as' => 'contacts.'

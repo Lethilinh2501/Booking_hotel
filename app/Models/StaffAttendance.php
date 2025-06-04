@@ -11,7 +11,7 @@ class StaffAttendance extends Model
 
     protected $fillable = ['staff_id', 'date', 'status'];
 
-    public function staff()
+    public function staffs()
     {
         return $this->belongsTo(Staff::class);
     }
