@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\Staff;
+use App\Models\Post;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class StaffSeeder extends Seeder
+class PostSeeder extends Seeder
 {
+
     public function run(): void
     {
-        Staff::factory()->count(15)->create();
+        Post::factory()->count(10)->create();
     }
 }

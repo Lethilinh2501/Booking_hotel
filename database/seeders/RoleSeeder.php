@@ -9,14 +9,6 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Xóa hết data cũ (nếu muốn)
-        Role::query()->delete();
-
-        // Tạo 3 vai trò cố định
-        Role::insert([
-            ['name' => 'Admin', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Nhân viên', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Quản lý', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        Role::factory()->count(10)->create();
     }
 }

@@ -85,15 +85,15 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.staffs.detailStaff', $staff->id) }}"
-                                        class="btn btn-info btn-sm">Chi
-                                        tiết</a>
+                                        class="btn btn-info btn-sm">Chi tiết</a>
                                     <a href="{{ route('admin.staffs.updateStaff', $staff->id) }}"
                                         class="btn btn-warning btn-sm">Sửa</a>
-                                    <form action="{{ route('admin.staffs.deleteStaff', $staff->id) }}" method="POST"
+                                    <form action="{{ route('admin.staffs.deleteStaff') }}" method="POST"
                                         style="display:inline;"
                                         onsubmit="return confirm('Bạn chắc chắn muốn xóa nhân viên này?')">
                                         @csrf
                                         @method('DELETE')
+                                        <input type="hidden" name="id" value="{{ $staff->id }}">
                                         <button class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>
