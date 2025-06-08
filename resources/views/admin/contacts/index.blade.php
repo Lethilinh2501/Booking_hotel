@@ -1,94 +1,125 @@
 @extends('admin.layout.default')
 
 @section('content')
-    <main class="container-fluid flex-grow-1 text-center">
-        <div class="container mt-4">
-            <h2 class="mb-4">Danh Sách Liên Hệ</h2>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">Danh sách liên hệ</h1>
+        </div>
+        <div class="col-md-4 text-right">
+            <form action="{{ route('admin.contacts.index') }}" method="GET" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            <div class="card p-4">
-                <table class="table table-bordered table-striped align-middle">
-                    <thead class="table-dark">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <th>ID</th>
                             <th>Tiêu đề</th>
                             <th>Email</th>
                             <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th>Ngày gửi</th>
+                            <th class="text-center">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contacts as $contact)
-                            <tr>
-                                <td>{{ $contact->id }}</td>
-                                <td>{{ $contact->title }}</td>
-                                <td>{{ $contact->email }}</td>
-                                <td>{{ ucfirst($contact->status) }}</td>
-                                <td>
-                                    <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-info btn-sm">Chi
-                                        tiết</a>
-                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Xác nhận xóa?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        @forelse($contacts as $contact)
+                        <tr>
+                            <td>{{ $contact->id }}</td>
+                            <td>{{ Str::limit($contact->title, 30) }}</td>
+                            <td>{{ $contact->email }}</td>
+                            <td>
+                                <span class="badge badge-{{ 
+                                    $contact->status == 'approved' ? 'success' : 
+                                    ($contact->status == 'rejected' ? 'danger' : 'warning') 
+                                }}">
+                                    {{ ucfirst($contact->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('admin.contacts.show', $contact->id) }}" 
+                                       class="btn btn-sm btn-info" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" 
+                                                class="btn btn-sm btn-danger" 
+                                                title="Xóa"
+                                                onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </form>
-                                </td>
-                            </tr>
-                        @endforeach
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Không có liên hệ nào</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
+            </div>
 
-                {{ $contacts->links('pagination::bootstrap-5') }}
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    Hiển thị {{ $contacts->firstItem() }} đến {{ $contacts->lastItem() }} trong tổng số {{ $contacts->total() }} liên hệ
+                </div>
+                {{ $contacts->appends(request()->query())->links() }}
             </div>
         </div>
-    </main>
+    </div>
+</div>
 @endsection
 
-@push('style')
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
+@push('styles')
+<style>
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .table th {
+        white-space: nowrap;
+    }
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+</style>
+@endpush
 
-        .sidebar {
-            background-color: #2c3e50;
-            color: white;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: #ecf0f1;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #2980b9;
-            color: white;
-        }
-
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer {
-            background-color: #3498db;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-        }
-
-        img.banner-thumbnail {
-            max-width: 120px;
-            height: auto;
-            border-radius: 4px;
-        }
-    </style>
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+    });
+</script>
 @endpush
