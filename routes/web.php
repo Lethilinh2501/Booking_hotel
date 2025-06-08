@@ -47,4 +47,19 @@ Route::group([
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
+
+       // Category routes
+        Route::group([
+        'prefix' => 'categories',
+        'as' => 'categories.'
+    ], function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::get('/{id}', [CategoryController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [CategoryController::class, 'updateStatus'])->name('update-status');
+    });
 });
