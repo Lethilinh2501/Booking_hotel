@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false); // bài nổi bật
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamps();
+            $table->softDeletes(); // thêm cột deleted_at để soft delete
         });
     }
 

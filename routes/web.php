@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,5 +47,18 @@ Route::group([
         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group([
+        'prefix' => 'post',
+        'as' => 'post.'
+    ], function () {
+        Route::get('/', [PostController::class, 'listPost'])->name('listPost');
+        Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
+        Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
+        Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
+        Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
+        Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
+        Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
     });
 });
