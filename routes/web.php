@@ -54,11 +54,11 @@ Route::group([
         'as' => 'post.'
     ], function () {
         Route::get('/', [PostController::class, 'listPost'])->name('listPost');
-            Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
-            Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
-            Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
-            Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
-            Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
-            Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
+        Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
+        Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
+        Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
+        Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
+        Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
+        Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
     });
 });
