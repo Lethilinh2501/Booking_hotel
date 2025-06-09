@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,18 +49,16 @@ Route::group([
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
-       // Category routes
-        Route::group([
-        'prefix' => 'categories',
-        'as' => 'categories.'
+    Route::group([
+        'prefix' => 'post',
+        'as' => 'post.'
     ], function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
-        Route::get('/create', [CategoryController::class, 'create'])->name('create');
-        Route::post('/store', [CategoryController::class, 'store'])->name('store');
-        Route::get('/{id}', [CategoryController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
-        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
-        Route::post('/{id}/status', [CategoryController::class, 'updateStatus'])->name('update-status');
+        Route::get('/', [PostController::class, 'listPost'])->name('listPost');
+            Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
+            Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
+            Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
+            Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
+            Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
+            Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
     });
 });
