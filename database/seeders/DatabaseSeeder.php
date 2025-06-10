@@ -55,8 +55,8 @@ class DatabaseSeeder extends Seeder
             SaleRoomTypeSeeder::class,
             SettingSeeder::class,
             LogSeeder::class,
-            PostSeeder::class,
             PostCategorySeeder::class,
+            PostSeeder::class,
         ]);
     }
 }
