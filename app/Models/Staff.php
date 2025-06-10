@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Staff extends Model
 {
+    protected $table = 'staffs';
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'email', 'phone', 'role_id', 'is_active'];
 
     public function role()
     {
-        return $this->belongsTo(StaffRole::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public function attendances()

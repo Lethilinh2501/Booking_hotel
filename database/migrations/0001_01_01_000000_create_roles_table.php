@@ -13,8 +13,9 @@ return new class extends Migration
     {
         // Migration: create_roles_table.php
         Schema::create('roles', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name')->unique();
+            $table->string('guard_name')->default('web');
             $table->timestamps();
         });
     }

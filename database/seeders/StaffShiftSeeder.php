@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\StaffShift;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class StaffShiftSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        StaffShift::factory()->count(10)->create();
     }
 }
