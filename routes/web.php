@@ -2,16 +2,27 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 // http://127.0.0.1:8000/admin/products/update-products
+Route::get('/', function () {
+    return view('layout.client');
+});
+
+
 Route::group([
     'prefix' => 'admin',
     'as' => 'admin.',
     // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
 ],  function () {
+
+    Route::get('/', function () {
+        return view('layout.default.admin');
+    });
+
     Route::group([
         'prefix' => 'banners',
         'as' => 'banners.'
@@ -47,6 +58,21 @@ Route::group([
         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
+    });
+
+    // Post Category
+    Route::group([
+        'prefix' => 'postcategory',
+        'as' => 'postcategory.'
+    ], function () {
+        Route::get('/', [PostCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [PostCategoryController::class, 'create'])->name('create');
+        Route::post('/store', [PostCategoryController::class, 'store'])->name('store');
+        Route::get('/{id}', [PostCategoryController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [PostCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [PostCategoryController::class, 'update'])->name('update');
+        Route::delete('/{id}', [PostCategoryController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [PostCategoryController::class, 'updateStatus'])->name('update-status');
     });
 
     Route::group([
