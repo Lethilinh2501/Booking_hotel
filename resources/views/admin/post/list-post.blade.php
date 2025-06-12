@@ -77,7 +77,7 @@
                         @foreach ($listPost as $key => $post)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $post->title }}</td>
+                                <td title="{{ $post->title }}">{{ Str::limit($post->title, 50, '...') }}</td>
 
                                 <td>{{ $post->category->name ?? 'Không có' }}</td>
                                 <td>{{ $post->author->name ?? 'Không rõ' }}</td>
