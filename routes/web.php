@@ -85,4 +85,4 @@ Route::get('/admin', function () {
         Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
         Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
     });
-});
+// });
