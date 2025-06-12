@@ -17,6 +17,7 @@ class Category extends Model
     ];
 
     // Chuyển đổi tên trường cho phù hợp
+
     public function getNameAttribute()
     {
         return $this->attributes['title'];
