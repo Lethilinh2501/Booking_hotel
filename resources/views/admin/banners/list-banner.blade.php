@@ -80,7 +80,7 @@
                                 <td>{{ $banner->title }}</td>
                                 <td>
                                     @if ($banner->image)
-                                        <img src="{{ Storage::url($banner->image) }}" class="banner-thumbnail">
+                                        <img src="{{ Storage::url($banner->image) }}" class="banner-thumbnail" width="100">
                                     @else
                                         <em>Không có ảnh</em>
                                     @endif
