@@ -1,88 +1,90 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use Illuminate\Support\Facades\Auth;
 
-// http://127.0.0.1:8000/admin/products/update-products
+/*
+|--------------------------------------------------------------------------
+| User Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/', function () {
-    return view('layout.client');
+Auth::routes();
+require __DIR__.'/auth.php';
+
+
+
+
+Route::view('/', 'layout.client');
+// Route::view('/', 'welcome');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('dashboard', 'dashboard')->name('dashboard');
 });
-Route::get('/admin', function () {
-    return view('layout.admin');
+
+Route::middleware(['auth'])->group(function () {
+    Route::view('profile', 'profile')->name('profile');
 });
 
-// Route::group([
-//     'prefix' => 'admin',
-//     'as' => 'admin.',
-//     // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
-// ],  function () {
-//     Route::group([
-//         'prefix' => 'banners',
-//         'as' => 'banners.'
-//     ], function () {
-//         Route::get('/', [BannerController::class, 'listBanner'])->name('listBanner');
-//         Route::get('/add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
-//         Route::post('/add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
-//         Route::get('/detail-banner/{idbanner}', [BannerController::class, 'detailBanner'])->name('detailBanner');
-//         Route::delete('/delete-banner', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
-//         Route::get('update-banner/{idBanner}', [BannerController::class, 'updateBanner'])->name('updateBanner');
-//         Route::patch('update-banner/{idBanner}', [BannerController::class, 'updatePatchBanner'])->name('updatePatchBanner');
-//     });
 
-//     Route::group([
-//         'prefix' => 'staffs',
-//         'as' => 'staffs.'
-//     ], function () {
-//         Route::get('/', [StaffController::class, 'listStaff'])->name('listStaff');
-//         Route::get('/add-staff', [StaffController::class, 'addStaff'])->name('addStaff');
-//         Route::post('/add-staff', [StaffController::class, 'addPostStaff'])->name('addPostStaff');
-//         Route::get('/detail-staff/{idStaff}', [StaffController::class, 'detailStaff'])->name('detailStaff');
-//         Route::delete('/delete-staff', [StaffController::class, 'deleteStaff'])->name('deleteStaff');
-//         Route::get('update-staff/{idStaff}', [StaffController::class, 'updateStaff'])->name('updateStaff');
-//         Route::patch('update-staff/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
-//     });
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Prefix: admin)
+|--------------------------------------------------------------------------
+*/
 
-//     // Contact routes
-//     Route::group([
-//         'prefix' => 'contacts',
-//         'as' => 'contacts.'
-//     ], function () {
-//         Route::get('/', [ContactController::class, 'index'])->name('index');
-//         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
-//         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
-//         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
-//     });
-
-//        // Category routes
-//         Route::group([
-//         'prefix' => 'categories',
-//         'as' => 'categories.'
-//     ], function () {
-//         Route::get('/', [CategoryController::class, 'index'])->name('index');
-//         Route::get('/create', [CategoryController::class, 'create'])->name('create');
-//         Route::post('/store', [CategoryController::class, 'store'])->name('store');
-//         Route::get('/{id}', [CategoryController::class, 'show'])->name('show');
-//         Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
-//         Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
-//         Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
-//         Route::post('/{id}/status', [CategoryController::class, 'updateStatus'])->name('update-status');
-//     });
-// });
-
-    Route::group([
-        'prefix' => 'post',
-        'as' => 'post.'
-    ], function () {
-        Route::get('/', [PostController::class, 'listPost'])->name('listPost');
-        Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
-        Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
-        Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
-        Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
-        Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
-        Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index']);
+    // Staff Routes
+    Route::prefix('staffs')->name('staffs.')->group(function () {
+        Route::get('/', [StaffController::class, 'listStaff'])->name('list');
+        Route::get('/add', [StaffController::class, 'addStaff'])->name('add');
+        Route::post('/add', [StaffController::class, 'addPostStaff'])->name('store');
+        Route::get('/{idStaff}', [StaffController::class, 'detailStaff'])->name('detail');
+        Route::delete('/delete', [StaffController::class, 'deleteStaff'])->name('delete');
+        Route::get('/update/{idStaff}', [StaffController::class, 'updateStaff'])->name('edit');
+        Route::patch('/update/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('update');
     });
-// });
+
+    // Contact Routes
+    Route::prefix('contacts')->name('contacts.')->group(function () {
+        Route::get('/', [ContactController::class, 'index'])->name('index');
+        Route::get('/{id}', [ContactController::class, 'show'])->name('show');
+        Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('status');
+        Route::delete('/{id}', [ContactController::class, 'destroy'])->name('delete');
+    });
+
+    // Category Routes
+    Route::prefix('categories')->name('categories.')->group(function () {
+        // Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        // Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        // Route::get('/{id}', [CategoryController::class, 'show'])->name('show');
+        // Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+        // Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
+        // Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('delete');
+        // Route::post('/{id}/status', [CategoryController::class, 'updateStatus'])->name('status');
+    });
+
+    // Post Routes
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/', [PostController::class, 'listPost'])->name('index');
+        Route::get('/create', [PostController::class, 'addPost'])->name('create');
+        Route::post('/store', [PostController::class, 'addPostPost'])->name('store');
+        Route::get('/{idPost}', [PostController::class, 'detailPost'])->name('show');
+        Route::delete('/delete', [PostController::class, 'deletePost'])->name('delete');
+        Route::get('/update/{idPost}', [PostController::class, 'updatePost'])->name('edit');
+        Route::patch('/update/{idPost}', [PostController::class, 'updatePatchPost'])->name('update');
+    });
+
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

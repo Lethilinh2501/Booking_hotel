@@ -9,19 +9,19 @@
 						<li class="lh-sb-item sb-drop-item">
 							<a href="javascript:void(0)" class="lh-drop-toggle">
 								<i class="ri-dashboard-3-line"></i>
-								<span class="condense">Dashboard<i class="drop-arrow ri-arrow-down-s-line"></i></span>
+								<span class="condense">Thống kê<i class=""></i></span>
 							</a>
-							<ul class="lh-sb-drop condense" style="display: none;">
+							{{-- <ul class="lh-sb-drop condense" style="display: none;">
 								<li class="list"><a href="index.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Report</a></li>
-							</ul>
+							</ul> --}}
 						</li>
 						<li class="lh-sb-item-separator"></li>
 						<li class="lh-sb-title condense">Apps</li>
 						<li class="lh-sb-item sb-drop-item">
 							<a href="javascript:void(0)" class="lh-drop-toggle">
-								<i class="ri-shield-user-line"></i><span class="condense">Staff<i class="drop-arrow ri-arrow-down-s-line"></i></span></a>
+								<i class="ri-shield-user-line"></i><span class="condense">Nhân viên<i class="drop-arrow ri-arrow-down-s-line"></i></span></a>
 							<ul class="lh-sb-drop condense" style="display: none;">
-								<li><a href="team-profile.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Team Profile</a></li>
+								<li><a href="team-profile.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Thêm nhân viên</a></li>
 								<li><a href="team-add.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Team Add</a></li>
 								<li><a href="team-update.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Team Update</a></li>
 								<li><a href="team-list.html" class="lh-page-link drop"><i class="ri-git-commit-line"></i>Team List</a></li>
@@ -31,28 +31,28 @@
 						<li class="lh-sb-title condense">Hotel | Resort</li>
 						<li class="lh-sb-item">
 							<a href="guest.html" class="lh-page-link">
-								<i class="ri-group-line"></i><span class="condense"><span class="hover-title">Guest</span> </span>
+								<i class="ri-group-line"></i><span class="condense"><span class="hover-title">concac</span> </span>
 							</a>
 						</li>
 						<li class="lh-sb-item">
 							<a href="guest-details.html" class="lh-page-link">
-								<i class="ri-user-search-line"></i><span class="condense"><span class="hover-title">Guest
+								<i class="ri-user-search-line"></i><span class="condense"><span class="hover-title">Tài khoản
 										Details</span> </span>
 							</a>
 						</li>
 						<li class="lh-sb-item">
 							<a href="rooms.html" class="lh-page-link">
-								<i class="ri-home-8-line"></i><span class="condense"><span class="hover-title">Rooms</span> </span>
+								<i class="ri-home-8-line"></i><span class="condense"><span class="hover-title">Loại phòng</span> </span>
 							</a>
 						</li>
 						<li class="lh-sb-item">
 							<a href="bookings.html" class="lh-page-link">
-								<i class="ri-contacts-book-line"></i><span class="condense"><span class="hover-title">Bookings</span> </span>
+								<i class="ri-contacts-book-line"></i><span class="condense"><span class="hover-title">Đặt phòng</span> </span>
 							</a>
 						</li>
 						<li class="lh-sb-item">
 							<a href="invoice.html" class="lh-page-link">
-								<i class="ri-bill-line"></i><span class="condense"><span class="hover-title">Invoice</span> </span>
+								<i class="ri-bill-line"></i><span class="condense"><span class="hover-title">Thanh toán</span> </span>
 							</a>
 						</li>
 						<li class="lh-sb-item-separator"></li>

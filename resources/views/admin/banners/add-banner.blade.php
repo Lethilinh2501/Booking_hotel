@@ -85,8 +85,6 @@
                             Hiển thị banner
                         </label>
                     </div>
-
-
                     <button type="submit" class="btn btn-primary">Thêm mới</button>
                 </form>
             </div>

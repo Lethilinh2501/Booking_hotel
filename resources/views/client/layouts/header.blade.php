@@ -1,4 +1,55 @@
+<style>
+    <style>
+.lh-header-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
+.lh-header-icons a {
+    color: #333;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+    z-index: 1000;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 12px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+</style>
+</style>
     <!-- Header -->
     <header>
         <div class="lh-top-header">
@@ -27,10 +78,37 @@
                             +91(123)(456)(7890)
                         </div>
                         <div class="lh-header-icons">
+                             <!-- Các biểu tượng mạng xã hội -->
                             <a href="javascript:void(0)"><i class="ri-facebook-box-line facebook"></i></a>
                             <a href="javascript:void(0)"><i class="ri-twitter-x-line twitter"></i></a>
                             <a href="javascript:void(0)"><i class="ri-linkedin-box-line linkedin"></i></a>
                             <a href="javascript:void(0)"><i class="ri-instagram-line instagram"></i></a>
+                            @guest
+                                <!-- Hiển thị khi chưa đăng nhập -->
+                                <a href="{{ route('register') }}" title="Đăng ký">
+                                    <i class="ri-user-add-line sign-up"></i>
+                                </a>
+                                @if (Route::has('login'))
+                                    <a href="{{ route('login') }}" title="Đăng nhập">
+                                        <i class="ri-login-box-line sign-in"></i>
+                                    </a>
+                                @endif
+                            @else
+                                <!-- Hiển thị khi đã đăng nhập -->
+                                <div class="dropdown">
+                                    <a href="javascript:void(0)" class="dropdown-toggle" title="Tài khoản">
+                                        <i class="ri-user-line account"></i>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('profile') }}" class="dropdown-item">Profile</a>
+                                        <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </div>
+                            @endguest
+
                         </div>
                     </div>
                 </div>
@@ -1124,7 +1202,7 @@
                                 </li>
                                 <li class="lh-information">
                                     <h5 class="heading">Email</h5>
-                                    <span>example@ec-email.com</span>
+                                    <span>Trần bùi tiến</span>
                                 </li>
                                 <li class="lh-information">
                                     <h5 class="heading">Phone No</h5>
