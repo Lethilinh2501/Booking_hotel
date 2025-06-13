@@ -87,4 +87,10 @@ Route::group([
         Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
         Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
     });
-});
+// });
+
+Route::middleware('auth')
+    ->group(function () {
+        Route::get('/review-form/{bookingID}', [App\Http\Controllers\ReviewController::class, 'reviewForm'])->name('review-form');
+        Route::post('/submit-review/{bookingID}', [App\Http\Controllers\ReviewController::class, 'submitReview'])->name('submit-review');
+    });
