@@ -11,9 +11,9 @@ class ReviewController extends Controller
     {
         $booking = \App\Models\Booking::findOrFail($bookingID);
 
-        // Check if the booking belongs to the authenticated user
+        // Kiểm tra xem người dùng hiện tại có phải người đặt booking không
         if ($booking->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Không có quyền thực hiện thao tác này');
         }
 
         return view('client.reviews.form', compact('booking'));
@@ -23,11 +23,11 @@ class ReviewController extends Controller
     {
         $booking = \App\Models\Booking::findOrFail($bookingID);
 
+        // Kiểm tra xem người dùng hiện tại có phải người đặt booking không
         if ($booking->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Không có quyền thực hiện thao tác này');
         }
 
-        // Logic to handle form submission for creating a new review
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
