@@ -42,6 +42,6 @@ class ReviewController extends Controller
 
         Review::create($data);
 
-        return redirect()->route('reviews.index')->with('success', 'Đánh giá thành công.');
+        return redirect('/')->with('success', 'Đánh giá thành công.');
     }
 }
