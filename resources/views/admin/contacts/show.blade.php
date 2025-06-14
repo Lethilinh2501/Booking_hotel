@@ -1,9 +1,10 @@
-@extends('admin.layout.default')
-@extends('layouts.admin')
+@extends('layout.admin')
+
 
 @section('content')
-<div class="container-fluid">
-    <div class="row mb-4">
+
+    <main class="lh-main-content">
+        <div class="container-fluid">
         <div class="col-md-8">
             <h2 class="h4 mb-0">Chi tiết liên hệ #{{ $contact->id }}</h2>
             <nav aria-label="breadcrumb">
@@ -69,9 +70,9 @@
                                 <div class="form-group">
                                     <label for="status" class="font-weight-bold">Trạng thái hiện tại:</label>
                                     <div class="mb-2">
-                                        <span class="badge badge-{{ 
-                                            $contact->status == 'approved' ? 'success' : 
-                                            ($contact->status == 'rejected' ? 'danger' : 'warning') 
+                                        <span class="badge badge-{{
+                                            $contact->status == 'approved' ? 'success' :
+                                            ($contact->status == 'rejected' ? 'danger' : 'warning')
                                         }}">
                                             {{ ucfirst($contact->status) }}
                                         </span>
