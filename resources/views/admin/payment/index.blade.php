@@ -1,9 +1,6 @@
 @extends('layout.admin')
 
-
-
 @section('content')
-
     <main class="lh-main-content">
         <div class="container-fluid">
             @if (session('message'))
@@ -12,48 +9,45 @@
                 </div>
             @endif
 
-            <h2 class="mb-4">Danh Sách Nhân Viên</h2>
-            <a href="{{ route('admin.staffs.addStaff') }}" class="btn btn-primary mb-4">Thêm mới</a>
+            <h3 class="mb-4">Danh Sách thanh toán</h3>
 
             <div class="card p-4">
                 <table class="table table-bordered table-striped align-middle">
                     <thead class="table-dark">
                         <tr>
                             <th>STT</th>
-                            <th>Tên</th>
-                            <th>Email</th>
-                            <th>Điện thoại</th>
-                            <th>Vai trò</th>
+                            <th>Booking ID</th>
+                            <th>Số tiền</th>
+                            <th>Phương thức</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($listStaff as $key => $staff)
+                        @foreach ($payments as $key => $payment)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $staff->name }}</td>
-                                <td>{{ $staff->email }}</td>
-                                <td>{{ $staff->phone }}</td>
-                                <td>{{ $staff->role ? $staff->role->name : 'Không có' }}</td>
+                                <td>{{ $payment->booking_id }}</td>
+                                <td>{{ number_format($payment->amount, 0, ',', '.') }} VNĐ</td>
+                                <td>{{ $payment->method }}</td>
                                 <td>
-                                    @if ($staff->is_active)
-                                        <span class="badge bg-success">Hoạt động</span>
+                                    @if ($payment->status == 'completed')
+                                        <span class="badge bg-success">Hoàn thành</span>
+                                    @elseif ($payment->status == 'pending')
+                                        <span class="badge bg-warning">Đang chờ</span>
                                     @else
-                                        <span class="badge bg-danger">Ngưng hoạt động</span>
+                                        <span class="badge bg-danger">Thất bại</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.staffs.detailStaff', $staff->id) }}"
+                                    <a href="{{ route('admin.payment.show', $payment->id) }}"
                                         class="btn btn-info btn-sm">Chi tiết</a>
-                                    <a href="{{ route('admin.staffs.updateStaff', $staff->id) }}"
+                                    <a href="{{ route('admin.payment.edit', $payment->id) }}"
                                         class="btn btn-warning btn-sm">Sửa</a>
-                                    <form action="{{ route('admin.staffs.deleteStaff') }}" method="POST"
-                                        style="display:inline;"
-                                        onsubmit="return confirm('Bạn chắc chắn muốn xóa nhân viên này?')">
+                                    <form action="{{ route('admin.payment.destroy', $payment->id) }}" method="POST"
+                                        style="display:inline;" onsubmit="return confirm('Xác nhận xóa thanh toán này?')">
                                         @csrf
                                         @method('DELETE')
-                                        <input type="hidden" name="id" value="{{ $staff->id }}">
                                         <button class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>
@@ -61,7 +55,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{ $listStaff->links('pagination::bootstrap-5') }}
+                {{ $payments->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </main>

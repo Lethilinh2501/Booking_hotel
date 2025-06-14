@@ -7,7 +7,7 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.contacts.index') }}">Quản lý liên hệ</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.staffs.listStaff') }}">Quản lý nhân viên</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.post.listPost') }}">Quản lý tin tức</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Quản lý sản phẩm</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.postcategory.index') }}">Quản lý danh mục bài viết</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Quản lý danh mục</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Quản lý thương hiệu</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Quản lý bài viết</a></li>
