@@ -1,71 +1,71 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Support\Facades\Auth;
 
-// http://127.0.0.1:8000/admin/products/update-products
+Auth::routes();
+require __DIR__ . '/auth.php';
 
-Route::get('/', function () {
-    return view('layout.client');
+// Public routes
+Route::view('/', 'layout.client');
+
+// Authenticated routes
+Route::middleware('auth')->group(function () {
+    Route::view('profile', 'profile')->name('profile');
+
+    Route::middleware('verified')->group(function () {
+        Route::view('dashboard', 'dashboard')->name('dashboard');
+    });
+
+    // Review routes
+    Route::get('/review-form/{bookingID}', [ReviewController::class, 'reviewForm'])->name('review-form');
+    Route::post('/submit-review/{bookingID}', [ReviewController::class, 'submitReview'])->name('submit-review');
 });
 
+// Admin routes
+Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::group([
-    'prefix' => 'admin',
-    'as' => 'admin.',
-    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
-],  function () {
-
-    Route::get('/', function () {
-        return view('layout.default.admin');
-    });
-
-    Route::group([
-        'prefix' => 'banners',
-        'as' => 'banners.'
-    ], function () {
+    // Banner routes
+    Route::prefix('banners')->as('banners.')->group(function () {
         Route::get('/', [BannerController::class, 'listBanner'])->name('listBanner');
-        Route::get('/add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
-        Route::post('/add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
-        Route::get('/detail-banner/{idbanner}', [BannerController::class, 'detailBanner'])->name('detailBanner');
-        Route::delete('/delete-banner', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
-        Route::get('update-banner/{idBanner}', [BannerController::class, 'updateBanner'])->name('updateBanner');
-        Route::patch('update-banner/{idBanner}', [BannerController::class, 'updatePatchBanner'])->name('updatePatchBanner');
+        Route::get('/add', [BannerController::class, 'addBanner'])->name('addBanner');
+        Route::post('/add', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
+        Route::get('/{idbanner}', [BannerController::class, 'detailBanner'])->name('detailBanner');
+        Route::delete('/delete', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
+        Route::get('/{idBanner}/edit', [BannerController::class, 'updateBanner'])->name('updateBanner');
+        Route::patch('/{idBanner}', [BannerController::class, 'updatePatchBanner'])->name('updatePatchBanner');
     });
 
-    Route::group([
-        'prefix' => 'staffs',
-        'as' => 'staffs.'
-    ], function () {
+    // Staff routes
+    Route::prefix('staffs')->as('staffs.')->group(function () {
         Route::get('/', [StaffController::class, 'listStaff'])->name('listStaff');
-        Route::get('/add-staff', [StaffController::class, 'addStaff'])->name('addStaff');
-        Route::post('/add-staff', [StaffController::class, 'addPostStaff'])->name('addPostStaff');
-        Route::get('/detail-staff/{idStaff}', [StaffController::class, 'detailStaff'])->name('detailStaff');
-        Route::delete('/delete-staff', [StaffController::class, 'deleteStaff'])->name('deleteStaff');
-        Route::get('update-staff/{idStaff}', [StaffController::class, 'updateStaff'])->name('updateStaff');
-        Route::patch('update-staff/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
+        Route::get('/add', [StaffController::class, 'addStaff'])->name('addStaff');
+        Route::post('/add', [StaffController::class, 'addPostStaff'])->name('addPostStaff');
+        Route::get('/{idStaff}', [StaffController::class, 'detailStaff'])->name('detailStaff');
+        Route::delete('/delete', [StaffController::class, 'deleteStaff'])->name('deleteStaff');
+        Route::get('/{idStaff}/edit', [StaffController::class, 'updateStaff'])->name('updateStaff');
+        Route::patch('/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
     });
 
     // Contact routes
-    Route::group([
-        'prefix' => 'contacts',
-        'as' => 'contacts.'
-    ], function () {
+    Route::prefix('contacts')->as('contacts.')->group(function () {
         Route::get('/', [ContactController::class, 'index'])->name('index');
         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
-    // Post Category
-    Route::group([
-        'prefix' => 'postcategory',
-        'as' => 'postcategory.'
-    ], function () {
+    // Post Category routes
+    Route::prefix('postcategory')->as('postcategory.')->group(function () {
         Route::get('/', [PostCategoryController::class, 'index'])->name('index');
         Route::get('/create', [PostCategoryController::class, 'create'])->name('create');
         Route::post('/store', [PostCategoryController::class, 'store'])->name('store');
@@ -73,7 +73,7 @@ Route::group([
         Route::get('/{id}/edit', [PostCategoryController::class, 'edit'])->name('edit');
         Route::put('/{id}', [PostCategoryController::class, 'update'])->name('update');
         Route::delete('/{id}', [PostCategoryController::class, 'destroy'])->name('destroy');
-        Route::post('/{id}/status', [PostCategoryController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/status', [PostCategoryController::class, 'updateStatus'])->name('updateStatus');
     });
 
     Route::group([
@@ -87,5 +87,11 @@ Route::group([
         Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
         Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
         Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
+
+        // payment
+        Route::resource('payment', PaymentController::class);
     });
+
+    // payment
+    Route::resource('payment', PaymentController::class);
 });
