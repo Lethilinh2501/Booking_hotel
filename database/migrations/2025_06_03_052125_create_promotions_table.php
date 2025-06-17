@@ -14,13 +14,18 @@ return new class extends Migration
         // Migration: create_promotions_table.php
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->decimal('discount_percent', 5, 2);
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->decimal('value');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            $table->integer('min_booking_amount');
+            $table->integer('max_discount_value');
+            $table->integer('quantity');
+            $table->string('type');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes(); //dekete_at xóa mềm
         });
     }
 
