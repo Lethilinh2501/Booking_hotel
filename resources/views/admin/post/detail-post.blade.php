@@ -1,132 +1,67 @@
-@extends('admin.layout.default')
-
-@push('style')
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .sidebar {
-            background-color: #2c3e50;
-            color: white;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: #ecf0f1;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #2980b9;
-            color: white;
-        }
-
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer {
-            background-color: #3498db;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-        }
-
-        img.post-thumbnail {
-            max-width: 120px;
-            height: auto;
-            border-radius: 4px;
-        }
-    </style>
-@endpush
+@extends('layout.admin')
 
 @section('content')
-    <main class="container-fluid flex-grow-1">
-        <div class="container mt-4">
-            <h2 class="mb-4">Chi Tiết Bài Viết</h2>
-            <div class="card p-4">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Tiêu đề</th>
-                        <td>{{ $post->title }}</td>
-                    </tr>
-                    <tr>
-                        <th>Slug</th>
-                        <td>{{ $post->slug }}</td>
-                    </tr>
-                    <tr>
-                        <th>Trích dẫn</th>
-                        <td>{{ $post->excerpt ?? 'Không có' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Nội dung</th>
-                        <td>{!! nl2br(e($post->content)) !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Ảnh đại diện</th>
-                        <td>
-                            @if ($post->image)
-                                <img src="{{ asset('storage/' . $post->image) }}" alt="Ảnh đại diện" style="max-width: 200px;">
-                            @else
-                                Không có ảnh
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Danh mục</th>
-                        <td>{{ $post->category->name ?? 'Không xác định' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Tác giả</th>
-                        <td>{{ $post->author->name ?? 'Không xác định' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ngày đăng</th>
-                        <td>{{ $post->published_at ? $post->published_at->format('d/m/Y H:i') : 'Chưa đăng' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Bài nổi bật</th>
-                        <td>
-                            @if ($post->is_featured)
-                                <span class="badge bg-warning text-dark">Nổi bật</span>
-                            @else
-                                <span class="badge bg-secondary">Không</span>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Trạng thái</th>
-                        <td>
-                            @php
-                                $statusClass = match ($post->status) {
-                                    'draft' => 'badge-draft',
-                                    'published' => 'badge-published',
-                                    'archived' => 'badge-archived',
-                                    default => 'badge-secondary',
-                                };
-                            @endphp
-                            <span class="badge {{ $statusClass }}">{{ ucfirst($post->status) }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Ngày tạo</th>
-                        <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ngày cập nhật</th>
-                        <td>{{ $post->updated_at->format('d/m/Y H:i') }}</td>
-                    </tr>
-                </table>
-                <a href="{{ route('admin.post.listPost') }}" class="btn btn-primary mt-3">Quay lại danh sách</a>
+    <main class="lh-main-content">
+        <div class="container-fluid">
+
+            {{-- Header --}}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="display-6 fw-bold mb-1">{{ $post->title }}</h1>
+                    <p class="text-muted mb-0">
+                        Bởi {{ optional($post->author)->name ?? 'Không rõ' }} •
+                        {{ $post->published_at ? $post->published_at->format('d/m/Y H:i') : 'Chưa đăng' }}
+                    </p>
+                </div>
+                <a href="{{ route('admin.post.listPost') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left-circle"></i> Quay lại
+                </a>
+            </div>
+
+            {{-- Cover Image --}}
+            @if ($post->image)
+                <div class="mb-4 text-center">
+                    <img src="{{ asset('storage/' . $post->image) }}" alt="Ảnh đại diện" class="img-fluid rounded-4 shadow"
+                        style="max-height: 450px; object-fit: cover;">
+                </div>
+            @endif
+
+            {{-- Badges --}}
+            <div class="mb-4 d-flex flex-wrap gap-2">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                    <i class="bi bi-folder"></i> {{ optional($post->category)->name ?? 'Không xác định' }}
+                </span>
+                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                    <i class="bi bi-check-circle"></i> {{ strtoupper($post->status) }}
+                </span>
+                @if ($post->is_featured)
+                    <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
+                        <i class="bi bi-star-fill"></i> NỔI BẬT
+                    </span>
+                @endif
+            </div>
+
+            {{-- Excerpt --}}
+            @if ($post->excerpt)
+                <blockquote
+                    class="blockquote px-3 py-2 bg-light rounded-3 fst-italic border-start border-4 border-primary mb-4">
+                    {{ $post->excerpt }}
+                </blockquote>
+            @endif
+
+            {{-- Content --}}
+            <article class="mb-5" style="line-height: 1.8; font-size: 1.1rem;">
+                {!! $post->content !!}
+            </article>
+
+            {{-- Metadata --}}
+            <div class="text-muted small d-flex flex-wrap gap-4">
+                <div>
+                    <i class="bi bi-clock-history"></i> Tạo lúc: {{ $post->created_at->format('d/m/Y H:i') }}
+                </div>
+                <div>
+                    <i class="bi bi-pencil-square"></i> Cập nhật: {{ $post->updated_at->format('d/m/Y H:i') }}
+                </div>
             </div>
         </div>
     </main>

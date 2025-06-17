@@ -5908,4 +5908,20 @@ div.dataTables_wrapper div.dataTables_info {
   line-height: 26px;
   color: #999;
 }
+
+body {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.ck-editor__editable_inline {
+    min-height: 300px;
+    max-height: 500px;
+    overflow-y: auto !important;
+}
+
+.ck-editor__editable_inline {
+    box-sizing: border-box;
+}
+
+
 /*# sourceMappingURL=style.css.map */

@@ -76,10 +76,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/{id}/status', [PostCategoryController::class, 'updateStatus'])->name('updateStatus');
     });
 
-    Route::group([
-        'prefix' => 'post',
-        'as' => 'post.'
-    ], function () {
+    Route::prefix('post')->as('post.')->group(function () {
         Route::get('/', [PostController::class, 'listPost'])->name('listPost');
         Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
         Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
@@ -87,9 +84,6 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
         Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
         Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
-
-        // payment
-        Route::resource('payment', PaymentController::class);
     });
 
     // payment
