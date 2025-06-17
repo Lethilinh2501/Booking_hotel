@@ -61,6 +61,12 @@
 
 
 						<li class="lh-sb-item">
+							<a href="{{ route('admin.post.listPost') }}" class="lh-page-link">
+								<i class="ri-user-search-line"></i><span class="condense"><span class="hover-title">Quản lý bài viết</span> </span>
+							</a>
+						</li>
+
+						<li class="lh-sb-item">
 							<a href="guest-details.html" class="lh-page-link">
 								<i class="ri-user-search-line"></i><span class="condense"><span class="hover-title">Tài khoản
 										Details</span> </span>
