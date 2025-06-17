@@ -1,32 +1,28 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateSaleRoomTypesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        // Migration: create_sale_room_types_table.php
         Schema::create('sale_room_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('room_type_id');
-            $table->decimal('sale_price', 15, 2);
+            $table->string('name');
+            $table->decimal('value', 10, 2);
+            $table->string('type');
+            $table->foreignId('room_type_id')->constrained('room_types');
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('status')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('sale_room_types');
     }
-};
+}

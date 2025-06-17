@@ -6,10 +6,10 @@
     <main class="lh-main-content">
         <div class="container-fluid">
         <div class="col-md-8">
-            <h2 class="h4 mb-0">Chi tiết liên hệ #{{ $contact->id }}</h2>
+            <h2 class="h4 mb-0">Chi tiết liên hệ</h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                    <!-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li> -->
                     <li class="breadcrumb-item"><a href="{{ route('admin.contacts.index') }}">Quản lý liên hệ</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
                 </ol>

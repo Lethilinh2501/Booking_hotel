@@ -11,14 +11,14 @@
         </div>
         <div class="col-md-4 text-right">
             <form action="{{ route('admin.contacts.index') }}" method="GET" class="form-inline">
-                <div class="input-group">
+                <!-- <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="{{ request('search') }}">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
@@ -65,7 +65,7 @@
                                 <div class="btn-group" role="group">
                                     <a href="{{ route('admin.contacts.show', $contact->id) }}"
                                        class="btn btn-sm btn-info" title="Xem chi tiết">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye">Xem</i>
                                     </a>
                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
@@ -73,7 +73,7 @@
                                                 class="btn btn-sm btn-danger"
                                                 title="Xóa"
                                                 onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-trash">Xóa</i>
                                         </button>
                                     </form>
                                 </div>

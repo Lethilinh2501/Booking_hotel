@@ -10,6 +10,18 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeServiceController;
+use App\Http\Controllers\Admin\RulesAndRegulationController;
+use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\RoomTypeAmenityController;
+use App\Http\Controllers\Admin\RoomTypeRulesAndRegulationController;
+use App\Http\Controllers\Admin\RoomTypeServiceController as AdminRoomTypeServiceController;
+use App\Http\Controllers\Admin\NewsCategoryController;
+// Authentication routes
 
 Auth::routes();
 require __DIR__.'/auth.php';
@@ -78,4 +90,41 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // payment
         Route::resource('payment', PaymentController::class);
+    // sale
+    Route::prefix('sale-room-types')->as('sale-room-types.')->group(function () {
+        Route::get('/', [SaleRoomTypeController::class, 'index'])->name('index');
+        Route::get('/create', [SaleRoomTypeController::class, 'create'])->name('create');
+        Route::post('/', [SaleRoomTypeController::class, 'store'])->name('store');
+        Route::get('/{id}', [SaleRoomTypeController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [SaleRoomTypeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [SaleRoomTypeController::class, 'update'])->name('update');
+        Route::delete('/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [SaleRoomTypeController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+        // News routes
+     Route::prefix('news-categories')->as('news-categories.')->group(function () {
+        Route::get('/', [NewsCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [NewsCategoryController::class, 'create'])->name('create');
+        Route::post('/', [NewsCategoryController::class, 'store'])->name('store');
+        Route::get('/{category}', [NewsCategoryController::class, 'show'])->name('show');
+        Route::get('/{category}/edit', [NewsCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{category}', [NewsCategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [NewsCategoryController::class, 'destroy'])->name('destroy');
+        Route::post('/{category}/status', [NewsCategoryController::class, 'updateStatus'])->name('updateStatus');
+    });
+
+     Route::prefix('news')->as('news.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NewsController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\NewsController::class, 'create'])->name('create'); // Route này sẽ được tạo: admin.news.create
+        Route::post('/', [\App\Http\Controllers\Admin\NewsController::class, 'store'])->name('store');
+        Route::get('/{news}', [\App\Http\Controllers\Admin\NewsController::class, 'show'])->name('show');
+        Route::get('/{news}/edit', [\App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('edit');
+        Route::put('/{news}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
+        Route::delete('/{news}', [\App\Http\Controllers\Admin\NewsController::class, 'destroy'])->name('destroy');
+        Route::post('/{news}/toggle-featured', [\App\Http\Controllers\Admin\NewsController::class, 'toggleFeatured'])->name('toggleFeatured');
+    });
 });
+    
+
+        
