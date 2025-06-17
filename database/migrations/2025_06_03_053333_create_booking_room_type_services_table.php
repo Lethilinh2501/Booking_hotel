@@ -13,13 +13,25 @@ return new class extends Migration
     {
         // Migration: create_booking_room_type_services_table.php
         Schema::create('booking_room_type_services', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('booking_id');
-            $table->unsignedBigInteger('room_type_service_id');
+            $table->bigIncrements('id');
+            $table->bigInteger('booking_id')->unsigned();
+            $table->bigInteger('room_type_service_id')->unsigned();
             $table->integer('quantity')->default(1);
             $table->decimal('price', 15, 2);
             $table->timestamps();
             $table->softDeletes();
+
+            // Ràng buộc khóa ngoại cho booking_id
+            $table->foreign('booking_id')
+                ->references('id')
+                ->on('bookings')
+                ->onDelete('cascade');
+
+            // Ràng buộc khóa ngoại cho room_type_service_id
+            $table->foreign('room_type_service_id')
+                ->references('id')
+                ->on('room_type_services')
+                ->onDelete('cascade');
         });
     }
 

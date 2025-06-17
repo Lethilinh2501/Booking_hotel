@@ -119,7 +119,7 @@
                 <div class="row">
                     <nav class="navbar navbar-expand-lg">
                         <a class="navbar-brand" href="index.html">
-                            <img src="assets/img/logo/logo.png" alt="logo" class="lh-logo">
+                            <img src="#" alt="logo" class="lh-logo">
                         </a>
                         <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -400,23 +400,23 @@
                     <button class="nav-link active" id="nav-Deluxe-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-Deluxe" type="button" role="tab" aria-controls="nav-Deluxe"
                         aria-selected="true">
-                        <img src="assets/img/room/1.jpg" alt="1">
+                        <img src="#" alt="1">
                         Deluxe Room
                     </button>
                     <button class="nav-link" id="nav-Single-tab" data-bs-toggle="tab" data-bs-target="#nav-Single"
                         type="button" role="tab" aria-controls="nav-Single" aria-selected="false">
-                        <img src="assets/img/room/2.jpg" alt="2">
+                        <img src="#" alt="2">
                         Single Room
                     </button>
                     <button class="nav-link" id="nav-Super-tab" data-bs-toggle="tab" data-bs-target="#nav-Super"
                         type="button" role="tab" aria-controls="nav-Super" aria-selected="false">
-                        <img src="assets/img/room/3.jpg" alt="3">
+                        <img src="#" alt="3">
                         Super Room
                     </button>
                     <button class="nav-link" id="nav-Presidential-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-Presidential" type="button" role="tab" aria-controls="nav-Presidential"
                         aria-selected="false">
-                        <img src="assets/img/room/4.jpg" alt="4">
+                        <img src="#" alt="4">
                         Presidential Room
                     </button>
                 </div>
@@ -467,7 +467,7 @@
                             </div>
                             <div class="col-xl-6 col-lg-12 p-0">
                                 <div class="room-img">
-                                    <img src="assets/img/room/room-1.jpg" alt="room-img" class="room-image">
+                                    <img src="#" alt="room-img" class="room-image">
                                     <a href="room-details.html" class="link"><i class="ri-arrow-right-line"></i></a>
                                 </div>
                             </div>
@@ -519,7 +519,7 @@
                             </div>
                             <div class="col-xl-6 col-lg-12 p-0">
                                 <div class="room-img">
-                                    <img src="assets/img/room/room-2.jpg" alt="room-img" class="room-image">
+                                    <img src="#" alt="room-img" class="room-image">
                                     <a href="room-details.html" class="link"><i class="ri-arrow-right-line"></i></a>
                                 </div>
                             </div>
@@ -571,7 +571,7 @@
                             </div>
                             <div class="col-xl-6 col-lg-12 p-0">
                                 <div class="room-img">
-                                    <img src="assets/img/room/room-3.jpg" alt="room-img" class="room-image">
+                                    <img src="#" alt="room-img" class="room-image">
                                     <a href="room-details.html" class="link"><i class="ri-arrow-right-line"></i></a>
                                 </div>
                             </div>
@@ -623,7 +623,7 @@
                             </div>
                             <div class="col-xl-6 col-lg-12 p-0">
                                 <div class="room-img">
-                                    <img src="assets/img/room/room-4.jpg" alt="room-img" class="room-image">
+                                    <img src="#" alt="room-img" class="room-image">
                                     <a href="room-details.html" class="link"><i class="ri-arrow-right-line"></i></a>
                                 </div>
                             </div>
@@ -684,7 +684,7 @@
                     <div class="lh-amenities" data-aos="fade-up" data-aos-duration="1500">
                         <div class="amenities-detail">
                             <div class="amenities-box">
-                                <img src="assets/img/amenities/1.jpg" alt="amenities_1" class="amenities-left-image">
+                                <img src="assets/img/amenities/" alt="amenities_1" class="amenities-left-image">
                             </div>
                             <div class="amenities-box">
                                 <div class="lh-amenities-in">
@@ -707,7 +707,7 @@
                     <div class="lh-amenities" data-aos="fade-up" data-aos-duration="2000">
                         <div class="amenities-detail">
                             <div class="amenities-box">
-                                <img src="assets/img/amenities/2.jpg" alt="amenities_2" class="amenities-left-image">
+                                <img src="assets/img/amenities/" alt="amenities_2" class="amenities-left-image">
                             </div>
                             <div class="amenities-box">
                                 <div class="lh-amenities-in">
@@ -744,7 +744,7 @@
                                 </div>
                             </div>
                             <div class="amenities-box">
-                                <img src="assets/img/amenities/3.jpg" alt="amenities_3" class="amenities-right-image">
+                                <img src="assets/img/amenities/" alt="amenities_3" class="amenities-right-image">
                             </div>
                         </div>
                     </div>
@@ -767,7 +767,7 @@
                                 </div>
                             </div>
                             <div class="amenities-box">
-                                <img src="assets/img/amenities/4.jpg" alt="amenities_4" class="amenities-right-image">
+                                <img src="assets/img/amenities/" alt="amenities_4" class="amenities-right-image">
                             </div>
                         </div>
                     </div>
@@ -785,7 +785,7 @@
                 </div>
                 <div class="col-lg-4 rs-pb-24">
                     <div class="lh-prices" data-aos="fade-up" data-aos-duration="1000">
-                        <img src="assets/img/prices/1.jpg" alt="prices_1" class="prices-image">
+                        <img src="assets/img/prices/" alt="prices_1" class="prices-image">
                         <div class="lh-prices-out">
                             <div class="lh-prices-in">
                                 <h4 class="lh-price-dollar"><span>$</span>50<code> / Per night</code></h4>
@@ -823,7 +823,7 @@
                 </div>
                 <div class="col-lg-4 rs-pb-24">
                     <div class="lh-prices" data-aos="fade-up" data-aos-duration="2000">
-                        <img src="assets/img/prices/2.jpg" alt="prices_2" class="prices-image active">
+                        <img src="assets/img/prices/" alt="prices_2" class="prices-image active">
                         <div class="lh-prices-out">
                             <div class="lh-prices-in">
                                 <h4 class="lh-price-dollar"><span>$</span>75<code> / Per night</code></h4>
@@ -861,7 +861,7 @@
                 </div>
                 <div class="col-lg-4 rs-pb-24">
                     <div class="lh-prices" data-aos="fade-up" data-aos-duration="3000">
-                        <img src="assets/img/prices/3.jpg" alt="prices_3" class="prices-image">
+                        <img src="assets/img/prices/" alt="prices_3" class="prices-image">
                         <div class="lh-prices-out">
                             <div class="lh-prices-in">
                                 <h4 class="lh-price-dollar"><span>$</span>99<code> / Per night</code></h4>
@@ -921,7 +921,7 @@
                                                 <div class="lh-testimonials-contain">
                                                     <div class="d-flex">
                                                         <div class="lh-testimonials-inner">
-                                                            <img src="assets/img/businessman/businessman-1.jpg"
+                                                            <img src="assets/img/businessman/businessman-"
                                                                 alt="businessman" class="businessman">
                                                             <div class="lh-testimonials-name-detalis">
                                                                 <h5>Jenifer Brown</h5>
@@ -967,7 +967,7 @@
                                                 <div class="lh-testimonials-contain">
                                                     <div class="d-flex">
                                                         <div class="lh-testimonials-inner">
-                                                            <img src="assets/img/businessman/businessman-2.jpg"
+                                                            <img src="assets/img/businessman/businessman-"
                                                                 alt="businessman" class="businessman">
                                                             <div class="lh-testimonials-name-detalis">
                                                                 <h5>John Doe</h5>
@@ -1013,7 +1013,7 @@
                                                 <div class="lh-testimonials-contain">
                                                     <div class="d-flex">
                                                         <div class="lh-testimonials-inner">
-                                                            <img src="assets/img/businessman/businessman-3.jpg"
+                                                            <img src="assets/img/businessman/businessman-"
                                                                 alt="businessman" class="businessman">
                                                             <div class="lh-testimonials-name-detalis">
                                                                 <h5>Moris Selemen</h5>
@@ -1064,7 +1064,7 @@
             </div>
             <div class="slick-slider blog-slider" data-aos="fade-up" data-aos-duration="2000">
                 <div class="blog-card">
-                    <figure><img src="assets/img/blog/2.jpg" alt="blog-img" class="blog-image-top"></figure>
+                    <figure><img src="assets/img/blog/" alt="blog-img" class="blog-image-top"></figure>
                     <div class="lh-blog">
                         <div class="lh-blog-date">
                             <span><code>Restaurant</code> - 09 Jan 2024 - 05 Comment</span>
@@ -1074,7 +1074,7 @@
                     </div>
                 </div>
                 <div class="blog-card">
-                    <figure><img src="assets/img/blog/3.jpg" alt="blog-img" class="blog-image-top"></figure>
+                    <figure><img src="assets/img/blog/" alt="blog-img" class="blog-image-top"></figure>
                     <div class="lh-blog">
                         <div class="lh-blog-date">
                             <span><code>Marketing</code> - 15 Feb 2024 - 22 Comment</span>
@@ -1084,7 +1084,7 @@
                     </div>
                 </div>
                 <div class="blog-card">
-                    <figure><img src="assets/img/blog/4.jpg" alt="blog-img" class="blog-image-top"></figure>
+                    <figure><img src="assets/img/blog/" alt="blog-img" class="blog-image-top"></figure>
                     <div class="lh-blog">
                         <div class="lh-blog-date">
                             <span><code>Hotel</code> - 22 Dec 2024 - 00 Comment</span>
@@ -1094,7 +1094,7 @@
                     </div>
                 </div>
                 <div class="blog-card">
-                    <figure><img src="assets/img/blog/5.jpg" alt="blog-img" class="blog-image-top"></figure>
+                    <figure><img src="assets/img/blog/" alt="blog-img" class="blog-image-top"></figure>
                     <div class="lh-blog">
                         <div class="lh-blog-date">
                             <span><code>Rooms</code> - 11 Nov 2024 - 01 Comment</span>
@@ -1104,7 +1104,7 @@
                     </div>
                 </div>
                 <div class="blog-card">
-                    <figure><img src="assets/img/blog/6.jpg" alt="blog-img" class="blog-image-top"></figure>
+                    <figure><img src="assets/img/blog/" alt="blog-img" class="blog-image-top"></figure>
                     <div class="lh-blog">
                         <div class="lh-blog-date">
                             <span><code>Spa</code> - 02 Mar 2024 - 25 Comment</span>
@@ -1162,7 +1162,7 @@
                 <div class="col-lg-6 rs-pb-24 order-lg-2 order-md-1 order-1">
                     <div class="lh-social-media">
                         <div class="footer-logos">
-                            <img src="assets/img/logo/logo.png" alt="logo">
+                            <img src="#" alt="logo">
                         </div>
                         <div class="lh-footer-social">
                             <p>This is the dolor sit amet consectetur adipisicing elit. Libero voluptatem soluta eaque

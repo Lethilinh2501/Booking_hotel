@@ -1,9 +1,7 @@
 @extends('layout.admin')
 
-
-
 @section('content')
-  <main class="lh-main-content">
+    <main class="lh-main-content">
         <div class="container-fluid">
             <h2 class="mb-4">Thêm Nhân Viên</h2>
 
