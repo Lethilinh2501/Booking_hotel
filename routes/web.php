@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
@@ -84,6 +85,21 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
         Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
         Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
+    });
+
+    // Room routes
+    Route::prefix('rooms')->as('rooms.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('index');
+        Route::get('/create', [RoomController::class, 'create'])->name('create');
+        Route::post('/store', [RoomController::class, 'store'])->name('store');
+        Route::get('/{id}', [RoomController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [RoomController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [RoomController::class, 'update'])->name('update');
+        Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [RoomController::class, 'trash'])->name('trash');
+        Route::post('/trash/restore/{id}', [RoomController::class, 'restore'])->name('restore');
+        Route::delete('/trash/delete/{id}', [RoomController::class, 'forceDelete'])->name('forceDelete');
+        Route::post('/{id}/status', [RoomController::class, 'updateStatus'])->name('updateStatus');
     });
 
     // payment
