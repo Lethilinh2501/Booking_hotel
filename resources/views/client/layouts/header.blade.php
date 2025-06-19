@@ -34,9 +34,9 @@
                                     <li><a class="dropdown-item" href="{{ route('bookings.index') }}"><i class="ri-contacts-book-line"></i> Đơn đặt phòng</a></li>
                                     <li><a class="dropdown-item" href="{{ route('refunds.lists') }}"><i class="ri-reply-all-line"></i> Lịch sử hoàn tiền</a></li>
                                     <li><a class="dropdown-item" href="{{ route('payments.lists') }}"><i class="ri-bank-card-2-line"></i> Lịch sử giao dịch</a></li> --}}
-                                    @hasanyrole('superadmin|admin|staff')
+                                    {{-- @hasanyrole('superadmin|admin|staff')
                                         <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="ri-dashboard-3-line"></i> Truy cập quản trị</a></li>
-                                    @endhasanyrole
+                                    @endhasanyrole --}}
                                     <li>
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
