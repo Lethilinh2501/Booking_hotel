@@ -14,7 +14,6 @@ class HomeController extends Controller
         Carbon::setLocale('vi');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-        // Giá trị mặc định cho check_in và check_out
         $checkIn = $request->input('check_in', Carbon::today()->setHour(14)->setMinute(0)->setSecond(0)->toDateTimeString());
         $checkOut = $request->input('check_out', Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0)->toDateTimeString());
         $totalGuests = (int) $request->input('total_guests', 2);
@@ -27,36 +26,43 @@ class HomeController extends Controller
 
             if ($checkInDate->gte($checkOutDate)) {
                 $checkOutDate = $checkInDate->copy()->addDay()->setHour(12)->setMinute(0)->setSecond(0);
-                $checkOut = $checkOutDate->toDateTimeString();
-            } else {
-                $checkOut = $checkOutDate->toDateTimeString();
             }
 
-            $nights = $checkInDate->diffInDays($checkOutDate);
-            if ($nights < 1) {
-                $nights = 1;
-            }
+            $nights = max(1, $checkInDate->diffInDays($checkOutDate));
 
             $days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
             $months = ['tháng 1', 'tháng 2', 'tháng 3', 'tháng 4', 'tháng 5', 'tháng 6', 'tháng 7', 'tháng 8', 'tháng 9', 'tháng 10', 'tháng 11', 'tháng 12'];
+
             $startDay = $days[$checkInDate->dayOfWeek];
             $startDateNum = $checkInDate->day;
             $startMonth = $months[$checkInDate->month - 1];
             $startTime = $checkInDate->format('H:i');
+
             $endDay = $days[$checkOutDate->dayOfWeek];
             $endDateNum = $checkOutDate->day;
             $endMonth = $months[$checkOutDate->month - 1];
             $endTime = $checkOutDate->format('H:i');
-            $formattedDateRange = "{$startDay}, {$startDateNum} {$startMonth} {$startTime} - {$endDay}, {$endDateNum} {$endMonth} {$endTime}";
+
+            $formattedDateRange = "$startDay, $startDateNum $startMonth $startTime - $endDay, $endDateNum $endMonth $endTime";
         } catch (\Exception $e) {
             return back()->with('error', 'Ngày giờ không hợp lệ.');
         }
 
         $totalPeople = $totalGuests + $childrenCount;
 
-        $roomTypes = RoomType::query()
-            ->where('capacity', '>=', $totalPeople)
-            ->get();
+        $roomTypes = RoomType::select([
+            'id',
+            'name',
+            'description',
+            'price',
+            'max_capacity',
+            'size',
+            'bed_type',
+            'children_free_limit'
+        ])
+        ->where('max_capacity', '>=', $totalPeople)
+        ->where('is_active', 1)
+        ->get();
 
         $roomTypes = $roomTypes->map(function ($roomType) use ($nights, $roomCount) {
             $roomType->total_original_price = $roomType->price * $nights * $roomCount;

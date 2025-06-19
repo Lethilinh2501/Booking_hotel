@@ -16,9 +16,7 @@
         object-fit: cover;
         background-color: #f0f0f0;
     }
-</style>
 
-<style>
     .discount-badge {
         position: absolute;
         top: 10px;
@@ -66,18 +64,25 @@
                                             <h4>{{ $roomType->name }}</h4>
                                             <div class="lh-room-price">
                                                 <h4 style="color: #333; font-weight: bold;">
-                                                    {{ $roomType->price }} / đêm
+                                                    {{ number_format($roomType->price, 0, ',', '.') }} VND / đêm
                                                 </h4>
                                                 <p style="font-size: 14px; color: #555;">
                                                     Chi phí cho {{ $nights }} đêm, {{ $totalGuests + $childrenCount }} khách
                                                 </p>
                                                 <p style="font-size: 14px; color: #555;">
-                                                    Tổng: {{ $roomType->total_original_price }}
+                                                    Tổng: {{ number_format($roomType->total_original_price, 0, ',', '.') }} VND
                                                 </p>
                                             </div>
                                         </div>
                                         <p>{{ $roomType->description ?? 'Không có mô tả.' }}</p>
-                                        <p><strong>Số phòng còn trống:</strong> {{ $roomType->available_rooms }}</p>
+                                        <ul>
+                                            <li><strong>Loại giường:</strong> {{ $roomType->bed_type }}</li>
+                                            <li><strong>Sức chứa tối đa:</strong> {{ $roomType->max_capacity }} khách</li>
+                                            <li><strong>Diện tích:</strong> {{ $roomType->size }} m²</li>
+                                            <li><strong>Trẻ em miễn phí:</strong> {{ $roomType->children_free_limit }}</li>
+                                            <li><strong>Trạng thái:</strong> {{ $roomType->is_active ? 'Đang hoạt động' : 'Không hoạt động' }}</li>
+                                            <li><strong>Số phòng còn trống:</strong> {{ $roomType->available_rooms }}</li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-12 p-0">
