@@ -22,10 +22,8 @@
             </div>
             <div class="form-holder">
                 <div class="form-content">
-                    <main>
-                         @yield('content')
-                    </main>
-                    {{-- <div class="form-items">
+
+                    <div class="form-items">
                         <div class="website-logo-inside logo-normal">
                             <a href="index.html">
                                 <div class="logo">
@@ -54,7 +52,7 @@
                         <div class="page-links">
                             <a href="register26.html">Register new account</a>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>

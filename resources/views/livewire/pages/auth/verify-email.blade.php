@@ -1,58 +1,60 @@
 <?php
 
-use App\Livewire\Actions\Logout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Illuminate\Support\Facades\Auth;
 
 new #[Layout('layouts.guest')] class extends Component
 {
-    /**
-     * Send an email verification notification to the user.
-     */
-    public function sendVerification(): void
+    public function resend(): void
     {
-        if (Auth::user()->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-
-            return;
-        }
-
         Auth::user()->sendEmailVerificationNotification();
-
-        Session::flash('status', 'verification-link-sent');
+        session()->flash('status', 'Đã gửi lại email xác minh.');
     }
+};
+?>
 
-    /**
-     * Log the current user out of the application.
-     */
-    public function logout(Logout $logout): void
-    {
-        $logout();
-
-        $this->redirect('/', navigate: true);
-    }
-}; ?>
-
-<div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
-
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
         </div>
-    @endif
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <div class="website-logo-inside less-margin">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                            </div>
+                        </a>
+                    </div>
 
-    <div class="mt-4 flex items-center justify-between">
-        <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
-        </x-primary-button>
+                    <h3 class="font-md">Xác minh email</h3>
+                    <p>Chúng tôi đã gửi một liên kết xác minh tới email của bạn.</p>
 
-        <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            {{ __('Log Out') }}
-        </button>
+                    @if (session('status'))
+                        <div class="alert alert-success mt-3 mb-3 text-center">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <form wire:submit.prevent="resend">
+                        <div class="form-button">
+                            <button type="submit" class="ibtn">Gửi lại liên kết xác minh</button>
+                        </div>
+                    </form>
+
+                    <div class="page-links">
+                        <a href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a>
+                        <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">@csrf</form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

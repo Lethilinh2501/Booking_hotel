@@ -12,10 +12,14 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
+
 
 
 Auth::routes();
 require __DIR__ . '/auth.php';
+
+// Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
 
 // Public routes
 // Route::view('/', 'layout.client');
