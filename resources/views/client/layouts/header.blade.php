@@ -62,12 +62,10 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg">
 
-            <a class="navbar-brand" href="">
-                <img  alt="Logo" class="lh-logo">
+
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('themes/client/assets/img/logo/lumora01.png')}}" alt="logo" class="lh-logo">
             </a>
-            <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="ri-menu-2-line"></i>
-            </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
