@@ -1,4 +1,4 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
 
 @push('style')
     <style>
@@ -44,6 +44,8 @@
 @endpush
 
 @section('content')
+    <main class="lh-main-content">
+
     <main class="container-fluid flex-grow-1">
         <div class="container mt-4">
             <h2 class="mb-4">Cập Nhật Bài Viết</h2>
@@ -56,10 +58,10 @@
             @endif
 
             <div class="card p-4">
-                <form action="{{ route('admin.post.updatePatchPost', $post->id) }}" method="POST"
+                <form action="{{ route('admin.posts.update', $post->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    @method('PATCH')
+                    @method('PUT')
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
@@ -125,10 +127,9 @@
                     <div class="mb-3">
                         <label for="status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="status" name="status" required>
-                            <option value="draft" {{ $post->status == 'draft' ? 'selected' : '' }}>Bản nháp</option>
-                            <option value="published" {{ $post->status == 'published' ? 'selected' : '' }}>Công khai
-                            </option>
-                            <option value="archived" {{ $post->status == 'archived' ? 'selected' : '' }}>Lưu trữ</option>
+                    <option value="draft" {{ $post->status == 'Bản nháp' ? 'selected' : '' }}>draft</option>
+                            <option value="published" {{ $post->status == 'published' ? 'selected' : '' }}>published</option>
+                            <option value="archived" {{ $post->status == 'archived' ? 'selected' : '' }}>archived</option>
                         </select>
                         @error('status')
                             <div class="text-danger">{{ $message }}</div>
@@ -153,7 +154,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-save"></i> Cập nhật
                     </button>
-                    <a href="{{ route('admin.post.listPost') }}" class="btn btn-secondary">Quay lại</a>
+                    <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary">Quay lại</a>
                 </form>
             </div>
         </div>

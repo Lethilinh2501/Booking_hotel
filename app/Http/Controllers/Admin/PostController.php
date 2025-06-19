@@ -10,21 +10,21 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    public function listPost()
+    public function index()
     {
-        $listPost = Post::with(['author.role', 'category'])
+        $posts = Post::with(['author.role', 'category'])
             ->orderBy('created_at', 'desc')
             ->paginate(5);
-        return view('admin.post.list-post', compact('listPost'));
+    return view('admin.posts.index', compact('posts'));
     }
 
-    public function addPost()
+    public function create()
     {
         $categories = PostCategory::all();
-        return view('admin.post.add-post', compact('categories'));
+    return view('admin.posts.create', compact('categories'));
     }
 
-    public function addPostPost(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
@@ -36,49 +36,44 @@ class PostController extends Controller
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
         ], [
-            'title.required'        => 'Vui lòng nhập tiêu đề.',
-            'slug.required'         => 'Vui lòng nhập slug.',
-            'slug.unique'           => 'Slug đã tồn tại.',
-            'content.required'      => 'Vui lòng nhập nội dung.',
-            'category_id.required'  => 'Vui lòng chọn danh mục.',
-            'status.required'       => 'Vui lòng chọn trạng thái.',
-            'image.image'           => 'Tệp tải lên phải là hình ảnh.',
-            'image.max'             => 'Ảnh không được vượt quá 2MB.',
+            // Validation messages...
         ]);
 
-        // Xử lý lưu ảnh nếu có
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $imagePath = $file->storeAs('uploads/posts', $filename, 'public');
+            $imagePath = $request->file('image')->store('uploads/posts', 'public');
         }
 
         Post::create([
             'title'        => $validated['title'],
             'slug'         => $validated['slug'],
-            'excerpt'      => $request->input('excerpt'),
+            'excerpt'      => $validated['excerpt'],
             'content'      => $validated['content'],
             'category_id'  => $validated['category_id'],
             'status'       => $validated['status'],
             'image'        => $imagePath,
-            'published_at' => $request->input('published_at'),
+            'published_at' => $validated['published_at'],
             'is_featured'  => $request->has('is_featured'),
-            'author_id'    => 1, // Tạm gán nếu chưa có auth
+            'author_id'    => auth()->id() ?? 1, // Sử dụng auth nếu có
         ]);
 
-        return redirect()->route('admin.post.listPost')->with('success', 'Thêm bài viết thành công!');
+        return redirect()->route('admin.posts.index')->with('success', 'Thêm bài viết thành công!');
     }
 
-    public function updatePost($id)
+    public function show($id)
+    {
+        $post = Post::with(['category', 'author'])->findOrFail($id);
+    return view('admin.posts.show', compact('post'));
+    }
+
+    public function edit($id)
     {
         $post = Post::findOrFail($id);
         $categories = PostCategory::all();
-
-        return view('admin.post.update-post', compact('post', 'categories'));
+            return view('admin.posts.edit', compact('post', 'categories'));
     }
 
-    public function updatePatchPost(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
@@ -90,60 +85,70 @@ class PostController extends Controller
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
         ], [
-            'title.required'        => 'Vui lòng nhập tiêu đề.',
-            'slug.required'         => 'Vui lòng nhập slug.',
-            'slug.unique'           => 'Slug đã tồn tại.',
-            'content.required'      => 'Vui lòng nhập nội dung.',
-            'category_id.required'  => 'Vui lòng chọn danh mục.',
-            'status.required'       => 'Vui lòng chọn trạng thái.',
-            'image.image'           => 'Tệp tải lên phải là hình ảnh.',
-            'image.max'             => 'Ảnh không được vượt quá 2MB.',
+            // Validation messages...
         ]);
 
         $post = Post::findOrFail($id);
-        $post->title = $validated['title'];
-        $post->slug = $validated['slug'];
-        $post->excerpt = $validated['excerpt'];
-        $post->content = $validated['content'];
-        $post->category_id = $validated['category_id'];
-        $post->status = $validated['status'];
-        $post->published_at = $validated['published_at'];
-        $post->is_featured = $request->has('is_featured');
+        $data = $validated;
+        $data['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ
-            if ($post->image && Storage::disk('public')->exists($post->image)) {
+            // Xóa ảnh cũ nếu có
+            if ($post->image) {
                 Storage::disk('public')->delete($post->image);
             }
-
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/posts', $filename, 'public');
-            $post->image = $path;
+            $data['image'] = $request->file('image')->store('uploads/posts', 'public');
         }
 
-        $post->save();
+        $post->update($data);
 
-        return redirect()->route('admin.post.listPost')->with('success', 'Cập nhật bài viết thành công!');
+        return redirect()->route('admin.posts.index')->with('success', 'Cập nhật bài viết thành công!');
     }
 
-    public function detailPost($id)
+    public function destroy($id)
     {
-        $post = Post::with(['category', 'author'])->findOrFail($id);
-        return view('admin.post.detail-post', compact('post'));
-    }
+        $post = Post::findOrFail($id);
 
-    public function deletePost(Request $req)
-    {
-        $post = Post::findOrFail($req->id);
-
-        if ($post->image && Storage::disk('public')->exists($post->image)) {
+        if ($post->image) {
             Storage::disk('public')->delete($post->image);
         }
 
         $post->delete();
 
-        return redirect()->route('admin.post.listPost')
-            ->with('message', 'Xóa bài viết thành công!');
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Xóa bài viết thành công!');
     }
+
+    // Hiển thị danh sách bài viết client
+public function indexClient()
+{
+    $posts = Post::with('category')
+        ->where('status', 'published')
+        ->orderByDesc('published_at')
+        ->paginate(6);
+
+    return view('client.news.index', compact('posts'));
+}
+
+// Hiển thị bài viết theo danh mục
+public function byCategory($id)
+{
+    $category = PostCategory::findOrFail($id);
+
+    $posts = Post::where('category_id', $id)
+        ->where('status', 'published')
+        ->orderByDesc('published_at')
+        ->paginate(6);
+
+    return view('client.news.category', compact('category', 'posts'));
+}
+
+// Chi tiết bài viết
+public function showClient($id)
+{
+    $post = Post::with('category')->where('status', 'published')->findOrFail($id);
+
+    return view('client.news.show', compact('post'));
+}
+
 }

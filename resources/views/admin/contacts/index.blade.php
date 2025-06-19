@@ -53,10 +53,8 @@
                             <td>{{ Str::limit($contact->title, 30) }}</td>
                             <td>{{ $contact->email }}</td>
                             <td>
-                                <span class="badge badge-{{
-                                    $contact->status == 'approved' ? 'success' :
-                                    ($contact->status == 'rejected' ? 'danger' : 'warning')
-                                }}">
+                                <span class="badge bg-{{ $statusColors[$contact->status] ?? 'dark' }}"
+">
                                     {{ ucfirst($contact->status) }}
                                 </span>
                             </td>

@@ -1,4 +1,4 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
 
 @push('style')
     <style>
@@ -50,6 +50,8 @@
 @endpush
 
 @section('content')
+    <main class="lh-main-content">
+
     <main class="container-fluid flex-grow-1">
         <div class="container mt-4">
             <h2 class="mb-4">Chi Tiết Bài Viết</h2>
@@ -114,7 +116,7 @@
                                     default => 'badge-secondary',
                                 };
                             @endphp
-                            <span class="badge {{ $statusClass }}">{{ ucfirst($post->status) }}</span>
+                            <span class="badge bg-{{ $statusColors[$post->status] ?? 'dark' }}">{{ ucfirst($post->status) }}</span>
                         </td>
                     </tr>
                     <tr>
@@ -126,7 +128,7 @@
                         <td>{{ $post->updated_at->format('d/m/Y H:i') }}</td>
                     </tr>
                 </table>
-                <a href="{{ route('admin.post.listPost') }}" class="btn btn-primary mt-3">Quay lại danh sách</a>
+                <a href="{{ route('admin.posts.index') }}" class="btn btn-primary mt-3">Quay lại danh sách</a>
             </div>
         </div>
     </main>

@@ -1,4 +1,4 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
 
 @push('style')
     <style>
@@ -50,6 +50,8 @@
 @endpush
 
 @section('content')
+    <main class="lh-main-content">
+
     <main class="container-fluid flex-grow-1 text-center">
         <div class="container mt-4">
             @if (session('message'))
@@ -59,7 +61,7 @@
             @endif
 
             <h2 class="mb-4">Danh Sách Bài Viết</h2>
-            <a href="{{ route('admin.post.addPost') }}" class="btn btn-primary mb-4">Thêm mới</a>
+            <a href="{{ route('admin.posts.create') }}" class="btn btn-primary mb-4">Thêm mới</a>
 
             <div class="card p-4">
                 <table class="table table-bordered table-striped align-middle">
@@ -74,11 +76,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($listPost as $key => $post)
+                        @foreach ($posts as $key => $post)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td title="{{ $post->title }}">{{ Str::limit($post->title, 50, '...') }}</td>
-
                                 <td>{{ $post->category->name ?? 'Không có' }}</td>
                                 <td>{{ $post->author->name ?? 'Không rõ' }}</td>
                                 <td>
@@ -94,15 +95,11 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.post.detailPost', $post->id) }}"
-                                        class="btn btn-info btn-sm">Chi tiết</a>
-                                    <a href="{{ route('admin.post.updatePost', $post->id) }}"
-                                        class="btn btn-warning btn-sm">Sửa</a>
-                                    <form action="{{ route('admin.post.deletePost') }}" method="POST"
-                                        style="display:inline;" onsubmit="return confirm('Xác nhận xóa bài viết này?')">
+                                    <a href="{{ route('admin.posts.show', $post->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                                    <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-warning btn-sm">Sửa</a>
+                                    <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Xác nhận xóa bài viết này?')">
                                         @csrf
                                         @method('DELETE')
-                                        <input type="hidden" name="id" value="{{ $post->id }}">
                                         <button class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>
@@ -110,7 +107,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{ $listPost->links('pagination::bootstrap-5') }}
+                {{ $posts->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </main>

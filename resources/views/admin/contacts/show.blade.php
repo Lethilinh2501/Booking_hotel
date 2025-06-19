@@ -70,10 +70,8 @@
                                 <div class="form-group">
                                     <label for="status" class="font-weight-bold">Trạng thái hiện tại:</label>
                                     <div class="mb-2">
-                                        <span class="badge badge-{{
-                                            $contact->status == 'approved' ? 'success' :
-                                            ($contact->status == 'rejected' ? 'danger' : 'warning')
-                                        }}">
+                                        <span class="badge bg-{{ $statusColors[$contact->status] ?? 'dark' }}"
+>
                                             {{ ucfirst($contact->status) }}
                                         </span>
                                     </div>

@@ -1,4 +1,4 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
 
 @push('style')
     <style>
@@ -44,6 +44,8 @@
 @endpush
 
 @section('content')
+    <main class="lh-main-content">
+
     <div class="container mt-4">
         <h2 class="mb-4">Thêm Bài viết mới</h2>
 
@@ -57,7 +59,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.post.addPostPost') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
@@ -102,9 +104,9 @@
             <div class="mb-3">
                 <label for="status" class="form-label">Trạng thái</label>
                 <select name="status" id="status" class="form-control">
-                    <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Bản nháp</option>
-                    <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Công khai</option>
-                    <option value="archived" {{ old('status') == 'archived' ? 'selected' : '' }}>Lưu trữ</option>
+                    <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>draft</option>
+                    <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>published</option>
+                    <option value="archived" {{ old('status') == 'archived' ? 'selected' : '' }}>archived</option>
                 </select>
             </div>
 
@@ -121,7 +123,7 @@
             </div>
 
             <button type="submit" class="btn btn-success">Lưu bài viết</button>
-            <a href="{{ route('admin.post.listPost') }}" class="btn btn-secondary">Quay lại</a>
+            <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary">Quay lại</a>
         </form>
     </div>
 @endsection
