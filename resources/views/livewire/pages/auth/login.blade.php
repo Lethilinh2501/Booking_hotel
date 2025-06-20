@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public LoginForm $form;
 
     public function login(): void
@@ -33,21 +32,21 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                    <div class="website-logo-inside logo-normal">
+                    {{-- <div class="website-logo-inside logo-normal">
                         <a href="/">
                             <div class="logo">
                                 <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
                     <h3 class="font-md">Đăng nhập tài khoản</h3>
                     <p>Truy cập vào công cụ mạnh mẽ nhất trong lĩnh vực thiết kế và phát triển web.</p>
 
                     <form wire:submit.prevent="login">
-                        <input class="form-control" type="email" placeholder="Địa chỉ Email"
-                               wire:model="form.email" required>
-                        <input class="form-control" type="password" placeholder="Mật khẩu"
-                               wire:model="form.password" required>
+                        <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="form.email"
+                            required>
+                        <input class="form-control" type="password" placeholder="Mật khẩu" wire:model="form.password"
+                            required>
 
                         <div class="form-button d-flex align-items-center">
                             <div class="submit-container mr-auto text-start">

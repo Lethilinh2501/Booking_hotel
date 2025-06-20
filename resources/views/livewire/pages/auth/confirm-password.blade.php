@@ -3,8 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public string $password = '';
 
     public function confirm(): void
@@ -31,21 +30,23 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                    <div class="website-logo-inside less-margin">
+                    {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
                                 <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
 
                     <h3 class="font-md">Xác nhận mật khẩu</h3>
                     <p>Vui lòng xác nhận lại mật khẩu trước khi tiếp tục.</p>
 
                     <form wire:submit.prevent="confirm">
-                        <input class="form-control" type="password" placeholder="Mật khẩu"
-                               wire:model="password" required>
-                        @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+                        <input class="form-control" type="password" placeholder="Mật khẩu" wire:model="password"
+                            required>
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
                         <div class="form-button">
                             <button id="submit" type="submit" class="ibtn">Xác nhận</button>

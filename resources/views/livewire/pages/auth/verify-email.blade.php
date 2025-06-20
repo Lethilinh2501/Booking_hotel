@@ -4,8 +4,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public function resend(): void
     {
         Auth::user()->sendEmailVerificationNotification();
@@ -25,13 +24,13 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                    <div class="website-logo-inside less-margin">
+                    {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
                                 <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
 
                     <h3 class="font-md">Xác minh email</h3>
                     <p>Chúng tôi đã gửi một liên kết xác minh tới email của bạn.</p>
@@ -50,7 +49,8 @@ new #[Layout('layouts.guest')] class extends Component
 
                     <div class="page-links">
                         <a href="{{ route('logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a>
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng
+                            xuất</a>
                         <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">@csrf</form>
                     </div>
                 </div>

@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+
+    public function index()
+    {
+        return view('client.home');
+    }
+    public function indexRoom(Request $request)
     {
         Carbon::setLocale('vi');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -60,9 +65,9 @@ class HomeController extends Controller
             'bed_type',
             'children_free_limit'
         ])
-        ->where('max_capacity', '>=', $totalPeople)
-        ->where('is_active', 1)
-        ->get();
+            ->where('max_capacity', '>=', $totalPeople)
+            ->where('is_active', 1)
+            ->get();
 
         $roomTypes = $roomTypes->map(function ($roomType) use ($nights, $roomCount) {
             $roomType->total_original_price = $roomType->price * $nights * $roomCount;
