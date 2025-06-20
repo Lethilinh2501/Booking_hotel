@@ -9,9 +9,6 @@ new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function login(): void
     {
         $this->validate();
@@ -22,50 +19,58 @@ new #[Layout('layouts.guest')] class extends Component
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
-}; ?>
+};
+?>
 
-<div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form wire:submit="login">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
         </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <div class="website-logo-inside logo-normal">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                            </div>
+                        </a>
+                    </div>
+                    <h3 class="font-md">Đăng nhập tài khoản</h3>
+                    <p>Truy cập vào công cụ mạnh mẽ nhất trong lĩnh vực thiết kế và phát triển web.</p>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                    <form wire:submit.prevent="login">
+                        <input class="form-control" type="email" placeholder="Địa chỉ Email"
+                               wire:model="form.email" required>
+                        <input class="form-control" type="password" placeholder="Mật khẩu"
+                               wire:model="form.password" required>
 
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+                        <div class="form-button d-flex align-items-center">
+                            <div class="submit-container mr-auto text-start">
+                                <button id="submit" type="submit" class="ibtn">Đăng nhập</button>
+                            </div>
+                            <div class="text-end">
+                                <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
+                            </div>
+                        </div>
+                    </form>
 
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+                    <div class="other-links social-with-title">
+                        <div class="text">Hoặc đăng nhập bằng</div>
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-google"></i> Google</a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i> Linkedin</a>
+                    </div>
+
+                    <div class="page-links">
+                        <a href="{{ route('register') }}">Tạo tài khoản mới</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 </div>

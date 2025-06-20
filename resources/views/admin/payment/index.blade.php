@@ -16,7 +16,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th>STT</th>
-                            <th>Booking ID</th>
+                            <th>Mã Booking</th>
                             <th>Số tiền</th>
                             <th>Phương thức</th>
                             <th>Trạng thái</th>
@@ -27,7 +27,8 @@
                         @foreach ($payments as $key => $payment)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $payment->booking_id }}</td>
+                              <td>{{ $payment->booking->booking_code }}</td>
+
                                 <td>{{ number_format($payment->amount, 0, ',', '.') }} VNĐ</td>
                                 <td>{{ $payment->method }}</td>
                                 <td>

@@ -1,88 +1,73 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use App\Livewire\Forms\RegisterForm;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component
 {
-    public string $name = '';
-    public string $email = '';
-    public string $password = '';
-    public string $password_confirmation = '';
+    public RegisterForm $form;
 
-    /**
-     * Handle an incoming registration request.
-     */
     public function register(): void
     {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        event(new Registered($user = User::create($validated)));
-
-        Auth::login($user);
-
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->validate();
+        $this->form->create();
+        $this->redirect(route('dashboard'), navigate: true);
     }
-}; ?>
+};
+?>
 
-<div>
-    <form wire:submit="register">
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
         </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <div class="website-logo-inside less-margin">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                            </div>
+                        </a>
+                    </div>
+                    <h3 class="font-md">Tạo tài khoản mới</h3>
+                    <p>Truy cập vào công cụ mạnh mẽ nhất trong thiết kế và phát triển web.</p>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <form wire:submit.prevent="register">
+                        <input class="form-control" type="text" placeholder="Họ và tên" wire:model="form.name" required>
+                        @error('form.name') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="form.email" required>
+                        @error('form.email') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="password" placeholder="Mật khẩu" wire:model="form.password" required>
+                        @error('form.password') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="password" placeholder="Nhập lại mật khẩu" wire:model="form.password_confirmation" required>
+                        @error('form.password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn">Đăng ký</button>
+                        </div>
+                    </form>
+
+                    <div class="other-links social-with-title">
+                        <div class="text">Hoặc đăng ký bằng</div>
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-google"></i> Google</a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i> Linkedin</a>
+                    </div>
+
+                    <div class="page-links">
+                        <a href="{{ route('login') }}">Đăng nhập tài khoản</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 </div>
