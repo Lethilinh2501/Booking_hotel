@@ -9,7 +9,13 @@ class RoomTypeService extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['room_type_id', 'service_id', 'price'];
+    protected $table = 'room_type_services';
+
+    protected $fillable = [
+        'room_type_id',
+        'service_id',
+        'price',
+    ];
 
     public function roomType()
     {
@@ -19,10 +25,5 @@ class RoomTypeService extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
-    }
-
-    public function bookingRoomTypeServices()
-    {
-        return $this->hasMany(BookingRoomTypeService::class);
     }
 }

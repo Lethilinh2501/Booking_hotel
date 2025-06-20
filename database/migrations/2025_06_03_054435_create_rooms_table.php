@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_rooms_table.php
         Schema::create('rooms', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('room_type_id');
-            $table->unsignedInteger('floor')->nullable();
-            $table->boolean('is_available')->default(true);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->id(); // Khóa chính, tự tăng
+            $table->string('name'); // Tên phòng, ví dụ: "Phòng A101"
+            $table->unsignedBigInteger('room_type_id'); // FK tới bảng room_types
+            $table->unsignedInteger('floor')->nullable(); // Tầng, có thể để trống
+            $table->enum('status', ['available', 'booked', 'maintenance'])->default('available'); // Trạng thái phòng
+            $table->timestamps(); // created_at và updated_at
+            $table->softDeletes(); // deleted_at (xóa mềm)
         });
     }
 

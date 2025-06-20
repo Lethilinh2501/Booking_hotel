@@ -14,8 +14,9 @@ return new class extends Migration
         // Migration: create_room_type_images_table.php
         Schema::create('room_type_images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('room_type_id');
-            $table->string('image_path');
+            $table->foreignId('room_type_id')->constrained('room_types')->onDelete('cascade'); // Liên kết với room_types
+            $table->string('image'); // Lưu đường dẫn ảnh
+            $table->boolean('is_main')->default(false); // Đánh dấu ảnh chính
             $table->timestamps();
             $table->softDeletes();
         });

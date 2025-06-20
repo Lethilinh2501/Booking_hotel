@@ -1,64 +1,16 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
 
-@push('style')
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .sidebar {
-            background-color: #2c3e50;
-            color: white;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: #ecf0f1;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #2980b9;
-            color: white;
-        }
-
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer {
-            background-color: #3498db;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-        }
-
-        img.banner-thumbnail {
-            max-width: 120px;
-            height: auto;
-            border-radius: 4px;
-        }
-    </style>
-@endpush
 
 @section('content')
-    <main class="container-fluid flex-grow-1 text-center">
-        <div class="container mt-4">
+    <main class="lh-main-content">
+        <div class="container-fluid">
             @if (session('message'))
                 <div class="alert alert-success" role="alert">
                     {{ session('message') }}
                 </div>
             @endif
 
-            <h2 class="mb-4">Danh Sách Banner</h2>
+            <h3 class="mb-4">Danh Sách Banner</h2>
             <a href="{{ route('admin.banners.addBanner') }}" class="btn btn-primary mb-4">Thêm mới</a>
 
             <div class="card p-4">
@@ -80,7 +32,7 @@
                                 <td>{{ $banner->title }}</td>
                                 <td>
                                     @if ($banner->image)
-                                        <img src="{{ Storage::url($banner->image) }}" class="banner-thumbnail">
+                                        <img src="{{ Storage::url($banner->image) }}" class="banner-thumbnail" width="100">
                                     @else
                                         <em>Không có ảnh</em>
                                     @endif

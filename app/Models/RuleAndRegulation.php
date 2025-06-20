@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RuleAndRegulation extends Model
+class RulesAndRegulation extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+    protected $fillable = [
+        'name',
+        'is_active',
+    ];
 
-    protected $fillable = ['title', 'content', 'is_active'];
+    public function roomTypes()
+    {
+        return $this->belongsToMany(RoomType::class, 'room_type_rars', 'rules_and_regulation_id', 'room_type_id');
+    }
 }

@@ -1,8 +1,11 @@
-@extends('admin.layout.default')
+@extends('layout.admin')
+
+
 
 @section('content')
-<div class="container-fluid">
-    <div class="row mb-4">
+
+    <main class="lh-main-content">
+        <div class="container-fluid">
         <div class="col-md-8">
             <h1 class="h3 mb-0">Danh sách liên hệ</h1>
         </div>
@@ -50,9 +53,9 @@
                             <td>{{ Str::limit($contact->title, 30) }}</td>
                             <td>{{ $contact->email }}</td>
                             <td>
-                                <span class="badge badge-{{ 
-                                    $contact->status == 'approved' ? 'success' : 
-                                    ($contact->status == 'rejected' ? 'danger' : 'warning') 
+                                <span class="badge badge-{{
+                                    $contact->status == 'approved' ? 'success' :
+                                    ($contact->status == 'rejected' ? 'danger' : 'warning')
                                 }}">
                                     {{ ucfirst($contact->status) }}
                                 </span>
@@ -60,14 +63,14 @@
                             <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('admin.contacts.show', $contact->id) }}" 
+                                    <a href="{{ route('admin.contacts.show', $contact->id) }}"
                                        class="btn btn-sm btn-info" title="Xem chi tiết">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button type="submit" 
-                                                class="btn btn-sm btn-danger" 
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger"
                                                 title="Xóa"
                                                 onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
                                             <i class="fas fa-trash"></i>
