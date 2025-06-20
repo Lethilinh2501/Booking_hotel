@@ -27,9 +27,10 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link " href="">
-                                Câu hỏi thường gặp
+                            <a class="nav-link " href="{{ route('contacts.create') }}">
+                                Liên lạc
                             </a>
+
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link " href="">
@@ -46,5 +47,4 @@
             </nav>
         </div>
     </div>
-
-</header>
+    
