@@ -4,7 +4,9 @@ use App\Livewire\Forms\RegisterForm;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
+
 new #[Layout('layouts.guest')] class extends Component {
+
     public RegisterForm $form;
 
     public function register(): void
@@ -13,7 +15,6 @@ new #[Layout('layouts.guest')] class extends Component {
         $this->form->create();
         $this->redirect(route('dashboard'), navigate: true);
     }
-};
 ?>
 
 <div class="form-body without-side">
@@ -30,10 +31,12 @@ new #[Layout('layouts.guest')] class extends Component {
                     {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
                             </div>
                         </a>
                     </div> --}}
+
                     <h3 class="font-md">Tạo tài khoản mới</h3>
                     <p>Truy cập vào công cụ mạnh mẽ nhất trong thiết kế và phát triển web.</p>
 

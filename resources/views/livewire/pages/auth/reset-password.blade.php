@@ -6,6 +6,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component {
+
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -39,7 +40,6 @@ new #[Layout('layouts.guest')] class extends Component {
             $this->addError('email', __($status));
         }
     }
-};
 ?>
 
 <div class="form-body without-side">
@@ -53,40 +53,39 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                    {{-- <div class="website-logo-inside less-margin">
+                    <<<<<<< HEAD {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
                             </div>
                         </a>
-                    </div> --}}
+                    </div> --}} <h3 class="font-md">Đặt lại mật khẩu</h3>
+                        <p>Vui lòng nhập mật khẩu mới của bạn bên dưới.</p>
 
-                    <h3 class="font-md">Đặt lại mật khẩu</h3>
-                    <p>Vui lòng nhập mật khẩu mới của bạn bên dưới.</p>
+                        <form wire:submit.prevent="resetPassword">
+                            <input class="form-control" type="email" placeholder="Email" wire:model="email" required>
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
 
-                    <form wire:submit.prevent="resetPassword">
-                        <input class="form-control" type="email" placeholder="Email" wire:model="email" required>
-                        @error('email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                            <input class="form-control" type="password" placeholder="Mật khẩu mới" wire:model="password"
+                                required>
+                            @error('password')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
 
-                        <input class="form-control" type="password" placeholder="Mật khẩu mới" wire:model="password"
-                            required>
-                        @error('password')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                            <input class="form-control" type="password" placeholder="Xác nhận mật khẩu"
+                                wire:model="password_confirmation" required>
 
-                        <input class="form-control" type="password" placeholder="Xác nhận mật khẩu"
-                            wire:model="password_confirmation" required>
+                            <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Đặt lại</button>
+                            </div>
+                        </form>
 
-                        <div class="form-button">
-                            <button id="submit" type="submit" class="ibtn">Đặt lại</button>
+                        <div class="page-links">
+                            <a href="{{ route('login') }}">Quay lại đăng nhập</a>
                         </div>
-                    </form>
-
-                    <div class="page-links">
-                        <a href="{{ route('login') }}">Quay lại đăng nhập</a>
-                    </div>
                 </div>
             </div>
         </div>

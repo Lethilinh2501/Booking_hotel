@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\RoomType;
+use App\Models\Service;
+use App\Models\System;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -16,6 +18,9 @@ class HomeController extends Controller
     }
     public function indexRoom(Request $request)
     {
+
+        $services = Service::where('is_active', 1)->get();
+
         Carbon::setLocale('vi');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
@@ -65,6 +70,7 @@ class HomeController extends Controller
             'bed_type',
             'children_free_limit'
         ])
+
             ->where('max_capacity', '>=', $totalPeople)
             ->where('is_active', 1)
             ->get();
@@ -75,6 +81,6 @@ class HomeController extends Controller
             return $roomType;
         });
 
-        return view('client.rooms.index', compact('roomTypes', 'nights', 'totalGuests', 'childrenCount', 'roomCount'));
+        return view('client.home', compact('roomTypes', 'nights', 'totalGuests', 'childrenCount', 'roomCount', 'services'));
     }
 }

@@ -18,7 +18,6 @@ new #[Layout('layouts.guest')] class extends Component {
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
-};
 ?>
 
 <div class="form-body without-side">
@@ -35,10 +34,12 @@ new #[Layout('layouts.guest')] class extends Component {
                     {{-- <div class="website-logo-inside logo-normal">
                         <a href="/">
                             <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
                             </div>
                         </a>
                     </div> --}}
+
                     <h3 class="font-md">Đăng nhập tài khoản</h3>
                     <p>Truy cập vào công cụ mạnh mẽ nhất trong lĩnh vực thiết kế và phát triển web.</p>
 

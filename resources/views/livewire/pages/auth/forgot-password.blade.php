@@ -31,34 +31,35 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-                    {{-- <div class="website-logo-inside less-margin">
+                    <<<<<<< HEAD {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
                             </div>
                         </a>
-                    </div> --}}
-
-                    @if (session('status'))
+                    </div> --}} @if (session('status'))
                         <div class="alert alert-success mt-3 mb-3 text-center">
                             {{ session('status') }}
                         </div>
-                    @endif
+                        @endif
 
-                    <h3 class="font-md">Đặt lại mật khẩu</h3>
-                    <p>Nhập địa chỉ email bạn đã đăng ký để nhận liên kết đặt lại mật khẩu.</p>
+                        <h3 class="font-md">Đặt lại mật khẩu</h3>
+                        <p>Nhập địa chỉ email bạn đã đăng ký để nhận liên kết đặt lại mật khẩu.</p>
 
-                    <form wire:submit.prevent="sendResetLink">
-                        <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="email"
-                            required>
-                        @error('email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <form wire:submit.prevent="sendResetLink">
 
-                        <div class="form-button full-width">
-                            <button id="submit" type="submit" class="ibtn btn-forget">Gửi liên kết đặt lại</button>
-                        </div>
-                    </form>
+                            <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="email"
+                                required>
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+
+                            <div class="form-button full-width">
+                                <button id="submit" type="submit" class="ibtn btn-forget">Gửi liên kết đặt
+                                    lại</button>
+                            </div>
+                        </form>
                 </div>
             </div>
         </div>

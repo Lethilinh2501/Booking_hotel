@@ -16,7 +16,6 @@ new #[Layout('layouts.guest')] class extends Component {
 
         $this->redirectIntended(route('dashboard'), navigate: true);
     }
-};
 ?>
 
 <div class="form-body without-side">
@@ -33,7 +32,8 @@ new #[Layout('layouts.guest')] class extends Component {
                     {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
                             </div>
                         </a>
                     </div> --}}

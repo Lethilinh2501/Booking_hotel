@@ -23,13 +23,16 @@ Auth::routes();
 require __DIR__ . '/auth.php';
 
 // Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
-
-// Public routes
 // Route::view('/', 'layout.client');
-Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
 // Authenticated routes
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
+// Public routes
+
+
 Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
 
