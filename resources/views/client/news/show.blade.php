@@ -1,18 +1,28 @@
 @extends('layout.client')
 
 @section('content')
-<div class="container py-4">
-    <h1 class="mb-3">{{ $post->title }}</h1>
-    <p class="text-muted">Đăng ngày: {{ $post->published_at->format('d/m/Y') }}</p>
+<div class="container py-5">
+    <h2 class="h2 text-dark mb-3">Chi tiết tin tức</h2>
 
-    @if ($post->image)
-        <img src="{{ asset('storage/' . $post->image) }}" class="img-fluid mb-4" alt="{{ $post->title }}">
-    @endif
-
-    <div>
-        {!! nl2br(e($post->content)) !!}
+    <div class="mb-4">
+        <h2 class="h5 text-dark mb-2">{{ $post->title }}</h2>
+        <p class="text-muted mb-1">Đăng ngày: {{ $post->published_at->format('d/m/Y') }}</p>
+        <p class="text-muted">Tác giả: {{ $post->author->name ?? 'Không rõ' }} | 
+            Danh mục: {{ $post->category->name ?? 'Không có' }}
+        </p>
     </div>
 
-    <a href="{{ route('client.news.list') }}" class="btn btn-secondary mt-3">← Quay lại danh sách</a>
+
+
+    <div class="mb-4">
+        <h2 class="h5 text-dark mb-3">Nội dung</h2>
+        <div class="bg-light p-3 rounded">
+            {!! nl2br(e($post->content)) !!}
+        </div>
+    </div>
+
+    <a href="{{ route('client.news.list') }}" class="btn btn-outline-secondary">
+        ← Quay lại danh sách
+    </a>
 </div>
 @endsection

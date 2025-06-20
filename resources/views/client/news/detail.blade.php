@@ -5,9 +5,11 @@
 @section('content')
     <h1>{{ $post->title }}</h1>
 
-    @if ($post->image)
-        <img src="{{ asset('storage/uploads/' . $post->image) }}" alt="{{ $post->title }}" width="400">
-    @endif
+    <p class="text-muted">
+        <strong>Đăng ngày:</strong> {{ $post->published_at->format('d/m/Y') }} |
+        <strong>Tác giả:</strong> {{ $post->author->name ?? 'Không rõ' }} |
+        <strong>Danh mục:</strong> {{ $post->category->name ?? 'Không có' }}
+    </p>
 
     <p><strong>Trích đoạn:</strong> {{ $post->excerpt }}</p>
 

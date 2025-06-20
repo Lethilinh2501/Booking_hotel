@@ -124,6 +124,8 @@ public function indexClient()
 {
     $posts = Post::with('category')
         ->where('status', 'published')
+        ->whereNotNull('published_at') 
+        ->where('published_at', '<=', now()) 
         ->orderByDesc('published_at')
         ->paginate(6);
 
@@ -146,7 +148,11 @@ public function byCategory($id)
 // Chi tiết bài viết
 public function showClient($id)
 {
-    $post = Post::with('category')->where('status', 'published')->findOrFail($id);
+    $post = Post::with('category')
+        ->where('status', 'published')
+        ->whereNotNull('published_at')
+        ->where('published_at', '<=', now())
+        ->findOrFail($id);
 
     return view('client.news.show', compact('post'));
 }
