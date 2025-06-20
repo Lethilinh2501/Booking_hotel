@@ -59,8 +59,4 @@
         </div>
     </div>
     @include('client.layouts.menu')
-
-
-
-
 </header>

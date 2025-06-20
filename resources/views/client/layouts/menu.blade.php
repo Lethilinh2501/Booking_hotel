@@ -1,4 +1,3 @@
-{{-- @include('client.layouts.menu') --}}
 
     <div class="lh-header">
 

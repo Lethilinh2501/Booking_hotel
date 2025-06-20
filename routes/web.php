@@ -15,15 +15,13 @@ use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Receptionist\GuestController;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
+
 
 
 
 Auth::routes();
 require __DIR__ . '/auth.php';
 
-// Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
-// Route::view('/', 'layout.client');
 Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 Route::get('/contacts/create', function () {
     return view('client.contact');
