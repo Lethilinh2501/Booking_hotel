@@ -1,44 +1,56 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
-
-                <div class="card-body">
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <div class="website-logo-inside logo-normal">
+                        <a href="{{ url('/') }}">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                            </div>
+                        </a>
+                    </div>
+                    <h3 class="font-md">Gửi liên kết đặt lại mật khẩu</h3>
+                    <p>Nhập địa chỉ email của bạn để nhận liên kết đặt lại mật khẩu.</p>
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
-
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Địa chỉ Email" required autocomplete="email" autofocus>
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @endif
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
+                        <div class="form-button d-flex align-items-center">
+                            <div class="submit-container mr-auto text-start">
+                                <button id="submit" type="submit" class="ibtn">Gửi liên kết</button>
                             </div>
                         </div>
                     </form>
+                    <div class="other-links social-with-title">
+                        <div class="text">Hoặc gửi bằng</div>
+                        <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-google"></i> Google</a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i> Linkedin</a>
+                    </div>
+                    <div class="page-links">
+                        <a href="{{ route('login') }}">Đăng nhập tài khoản</a>
+                    </div>
                 </div>
             </div>
         </div>
