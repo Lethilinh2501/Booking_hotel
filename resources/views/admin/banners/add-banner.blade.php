@@ -1,7 +1,5 @@
 @extends('layout.admin')
 
-
-
 @section('content')
 
     <main class="lh-main-content">

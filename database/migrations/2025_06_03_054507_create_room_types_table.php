@@ -6,12 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+   /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // Migration: create_room_types_table.php
         Schema::create('room_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -19,11 +18,11 @@ return new class extends Migration
             $table->decimal('price', 15, 2);
             $table->integer('capacity');
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes(); 
         });
     }
 
-    /**
+   /**
      * Reverse the migrations.
      */
     public function down(): void
