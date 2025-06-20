@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -13,18 +12,21 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
+
+
 
 Auth::routes();
 require __DIR__ . '/auth.php';
 
-// Public routes
-Route::view('/', 'layout.client');
-
+// Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
 // Route::view('/', 'layout.client');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
-// Authenticated routes
+// Public routes
+
 Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
 

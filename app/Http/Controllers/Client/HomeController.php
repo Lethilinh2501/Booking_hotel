@@ -13,7 +13,9 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+
         $services = Service::where('is_active', 1)->get();
+
         Carbon::setLocale('vi');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
@@ -63,6 +65,7 @@ class HomeController extends Controller
             'bed_type',
             'children_free_limit'
         ])
+
             ->where('max_capacity', '>=', $totalPeople)
             ->where('is_active', 1)
             ->get();

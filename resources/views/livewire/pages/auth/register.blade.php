@@ -4,7 +4,12 @@ use App\Livewire\Forms\RegisterForm;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
+<<<<<<< HEAD
 new #[Layout('layouts.guest')] class extends Component {
+=======
+new #[Layout('layouts.guest')] class extends Component
+{
+>>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
     public RegisterForm $form;
 
     public function register(): void
@@ -27,6 +32,7 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
+<<<<<<< HEAD
                     {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
@@ -35,10 +41,20 @@ new #[Layout('layouts.guest')] class extends Component {
                             </div>
                         </a>
                     </div> --}}
+=======
+                    <div class="website-logo-inside less-margin">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
+                            </div>
+                        </a>
+                    </div>
+>>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
                     <h3 class="font-md">Tạo tài khoản mới</h3>
                     <p>Truy cập vào công cụ mạnh mẽ nhất trong thiết kế và phát triển web.</p>
 
                     <form wire:submit.prevent="register">
+<<<<<<< HEAD
                         <input class="form-control" type="text" placeholder="Họ và tên" wire:model="form.name"
                             required>
                         @error('form.name')
@@ -62,6 +78,19 @@ new #[Layout('layouts.guest')] class extends Component {
                         @error('form.password_confirmation')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+=======
+                        <input class="form-control" type="text" placeholder="Họ và tên" wire:model="form.name" required>
+                        @error('form.name') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="form.email" required>
+                        @error('form.email') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="password" placeholder="Mật khẩu" wire:model="form.password" required>
+                        @error('form.password') <span class="text-danger">{{ $message }}</span> @enderror
+
+                        <input class="form-control" type="password" placeholder="Nhập lại mật khẩu" wire:model="form.password_confirmation" required>
+                        @error('form.password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
+>>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
 
                         <div class="form-button">
                             <button id="submit" type="submit" class="ibtn">Đăng ký</button>
