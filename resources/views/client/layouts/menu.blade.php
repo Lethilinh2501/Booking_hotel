@@ -6,7 +6,7 @@
 
 
                 <a class="navbar-brand" href="#">
-                    <img src="{{ asset('themes/client/assets/img/logo/lumora01.png') }}" alt="logo" class="lh-logo">
+                    {{-- <img src="{{ asset('themes/client/assets/img/logo/lumora01.png') }}" alt="logo" class="lh-logo"> --}}
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">

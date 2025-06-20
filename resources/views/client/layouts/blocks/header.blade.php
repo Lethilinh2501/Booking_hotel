@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-@include('client.layouts.menu')
+    @include('client.layouts.menu')
 
 
     <div class="lh-header">
