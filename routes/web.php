@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\RoomTypeClientController;
@@ -109,6 +110,17 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/trash/restore/{id}', [RoomController::class, 'restore'])->name('restore');
         Route::delete('/trash/delete/{id}', [RoomController::class, 'forceDelete'])->name('forceDelete');
         Route::post('/{id}/status', [RoomController::class, 'updateStatus'])->name('updateStatus');
+    });
+
+    // service routes
+    Route::prefix('services')->as('services.')->group(function () {
+        Route::get('/', [ServiceController::class, 'index'])->name('index');
+        Route::get('/create', [ServiceController::class, 'create'])->name('create');
+        Route::post('/store', [ServiceController::class, 'store'])->name('store');
+        Route::get('/{id}', [ServiceController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ServiceController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ServiceController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ServiceController::class, 'destroy'])->name('destroy');
     });
 
     // payment

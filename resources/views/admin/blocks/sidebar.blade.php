@@ -97,6 +97,12 @@
                     </a>
                 </li>
                 <li class="lh-sb-item">
+                    <a href="{{ route('admin.services.index') }}" class="lh-page-link">
+                        <i class="ri-home-8-line"></i><span class="condense"><span class="hover-title">Quản lý dịch vụ
+                                phòng</span> </span>
+                    </a>
+                </li>
+                <li class="lh-sb-item">
                     <a href="bookings.html" class="lh-page-link">
                         <i class="ri-contacts-book-line"></i><span class="condense"><span class="hover-title">Đặt
                                 phòng</span> </span>
