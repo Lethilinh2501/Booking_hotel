@@ -25,6 +25,10 @@ require __DIR__ . '/auth.php';
 // Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
 // Route::view('/', 'layout.client');
 Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
+Route::get('/contacts/create', function () {
+    return view('client.contact');
+})->name('contacts.create');
+ Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
 // Authenticated routes
