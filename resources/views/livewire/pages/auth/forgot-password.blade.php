@@ -4,58 +4,64 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public string $email = '';
 
-    /**
-     * Send a password reset link to the provided email address.
-     */
-    public function sendPasswordResetLink(): void
+    public function sendResetLink(): void
     {
         $this->validate([
-            'email' => ['required', 'string', 'email'],
+            'email' => 'required|email|exists:users,email',
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $this->only('email')
-        );
+        Password::sendResetLink(['email' => $this->email]);
 
-        if ($status != Password::RESET_LINK_SENT) {
-            $this->addError('email', __($status));
-
-            return;
-        }
-
-        $this->reset('email');
-
-        session()->flash('status', __($status));
+        session()->flash('status', 'Chúng tôi đã gửi link đặt lại mật khẩu vào email của bạn!');
     }
-}; ?>
+};
+?>
 
-<div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    {{-- <div class="website-logo-inside less-margin">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
+                            </div>
+                        </a>
+                    </div> --}}
+
+                    @if (session('status'))
+                        <div class="alert alert-success mt-3 mb-3 text-center">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <h3 class="font-md">Đặt lại mật khẩu</h3>
+                    <p>Nhập địa chỉ email bạn đã đăng ký để nhận liên kết đặt lại mật khẩu.</p>
+
+                    <form wire:submit.prevent="sendResetLink">
+                        <input class="form-control" type="email" placeholder="Địa chỉ Email" wire:model="email"
+                            required>
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+
+                        <div class="form-button full-width">
+                            <button id="submit" type="submit" class="ibtn btn-forget">Gửi liên kết đặt lại</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form wire:submit="sendPasswordResetLink">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
 </div>

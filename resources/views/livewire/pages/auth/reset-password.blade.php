@@ -1,105 +1,95 @@
 <?php
 
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Locked;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
-    #[Locked]
-    public string $token = '';
+new #[Layout('layouts.guest')] class extends Component {
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $token;
 
-    /**
-     * Mount the component.
-     */
     public function mount(string $token): void
     {
         $this->token = $token;
-
-        $this->email = request()->string('email');
+        $this->email = request()->email;
     }
 
-    /**
-     * Reset the password for the given user.
-     */
     public function resetPassword(): void
     {
         $this->validate([
-            'token' => ['required'],
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $this->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) {
-                $user->forceFill([
-                    'password' => Hash::make($this->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+        $status = Password::reset($this->only('email', 'password', 'password_confirmation') + ['token' => $this->token], function ($user, $password) {
+            $user
+                ->forceFill([
+                    'password' => Hash::make($password),
+                ])
+                ->save();
+        });
 
-                event(new PasswordReset($user));
-            }
-        );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status != Password::PASSWORD_RESET) {
+        if ($status == Password::PASSWORD_RESET) {
+            session()->flash('status', 'Đặt lại mật khẩu thành công. Bạn có thể đăng nhập!');
+            $this->redirect(route('login'), navigate: true);
+        } else {
             $this->addError('email', __($status));
-
-            return;
         }
-
-        Session::flash('status', __($status));
-
-        $this->redirectRoute('login', navigate: true);
     }
-}; ?>
+};
+?>
 
-<div>
-    <form wire:submit="resetPassword">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<div class="form-body without-side">
+    <div class="iofrm-layout">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="{{ asset('themes/Auth/images/graphic9.svg') }}" alt="">
+            </div>
         </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    {{-- <div class="website-logo-inside less-margin">
+                        <a href="/">
+                            <div class="logo">
+                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}"
+                                    alt="">
+                            </div>
+                        </a>
+                    </div> --}}
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <h3 class="font-md">Đặt lại mật khẩu</h3>
+                    <p>Vui lòng nhập mật khẩu mới của bạn bên dưới.</p>
+
+                    <form wire:submit.prevent="resetPassword">
+                        <input class="form-control" type="email" placeholder="Email" wire:model="email" required>
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+
+                        <input class="form-control" type="password" placeholder="Mật khẩu mới" wire:model="password"
+                            required>
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+
+                        <input class="form-control" type="password" placeholder="Xác nhận mật khẩu"
+                            wire:model="password_confirmation" required>
+
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn">Đặt lại</button>
+                        </div>
+                    </form>
+
+                    <div class="page-links">
+                        <a href="{{ route('login') }}">Quay lại đăng nhập</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                          type="password"
-                          name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 </div>

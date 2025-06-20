@@ -44,11 +44,11 @@
     </div>
 
     <!-- Header -->
-    @include('client.layouts.header')
+    @include('client.layouts.blocks.header')
 
     <!-- Mobile-menu -->
-    {{-- @include('clients.layout.menu') --}}
-{{--     @include('clients.layout.blocks.slider')--}}
+    @include('client.layouts.menu')
+    {{-- @include('client.layouts.blocks.slider') --}}
     <!-- Hero -->
 
 
@@ -59,7 +59,7 @@
 
 
     {{-- @include('clients.layout.blocks.footer') --}}
-
+  @include('client.layouts.blocks.footer')
 
 
     <!-- Plugins JS -->

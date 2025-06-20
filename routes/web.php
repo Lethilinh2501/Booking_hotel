@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +19,10 @@ require __DIR__ . '/auth.php';
 
 // Public routes
 Route::view('/', 'layout.client');
+
+// Route::view('/', 'layout.client');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
