@@ -193,3 +193,25 @@ Route::group([
         Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
     });
 });
+
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    });
+});
