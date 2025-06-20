@@ -11,7 +11,12 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+
+    public function index()
+    {
+        return view('client.home');
+    }
+    public function indexRoom(Request $request)
     {
 
         $services = Service::where('is_active', 1)->get();

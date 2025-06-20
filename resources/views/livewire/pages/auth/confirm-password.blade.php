@@ -16,10 +16,6 @@ new #[Layout('layouts.guest')] class extends Component {
 
         $this->redirectIntended(route('dashboard'), navigate: true);
     }
-<<<<<<< HEAD
-=======
-};
->>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
 ?>
 
 <div class="form-body without-side">
@@ -33,7 +29,6 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="form-holder">
             <div class="form-content">
                 <div class="form-items">
-<<<<<<< HEAD
                     {{-- <div class="website-logo-inside less-margin">
                         <a href="/">
                             <div class="logo">
@@ -42,31 +37,16 @@ new #[Layout('layouts.guest')] class extends Component {
                             </div>
                         </a>
                     </div> --}}
-=======
-                    <div class="website-logo-inside less-margin">
-                        <a href="/">
-                            <div class="logo">
-                                <img class="logo-size" src="{{ asset('themes/Auth/images/logo-black.svg') }}" alt="">
-                            </div>
-                        </a>
-                    </div>
->>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
 
                     <h3 class="font-md">Xác nhận mật khẩu</h3>
                     <p>Vui lòng xác nhận lại mật khẩu trước khi tiếp tục.</p>
 
                     <form wire:submit.prevent="confirm">
-<<<<<<< HEAD
                         <input class="form-control" type="password" placeholder="Mật khẩu" wire:model="password"
                             required>
                         @error('password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
-=======
-                        <input class="form-control" type="password" placeholder="Mật khẩu"
-                               wire:model="password" required>
-                        @error('password') <span class="text-danger">{{ $message }}</span> @enderror
->>>>>>> a5ad75925c9bf2d715734ddfa0dd7544a6deca42
 
                         <div class="form-button">
                             <button id="submit" type="submit" class="ibtn">Xác nhận</button>

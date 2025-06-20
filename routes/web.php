@@ -7,11 +7,13 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Receptionist\GuestController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -22,10 +24,14 @@ require __DIR__ . '/auth.php';
 
 // Volt::route('/login', 'auth.login')->middleware('guest')->name('login');
 // Route::view('/', 'layout.client');
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
+// Authenticated routes
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
 // Public routes
+
 
 Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
@@ -110,6 +116,105 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/{id}/status', [RoomController::class, 'updateStatus'])->name('updateStatus');
     });
 
+    // service routes
+    Route::prefix('services')->as('services.')->group(function () {
+        Route::get('/', [ServiceController::class, 'index'])->name('index');
+        Route::get('/create', [ServiceController::class, 'create'])->name('create');
+        Route::post('/store', [ServiceController::class, 'store'])->name('store');
+        Route::get('/{id}', [ServiceController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ServiceController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ServiceController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ServiceController::class, 'destroy'])->name('destroy');
+    });
+
     // payment
     Route::resource('payment', PaymentController::class);
+});
+
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    });
+});
+
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    });
+});
+
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    });
+});
+
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    });
 });

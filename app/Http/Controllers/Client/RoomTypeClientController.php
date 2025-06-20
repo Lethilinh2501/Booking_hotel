@@ -12,6 +12,4 @@ class RoomTypeClientController extends Controller
         $roomTypes = RoomType::where('is_active', 1)->get();
         return view('client.rooms.roomtype', compact('roomTypes'));
     }
-
-
 }
