@@ -1,56 +1,74 @@
-@extends('admin.layout')
+@extends('layout.admin')
 
 @section('content')
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Danh sách Tiện Nghi</h2>
-        <a href="{{ route('admin.amenities.create') }}" class="btn btn-primary">➕ Thêm tiện nghi</a>
-    </div>
+    <main class="lh-main-content">
+        <div class="container-fluid">
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+            <h2 class="mb-4">Danh Sách Đặt Phòng</h2>
 
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Tên tiện nghi</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($amenities as $amenity)
-                <tr>
-                    <td>{{ $amenity->id }}</td>
-                    <td>{{ $amenity->name }}</td>
-                    <td>
-                        @if($amenity->is_active)
-                            <span class="badge bg-success">Hiển thị</span>
-                        @else
-                            <span class="badge bg-secondary">Ẩn</span>
-                        @endif
-                    </td>
-                    <td>
-                        <a href="{{ route('admin.amenities.edit', $amenity->id) }}" class="btn btn-warning btn-sm">✏️ Sửa</a>
-                        <form action="{{ route('admin.amenities.destroy', $amenity->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Xác nhận xoá tiện nghi này?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Xoá</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="text-center">Chưa có tiện nghi nào!</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            <div class="card p-4">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã Đặt Phòng</th>
+                            <th>Người Đặt</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Tổng Tiền</th>
+                            <th>Số Khách</th>
+                            <th>Số Phòng</th>
+                            <th>Trạng Thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($bookings as $key => $booking)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $booking->booking_code }}</td>
+                                <td>{{ $booking->user ? $booking->user->name : 'Chưa có' }}</td>
+                                <td>{{ $booking->check_in }}</td>
+                                <td>{{ $booking->check_out }}</td>
+                                <td>{{ number_format($booking->total_price, 0, ',', '.') }} VND</td>
+                                <td>{{ $booking->total_guests }}</td>
+                                <td>{{ $booking->room_quantity }}</td>
+                                <td>
+                                    @php
+                                        $badgeClass = match ($booking->status) {
+                                            'pending' => 'bg-warning',
+                                            'confirmed' => 'bg-info',
+                                            'canceled' => 'bg-danger',
+                                            'completed' => 'bg-success',
+                                            default => 'bg-secondary',
+                                        };
+                                    @endphp
+                                    <span class="badge {{ $badgeClass }}">{{ ucfirst($booking->status) }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.bookings.show', $booking->id) }}"
+                                        class="btn btn-info btn-sm">Chi tiết</a>
+                                    <a href="{{ route('admin.bookings.edit', $booking->id) }}"
+                                        class="btn btn-warning btn-sm">Sửa</a>
+                                    <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST"
+                                        style="display:inline;"
+                                        onsubmit="return confirm('Bạn chắc chắn muốn xóa booking này?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-    <div class="d-flex justify-content-center">
-        {{ $amenities->links() }}
-    </div>
-</div>
-@endsection
+                {{ $bookings->links('pagination::bootstrap-5') }}
+            </div>
+        </div>
+    </main>

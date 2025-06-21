@@ -4,31 +4,32 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    // Hiển thị danh sách booking
     public function index()
     {
-        $bookings = Booking::orderBy('id', 'desc')->paginate(10);
+        $bookings = Booking::with('user')->orderBy('id', 'desc')->paginate(10);
         return view('admin.bookings.index', compact('bookings'));
     }
 
-    // Hiển thị form tạo booking mới
     public function create()
     {
-        return view('admin.bookings.create');
+        $users = User::all();
+        $rooms = Room::all();
+        return view('admin.bookings.create', compact('users', 'rooms'));
     }
 
-    // Xử lý lưu booking mới
     public function store(Request $request)
     {
         $request->validate([
-            'customer_name' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
             'room_id' => 'required|exists:rooms,id',
-            'check_in_date' => 'required|date',
-            'check_out_date' => 'required|date|after:check_in_date',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
         ]);
 
         Booking::create($request->all());
@@ -36,23 +37,30 @@ class BookingController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'Tạo đặt phòng thành công!');
     }
 
-    // Hiển thị form chỉnh sửa booking
+    public function show($id)
+{
+    $booking = Booking::with('user')->findOrFail($id);
+    return view('admin.bookings.detail', compact('booking'));
+}
+
+
     public function edit($id)
     {
         $booking = Booking::findOrFail($id);
-        return view('admin.bookings.edit', compact('booking'));
+        $users = User::all();
+        $rooms = Room::all();
+        return view('admin.bookings.edit', compact('booking', 'users', 'rooms'));
     }
 
-    // Xử lý cập nhật booking
     public function update(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
 
         $request->validate([
-            'customer_name' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
             'room_id' => 'required|exists:rooms,id',
-            'check_in_date' => 'required|date',
-            'check_out_date' => 'required|date|after:check_in_date',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
         ]);
 
         $booking->update($request->all());
@@ -60,7 +68,6 @@ class BookingController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'Cập nhật đặt phòng thành công!');
     }
 
-    // Xoá booking
     public function destroy($id)
     {
         $booking = Booking::findOrFail($id);
@@ -69,7 +76,6 @@ class BookingController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'Xoá đặt phòng thành công!');
     }
 
-    // Cập nhật trạng thái booking (ví dụ: pending, confirmed, canceled)
     public function updateStatus(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);

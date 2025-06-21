@@ -88,7 +88,8 @@
                                 <div class="col-xl-6 col-lg-12 p-0">
                                     <div class="room-img">
                                         <img src="assets/client/assets/img/room/room-{{ $roomType->id }}.jpg" alt="room-img" class="room-image">
-                                        <a href="#" class="link"><i class="ri-arrow-right-line"></i></a>
+
+                                        <a href="{{ route('client.rooms.roomdetail', ['id' => $roomType->id]) }}" class="link"><i class="ri-arrow-right-line"></i></a>
                                     </div>
                                 </div>
                             </div>
