@@ -1,42 +1,59 @@
 @extends('layout.admin')
 
 @section('content')
-<div class="container mt-4">
-    <h2 class="mb-3">Danh sách Tiện nghi (Amenities)</h2>
-    <a href="{{ route('admin.amenities.create') }}" class="btn btn-primary mb-3">+ Thêm tiện nghi</a>
+    <main class="lh-main-content">
+        <div class="container-fluid">
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Tên tiện nghi</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($amenities as $item)
-            <tr>
-                <td>{{ $item->id }}</td>
-                <td>{{ $item->name }}</td>
-                <td>
-                    @if($item->is_active)
-                        <span class="badge bg-success">Hiện</span>
-                    @else
-                        <span class="badge bg-secondary">Ẩn</span>
-                    @endif
-                </td>
-                <td>
-                    <a href="{{ route('admin.amenities.edit', $item->id) }}" class="btn btn-warning btn-sm">Sửa</a>
-                    <form action="{{ route('admin.amenities.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa tiện nghi này?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+            <h2 class="mb-4">Danh Sách Tiện Nghi</h2>
+            <a href="{{ route('admin.amenities.create') }}" class="btn btn-primary mb-4">+ Thêm Tiện Nghi</a>
+
+            <div class="card p-4">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên Tiện Nghi</th>
+                            <th>Trạng Thái</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($amenities as $key => $item)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>
+                                    @if($item->is_active)
+                                        <span class="badge bg-success">Hiện</span>
+                                    @else
+                                        <span class="badge bg-secondary">Ẩn</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.amenities.edit', $item->id) }}"
+                                        class="btn btn-warning btn-sm">Sửa</a>
+                                    <form action="{{ route('admin.amenities.destroy', $item->id) }}"
+                                        method="POST" style="display:inline;"
+                                        onsubmit="return confirm('Bạn chắc chắn muốn xóa tiện nghi này?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                {{-- Nếu amenities có phân trang --}}
+                {{-- {{ $amenities->links('pagination::bootstrap-5') }} --}}
+            </div>
+        </div>
+    </main>
 @endsection
+    
