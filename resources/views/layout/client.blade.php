@@ -3,13 +3,14 @@
     Author: ashishmaraviya
     Version: 2.2.0
     Copyright 2024
-	Author URI: https://themeforest.net/user/ashishmaraviya
+ Author URI: https://themeforest.net/user/ashishmaraviya
 -->
 <!DOCTYPE html>
 <html lang="en">
 
 
 <!-- Mirrored from maraviyainfotech.com/projects/luxurious-html-v22/luxurious-html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 04 Dec 2024 10:26:54 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -59,25 +60,28 @@
 
 
     {{-- @include('clients.layout.blocks.footer') --}}
-  @include('client.layouts.blocks.footer')
+    @include('client.layouts.blocks.footer')
+    
+    @stack('scripts')
 
 
     <!-- Plugins JS -->
-    <script src="{{ asset('themes/client/assets/js/vendor/jquery.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/swiper-bundle.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/magnific-popup.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/aos.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/semantic.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/slick.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/particles.min.js')}}"></script>
-    <script src="{{ asset('themes/client/assets/js/vendor/app.js')}}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/jquery.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/aos.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/semantic.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/slick.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/particles.min.js') }}"></script>
+    <script src="{{ asset('themes/client/assets/js/vendor/app.js') }}"></script>
 
     <!-- Main-js -->
-    <script src="{{ asset('themes/client/assets/js/main.js')}}"></script>
+    <script src="{{ asset('themes/client/assets/js/main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    
+
 </body>
 
 <!-- Mirrored from maraviyainfotech.com/projects/luxurious-html-v22/luxurious-html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 04 Dec 2024 10:27:00 GMT -->
+
 </html>
