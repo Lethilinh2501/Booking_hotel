@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReviewController;
@@ -28,10 +29,11 @@ require __DIR__ . '/auth.php';
 Route::prefix('client')->name('client.')->group(function () {
     Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 });
-
+// user
+ Route::get('/profileUse/{id}/edit', [UserController::class, 'edit'])->name('profileUse.edit');
+ Route::put('/profileUse/{id}', [UserController::class, 'update'])->name('profileUse.update');
 
 Route::get('/', [HomeController::class, 'indexRoom'])->name('client.home');
-
 
 // Public routes
 Route::view('/', 'layout.client');
