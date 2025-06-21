@@ -3,12 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\RoomType;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 
 class RoomTypeSeeder extends Seeder
 {
     public function run(): void
     {
+
         RoomType::create([
             'name' => 'Phòng Deluxe',
             'description' => 'Phòng rộng rãi, view biển, đầy đủ tiện nghi hiện đại.',
@@ -29,5 +33,8 @@ class RoomTypeSeeder extends Seeder
             'price' => 2000000,
             'capacity' => 4
         ]);
+
+        RoomType::factory()->count(6)->create();
+
     }
 }

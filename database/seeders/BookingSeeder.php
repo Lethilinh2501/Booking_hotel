@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -33,5 +35,8 @@ class BookingSeeder extends Seeder
                 'service_plus_total' => 300000,
             ]);
         }
+
+        Booking::factory()->count(15)->create();
+
     }
 }

@@ -40,8 +40,9 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
 
-
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
     <!-- Main CSS -->
 
     <link id="mainCss" href="{{ asset('themes/admin/assets/css/style.css') }}" rel="stylesheet">
@@ -195,8 +196,8 @@
         </div>
     </main>
 
-<!-- Thêm SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Thêm SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Vendor Custom -->
     <script src="{{ asset('themes/admin/assets/js/vendor/jquery-3.6.4.min.js') }}"></script>
@@ -225,10 +226,32 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <!-- Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
     @stack('script')
+
+    <!-- CKEditor Init -->
     <script>
-        CKEDITOR.replace('editor');
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('textarea[data-editor="true"]').forEach(function(el) {
+                ClassicEditor
+                    .create(el)
+                    .then(editor => {
+                        // Đồng bộ nội dung vào textarea trước khi submit form
+                        el.form.addEventListener('submit', function() {
+                            el.value = editor.getData();
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        });
     </script>
+
+
 
 </body>
 

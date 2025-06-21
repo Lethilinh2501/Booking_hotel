@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             BookingRoomSeeder::class,
             BookingGuestSeeder::class,
+            PromotionSeeder::class,
             BookingPromotionSeeder::class,
             PaymentSeeder::class,
             RefundSeeder::class,

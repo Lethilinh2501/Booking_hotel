@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Amenity;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Amenity;
 
@@ -18,5 +20,7 @@ class AmenitySeeder extends Seeder
             'name' => 'Hồ bơi ngoài trời',
             'is_active' => true,
         ]);
+
+        Amenity::factory()->count(10)->create();
     }
 }
