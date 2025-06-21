@@ -22,11 +22,11 @@
                 <div class="lh-right-tool lh-flag-drop language">
                     <div class="lh-hover-drop">
                         <div class="lh-hover-tool">
-                            <img class="flag" src="{{ asset('assets/admin/assets/img/flag/vn.png') }}" alt="flag">
+                            <img class="flag" src="{{ asset('themes/admin/assets/img/flag/vn.png') }}" alt="flag">
                         </div>
                         <div class="lh-hover-drop-panel right">
                             <ul>
-                                <li><a href="javascript:void(0)"><img class="flag" src="{{ asset('assets/admin/assets/img/flag/vn.png')}}"
+                                <li><a href="javascript:void(0)"><img class="flag" src="{{ asset('themes/admin/assets/img/flag/vn.png')}}"
                                     alt="flag">Việt nam</a></li>
                             </ul>
                         </div>

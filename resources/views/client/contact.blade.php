@@ -95,7 +95,10 @@
                                         class="lh-form-control" required="">
                                 </div>
                                 <div class="lh-contact-touch-inner-form-warp">
-                                    <textarea class="lh-form-control" id="contact_content" name="content" placeholder="Message*"></textarea>
+                                    <textarea class="lh-form-control" id="contact_content" name="content" 
+                                    placeholder="Message*" required 
+                                     oninvalid="this.setCustomValidity('Vui lòng nhập nội dung tin nhắn')"
+                                     oninput="this.setCustomValidity('')"></textarea>
                                 </div>
                                 <div class="lh-contact-touch-inner-form-button">
                                     <button class="lh-buttons result-placeholder" type="submit">
@@ -103,6 +106,12 @@
                                     </button>
                                 </div>
                             </form>
+                            @if(session('success'))
+                                <div id="success-alert" class="alert alert-success alert-dismissible fade show ">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -119,5 +128,13 @@
     </section>
     
 @endsection
-
+<script>
+    setTimeout(function () {
+        let alert = document.getElementById('success-alert');
+        if (alert) {
+            alert.classList.remove('show');
+            alert.classList.add('hide');
+        }
+    }, 5000);
+</script>
 
