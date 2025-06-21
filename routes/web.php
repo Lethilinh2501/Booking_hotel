@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,10 @@ Route::get('/contacts/create', function () {
 })->name('contacts.create');
  Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
+Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
+Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
+
 
 // Authenticated routes
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
