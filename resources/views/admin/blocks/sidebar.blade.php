@@ -2,10 +2,10 @@
     <div class="lh-sb-logo">
 
         <a href="{{ route('admin.dashboard') }}" class="sb-full">
-            <img src="{{ asset('assets/img/logo/full-logo.png') }}" alt="logo">
+            <img src="{{ asset('themes/admin/assets/img/logo/full-logo.png') }}" alt="logo">
         </a>
         <a href="{{ route('admin.dashboard') }}" class="sb-collapse">
-            <img src="{{ asset('assets/img/logo/collapse-logo.png') }}" alt="logo">
+            <img src="{{ asset('themes/admin/assets/img/logo/collapse-logo.png') }}" alt="logo">
         </a>
 
     </div>
@@ -69,9 +69,18 @@
                         <i class="ri-logout-box-line"></i> <span>Đăng xuất</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-                    
-        <a href="index.html" class="sb-full"><img src="assets/img/logo/full-logo.png" alt="logo"></a>
-        <a href="index.html" class="sb-collapse"><img src="assets/img/logo/collapse-logo.png" alt="logo"></a>
+                 
+            
+                <div class="lh-sb-logo">
+
+                    <a href="{{ route('admin.dashboard') }}" class="sb-full">
+                        <img src="{{ asset('themes/admin/assets/img/logo/full-logo.png') }}" alt="logo">
+                    </a>
+                    <a href="{{ route('admin.dashboard') }}" class="sb-collapse">
+                        <img src="{{ asset('themes/admin/assets/img/logo/collapse-logo.png') }}" alt="logo">
+                    </a>
+
+                </div>
     </div>
     <div class="lh-sb-wrapper">
         <div class="lh-sb-content">
