@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Controller;
-use App\Models\RoomType;
-use App\Models\Service;
-use App\Models\System;
 use Carbon\Carbon;
+use App\Models\Amenity;
+use App\Models\Service;
+use App\Models\RoomType;
 use Illuminate\Http\Request;
+use App\Models\RulesAndRegulation;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
 
-    public function index()
-    {
-        return view('client.home');
-    }
     public function indexRoom(Request $request)
     {
 
@@ -82,5 +79,14 @@ class HomeController extends Controller
         });
 
         return view('client.home', compact('roomTypes', 'nights', 'totalGuests', 'childrenCount', 'roomCount', 'services'));
+    }
+
+    public function roomdetail($id)
+    {
+        $roomType = RoomType::findOrFail($id);
+
+        $amenities = Amenity::where('is_active', 1)->get();
+        $rules = RulesAndRegulation::where('is_active', 1)->get();
+        return view('client.rooms.roomdetail', compact('roomType', 'amenities', 'rules'));
     }
 }

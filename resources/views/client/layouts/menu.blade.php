@@ -5,8 +5,8 @@
             <nav class="navbar navbar-expand-lg">
 
 
-                <a class="navbar-brand" href="#">
-                    <img src="{{ asset('themes/client/assets/img/logo/lumora01.png') }}" alt="logo" class="lh-logo">
+                <a class="navbar-brand" href="{{route('client.home')}}">
+                    <img src="{{ asset('themes/client/assets/img/logo/logo11.png') }}" alt="logo" class="lh-logo">
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -27,9 +27,14 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link " href="">
-                                Câu hỏi thường gặp
+                            <a class="nav-link " href="{{ route('contacts.create') }}">
+                                Liên lạc
                             </a>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link " href="{{ route('client.promotions.index') }}">
+                                Ưu đãi 
+                            </a>
+
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link " href="">
@@ -37,8 +42,8 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link " href="">
-                                Liên hệ với cúng tôi
+                            <a class="nav-link " href="{{ route('client.posts.index') }}">
+                                Tin tức
                             </a>
                         </li>
                     </ul>
@@ -46,5 +51,4 @@
             </nav>
         </div>
     </div>
-
-</header>
+    

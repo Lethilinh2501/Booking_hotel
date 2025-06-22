@@ -1394,10 +1394,10 @@ label {
   overflow: hidden;
 }
 .lh-sidebar .lh-sb-logo .sb-full img {
-  width: 150px;
+  width: 180px;
 }
 .lh-sidebar .lh-sb-logo .sb-collapse img {
-  width: 33px;
+  width: 40px;
 }
 .lh-sidebar .lh-sb-wrapper {
   -webkit-transition: all 0.3s ease-in-out;

@@ -28,14 +28,38 @@
                             @auth
                                 <a href="#" class="dropdown-toggle" role="button" id="dropdownMenuLink"
                                     data-bs-toggle="dropdown">
-                                    <i class="ri-user-2-fill"></i> Tài khoản
+                                    <i class="ri-user-2-fill"></i> Xin chào {{ auth()->user()->name }}!
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    {{-- <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="mdi mdi-account"></i> Hồ sơ</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('bookings.index') }}"><i class="ri-contacts-book-line"></i> Đơn đặt phòng</a></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('profileUse.edit', Auth::id()) }}">
+                                            <i class="mdi mdi-account"></i> Hồ sơ
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="ri-contacts-book-line"></i> Đơn đặt phòng
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="ri-reply-all-line"></i> Lịch sử hoàn tiền
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="ri-bank-card-2-line"></i> Lịch sử giao dịch
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                            <i class="ri-dashboard-3-line"></i> Truy cập quản trị
+                                        </a>
+                                    </li>
+                                    {{-- <li><a class="dropdown-item" href="{{ route('bookings.index') }}"><i class="ri-contacts-book-line"></i> Đơn đặt phòng</a></li>
                                     <li><a class="dropdown-item" href="{{ route('refunds.lists') }}"><i class="ri-reply-all-line"></i> Lịch sử hoàn tiền</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('payments.lists') }}"><i class="ri-bank-card-2-line"></i> Lịch sử giao dịch</a></li> --}}
-                                    {{-- @hasanyrole('superadmin|admin|staff')
+                                    <li><a class="dropdown-item" href="{{ route('payments.lists') }}"><i class="ri-bank-card-2-line"></i> Lịch sử giao dịch</a></li>
+                                    @hasanyrole('superadmin|admin|staff')
                                         <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="ri-dashboard-3-line"></i> Truy cập quản trị</a></li>
                                     @endhasanyrole --}}
                                     <li>
@@ -59,5 +83,4 @@
         </div>
     </div>
     @include('client.layouts.menu')
-
 </header>

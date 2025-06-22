@@ -31,8 +31,16 @@
                 <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
                     <i class="bi bi-folder"></i> {{ optional($post->category)->name ?? 'Không xác định' }}
                 </span>
+                @php
+                    $statusLabels = [
+                        'draft' => 'Bản nháp',
+                        'published' => 'Đã đăng',
+                        'archived' => 'Đã lưu trữ',
+                    ];
+                @endphp
+
                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
-                    <i class="bi bi-check-circle"></i> {{ strtoupper($post->status) }}
+                    <i class="bi bi-check-circle"></i> {{ $statusLabels[$post->status] ?? 'Không xác định' }}
                 </span>
                 @if ($post->is_featured)
                     <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">

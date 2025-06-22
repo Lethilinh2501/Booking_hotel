@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             RefundTransactionSeeder::class,
             ReviewSeeder::class,
             RestaurantSeeder::class,
-            RuleAndRegulationSeeder::class,
+            RulesAndRegulationSeeder::class,
             StaffRoleSeeder::class,
             StaffSeeder::class,
             StaffAttendanceSeeder::class,
