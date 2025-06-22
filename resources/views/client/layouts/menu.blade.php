@@ -5,7 +5,7 @@
             <nav class="navbar navbar-expand-lg">
 
 
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{{route('client.home')}}">
                     <img src="{{ asset('themes/client/assets/img/logo/logo11.png') }}" alt="logo" class="lh-logo">
                 </a>
 
