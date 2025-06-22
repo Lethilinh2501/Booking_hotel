@@ -7,7 +7,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
@@ -16,24 +15,29 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\Receptionist\GuestController;
-
 
 
 Auth::routes();
 require __DIR__ . '/auth.php';
+
+// Router client
+// Trang chủ
 Route::prefix('client')->name('client.')->group(function () {
     Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 });
+
 // user
  Route::get('/profileUse/{id}/edit', [UserController::class, 'edit'])->name('profileUse.edit');
  Route::put('/profileUse/{id}', [UserController::class, 'update'])->name('profileUse.update');
 
 Route::get('/', [HomeController::class, 'indexRoom'])->name('client.home');
+
 
 // Public routes
 Route::view('/', 'layout.client');
@@ -41,20 +45,17 @@ Route::get('/contacts/create', function () {
     return view('client.contact');
 })->name('contacts.create');
 Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
-Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('client.rooms.roomdetail');
 
+Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('client.rooms.roomdetail');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
+// router tin tức client
 Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
+Route::get('/tin-tuc/{id}', [PostClientController::class, 'show'])->name('client.posts.show');
 Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
 
 
-// Authenticated routes
-Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
-
 // Public routes
-
-
 Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
 
@@ -66,36 +67,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/review-form/{bookingID}', [ReviewController::class, 'reviewForm'])->name('review-form');
     Route::post('/submit-review/{bookingID}', [ReviewController::class, 'submitReview'])->name('submit-review');
 });
+
 // Trang chủ
 Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
-
-// // Route client riêng
-// Route::prefix('client')->as('client.')->group(function () {
-//     // Trang chính client
-//     Route::get('/', function () {
-//         return view('client.index');
-//     })->name('home');
-
-//     // Danh sách phòng
-//     Route::get('/rooms', [RoomTypeController::class, 'index'])->name('rooms.index');
-// });
-
-// // Public route
-// Route::get('/roomtypes', [RoomTypeController::class, 'index'])->name('roomtypes');
-
-// // Authenticated routes
-// Route::middleware('auth')->group(function () {
-//     Route::view('profile', 'profile')->name('profile');
-
-//     Route::middleware('verified')->group(function () {
-//         Route::view('dashboard', 'dashboard')->name('dashboard');
-//     });
-
-//     // Đánh giá phòng
-//     Route::get('/review-form/{bookingID}', [ReviewController::class, 'reviewForm'])->name('review-form');
-//     Route::post('/submit-review/{bookingID}', [ReviewController::class, 'submitReview'])->name('submit-review');
-// });
-
 
 // Admin routes
 Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
@@ -212,7 +186,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::put('/update/{id}', [RuleAndRegulationController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [RuleAndRegulationController::class, 'destroy'])->name('destroy');
     });
-    
+
     // Promotions routes
     Route::prefix('promotions')->as('promotions.')->group(function () {
         Route::get('/', [PromotionController::class, 'index'])->name('index');
@@ -245,5 +219,3 @@ Route::group([
         Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
     });
 });
-
-

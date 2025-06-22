@@ -36,17 +36,23 @@ class PostController extends Controller
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
         ], [
-            'title.required'        => 'Vui lòng nhập tiêu đề.',
-            'slug.required'         => 'Vui lòng nhập slug.',
-            'slug.unique'           => 'Slug đã tồn tại.',
-            'content.required'      => 'Vui lòng nhập nội dung.',
-            'category_id.required'  => 'Vui lòng chọn danh mục.',
-            'status.required'       => 'Vui lòng chọn trạng thái.',
-            'image.image'           => 'Tệp tải lên phải là hình ảnh.',
-            'image.max'             => 'Ảnh không được vượt quá 2MB.',
+            'title.required'       => 'Vui lòng nhập tiêu đề bài viết.',
+            'title.max'            => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'slug.required'        => 'Vui lòng nhập đường dẫn (slug).',
+            'slug.max'             => 'Slug không được vượt quá 255 ký tự.',
+            'slug.unique'          => 'Slug đã tồn tại, vui lòng chọn slug khác.',
+            'excerpt.max'          => 'Tóm tắt không được vượt quá 255 ký tự.',
+            'content.required'     => 'Vui lòng nhập nội dung bài viết.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'category_id.exists'   => 'Danh mục không tồn tại.',
+            'status.required'      => 'Vui lòng chọn trạng thái.',
+            'status.in'            => 'Trạng thái không hợp lệ.',
+            'image.image'          => 'Tệp tải lên phải là hình ảnh.',
+            'image.mimes'          => 'Ảnh phải có định dạng jpg, jpeg, png hoặc webp.',
+            'image.max'            => 'Ảnh không được vượt quá 2MB.',
+            'published_at.date'    => 'Ngày đăng không hợp lệ.',
         ]);
 
-        // Xử lý lưu ảnh nếu có
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -64,7 +70,7 @@ class PostController extends Controller
             'image'        => $imagePath,
             'published_at' => $request->input('published_at'),
             'is_featured'  => $request->has('is_featured'),
-            'author_id'    => 1, // Tạm gán nếu chưa có auth
+            'author_id'    => 1,
         ]);
 
         return redirect()->route('admin.post.listPost')->with('success', 'Thêm bài viết thành công!');
@@ -90,14 +96,21 @@ class PostController extends Controller
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
         ], [
-            'title.required'        => 'Vui lòng nhập tiêu đề.',
-            'slug.required'         => 'Vui lòng nhập slug.',
-            'slug.unique'           => 'Slug đã tồn tại.',
-            'content.required'      => 'Vui lòng nhập nội dung.',
-            'category_id.required'  => 'Vui lòng chọn danh mục.',
-            'status.required'       => 'Vui lòng chọn trạng thái.',
-            'image.image'           => 'Tệp tải lên phải là hình ảnh.',
-            'image.max'             => 'Ảnh không được vượt quá 2MB.',
+            'title.required'       => 'Vui lòng nhập tiêu đề bài viết.',
+            'title.max'            => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'slug.required'        => 'Vui lòng nhập đường dẫn (slug).',
+            'slug.max'             => 'Slug không được vượt quá 255 ký tự.',
+            'slug.unique'          => 'Slug đã tồn tại, vui lòng chọn slug khác.',
+            'excerpt.max'          => 'Tóm tắt không được vượt quá 255 ký tự.',
+            'content.required'     => 'Vui lòng nhập nội dung bài viết.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'category_id.exists'   => 'Danh mục không tồn tại.',
+            'status.required'      => 'Vui lòng chọn trạng thái.',
+            'status.in'            => 'Trạng thái không hợp lệ.',
+            'image.image'          => 'Tệp tải lên phải là hình ảnh.',
+            'image.mimes'          => 'Ảnh phải có định dạng jpg, jpeg, png hoặc webp.',
+            'image.max'            => 'Ảnh không được vượt quá 2MB.',
+            'published_at.date'    => 'Ngày đăng không hợp lệ.',
         ]);
 
         $post = Post::findOrFail($id);
@@ -111,11 +124,9 @@ class PostController extends Controller
         $post->is_featured = $request->has('is_featured');
 
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ
             if ($post->image && Storage::disk('public')->exists($post->image)) {
                 Storage::disk('public')->delete($post->image);
             }
-
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('uploads/posts', $filename, 'public');
