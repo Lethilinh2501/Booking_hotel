@@ -30,7 +30,8 @@
         z-index: 10;
     }
 </style>
-
+    @include('client.layouts.blocks.slider')
+    @include('client.layouts.search')
 <section class="section-room padding-tb-100" data-aos="fade-up" data-aos-duration="2000" id="rooms">
     <div class="container">
         <div class="banner">
