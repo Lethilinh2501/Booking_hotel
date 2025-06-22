@@ -1,65 +1,49 @@
 <?php
 
-use App\Http\Controllers\Client\UserController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\AmenityController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Client\PromotionClientController;
-use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Admin\RuleAndRegulationController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Receptionist\GuestController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\NewsCategoryController;
+use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Client\UserController;
+Route::get('/news', [PostController::class, 'indexClient'])->name('client.news.list');
+Route::get('/news/category/{id}', [PostController::class, 'byCategory'])->name('client.news.category');
+Route::get('/news/{id}', [PostController::class, 'showClient'])->name('client.news.detail');
 
 
 Auth::routes();
 require __DIR__ . '/auth.php';
-
-// Router client
-// Trang chủ
-Route::prefix('client')->name('client.')->group(function () {
-    Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
-});
-
-// user
- Route::get('/profileUse/{id}/edit', [UserController::class, 'edit'])->name('profileUse.edit');
- Route::put('/profileUse/{id}', [UserController::class, 'update'])->name('profileUse.update');
-
-Route::get('/', [HomeController::class, 'indexRoom'])->name('client.home');
-
-
-// Public routes
-Route::view('/', 'layout.client');
+Route::get('/rooms/{id}/detail', [RoomTypeClientController::class, 'showDetail'])
+     ->name('client.rooms.roomdetail');
+Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 Route::get('/contacts/create', function () {
     return view('client.contact');
 })->name('contacts.create');
-Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
-
-Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('client.rooms.roomdetail');
+ Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+// Route cho profile user
+Route::prefix('profile')->name('profileUse.')->group(function() {
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [UserController::class, 'update'])->name('update');
+});
+// Authenticated routes
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
-// giảm giá 
-Route::get('/promotions', [PromotionClientController::class, 'index'])->name('client.promotions.index');
-
-// router tin tức client
-Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
-Route::get('/tin-tuc/{id}', [PostClientController::class, 'show'])->name('client.posts.show');
-Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
-
-
 // Public routes
+
+
 Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
 
@@ -71,9 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/review-form/{bookingID}', [ReviewController::class, 'reviewForm'])->name('review-form');
     Route::post('/submit-review/{bookingID}', [ReviewController::class, 'submitReview'])->name('submit-review');
 });
-
-// Trang chủ
-Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
 
 // Admin routes
 Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
@@ -121,14 +102,15 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/{id}/status', [PostCategoryController::class, 'updateStatus'])->name('updateStatus');
     });
 
-    Route::prefix('post')->as('post.')->group(function () {
-        Route::get('/', [PostController::class, 'listPost'])->name('listPost');
-        Route::get('/add-post', [PostController::class, 'addPost'])->name('addPost');
-        Route::post('/add-post', [PostController::class, 'addPostPost'])->name('addPostPost');
-        Route::get('/detail-post/{idPost}', [PostController::class, 'detailPost'])->name('detailPost');
-        Route::delete('/delete-post', [PostController::class, 'deletePost'])->name('deletePost');
-        Route::get('update-post/{idPost}', [PostController::class, 'updatePost'])->name('updatePost');
-        Route::patch('update-post/{idPost}', [PostController::class, 'updatePatchPost'])->name('updatePatchPost');
+// Post routes
+    Route::prefix('posts')->as('posts.')->group(function () {
+        Route::get('/', [PostController::class, 'index'])->name('index');
+        Route::get('/create', [PostController::class, 'create'])->name('create');
+        Route::post('/', [PostController::class, 'store'])->name('store');
+        Route::get('/{post}', [PostController::class, 'show'])->name('show');
+        Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
+        Route::put('/{post}', [PostController::class, 'update'])->name('update');
+        Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
     });
 
     // Room routes
@@ -146,6 +128,19 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/{id}/status', [RoomController::class, 'updateStatus'])->name('updateStatus');
     });
 
+    // sale
+    Route::prefix('sale-room-types')->as('sale-room-types.')->group(function () {
+        Route::get('/', [SaleRoomTypeController::class, 'index'])->name('index');
+        Route::get('/create', [SaleRoomTypeController::class, 'create'])->name('create');
+        Route::post('/', [SaleRoomTypeController::class, 'store'])->name('store');
+        Route::get('/{id}', [SaleRoomTypeController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [SaleRoomTypeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [SaleRoomTypeController::class, 'update'])->name('update');
+        Route::delete('/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [SaleRoomTypeController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+
     // service routes
     Route::prefix('services')->as('services.')->group(function () {
         Route::get('/', [ServiceController::class, 'index'])->name('index');
@@ -159,46 +154,71 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
 
     // payment
     Route::resource('payment', PaymentController::class);
+});
 
-    // Order routes
-    Route::prefix('bookings')->as('bookings.')->group(function () {
-        Route::get('/', [BookingController::class, 'index'])->name('index');
-        Route::get('/create', [BookingController::class, 'create'])->name('create');
-        Route::post('/store', [BookingController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [BookingController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [BookingController::class, 'destroy'])->name('destroy');
-        Route::post('/update-status/{id}', [BookingController::class, 'updateStatus'])->name('updateStatus');
-        Route::get('/{id}', [BookingController::class, 'show'])->name('show');
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
     });
+});
 
-    // Amenities routes
-    Route::prefix('amenities')->as('amenities.')->group(function () {
-        Route::get('/', [AmenityController::class, 'index'])->name('index');
-        Route::get('/create', [AmenityController::class, 'create'])->name('create');
-        Route::post('/store', [AmenityController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [AmenityController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [AmenityController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [AmenityController::class, 'destroy'])->name('destroy');
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
+
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
     });
+});
 
-    Route::prefix('rules')->as('rules.')->group(function () {
-        Route::get('/', [RuleAndRegulationController::class, 'index'])->name('index');
-        Route::get('/create', [RuleAndRegulationController::class, 'create'])->name('create');
-        Route::post('/store', [RuleAndRegulationController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [RuleAndRegulationController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [RuleAndRegulationController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [RuleAndRegulationController::class, 'destroy'])->name('destroy');
-    });
+// phần router cho lễ tân
+Route::group([
+    'prefix' => 'receptionist',
+    'as' => 'receptionist.',
+    // 'middleware' => 'auth' // Bảo vệ route admin, yêu cầu đăng nhập
+],  function () {
 
-    // Promotions routes
-    Route::prefix('promotions')->as('promotions.')->group(function () {
-        Route::get('/', [PromotionController::class, 'index'])->name('index');
-        Route::get('/create', [PromotionController::class, 'create'])->name('create');
-        Route::post('/store', [PromotionController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [PromotionController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [PromotionController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [PromotionController::class, 'destroy'])->name('destroy');
+    // Quản lý khách hàng
+    Route::group([
+        'prefix' => 'guests',
+        'as' => 'guests.'
+    ], function () {
+        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
+        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
+        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
+        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
+        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
+        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
+        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
     });
 });
 
