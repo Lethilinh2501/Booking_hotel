@@ -11,11 +11,11 @@
                     <div class="lh-breadcrumb">
                         <h5>
                             <span class="lh-inner-breadcrumb">
-                                <a href="{{ url('/') }}">Home</a>
+                                <a href="{{ url('/') }}">Trang chủ</a>
                             </span>
                             <span> / </span>
                             <span>
-                                <a href="javascript:void(0)">Blog Classic</a>
+                                <a href="javascript:void(0)">Tin tức</a>
                             </span>
                         </h5>
                     </div>
@@ -50,8 +50,8 @@
                                     <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
                                 </div>
                                 <div class="lh-our-blog-contain-buttons">
-                                    <a class="lh-buttons" href="">
-                                        View More
+                                    <a class="lh-buttons" href="{{ route('client.posts.show', $post->id) }}">
+                                        Xem thêm
                                     </a>
                                 </div>
                             </div>
@@ -74,21 +74,20 @@
 @endsection
 
 @push('style')
-<style>
-    .pagination {
-        font-size: 14px;
-        padding: 0;
-    }
+    <style>
+        .pagination {
+            font-size: 14px;
+            padding: 0;
+        }
 
-    .pagination .page-item {
-        margin: 0 2px;
-    }
+        .pagination .page-item {
+            margin: 0 2px;
+        }
 
-    .pagination .page-link {
-        padding: 4px 10px;
-        font-size: 13px;
-        border-radius: 4px;
-    }
-</style>
+        .pagination .page-link {
+            padding: 4px 10px;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+    </style>
 @endpush
-
