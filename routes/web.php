@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Client\PromotionClientController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
 use App\Http\Controllers\Client\HomeController;
@@ -48,6 +49,9 @@ Route::post('/contacts/store', [ContactController::class, 'store'])->name('conta
 
 Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('client.rooms.roomdetail');
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
+// giảm giá 
+Route::get('/promotions', [PromotionClientController::class, 'index'])->name('client.promotions.index');
 
 // router tin tức client
 Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');

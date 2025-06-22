@@ -30,6 +30,10 @@
                             <a class="nav-link " href="{{ route('contacts.create') }}">
                                 Liên lạc
                             </a>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link " href="{{ route('client.promotions.index') }}">
+                                Ưu đãi 
+                            </a>
 
                         </li>
                         <li class="nav-item dropdown">
