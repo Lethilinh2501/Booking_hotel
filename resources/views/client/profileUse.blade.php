@@ -6,8 +6,7 @@
            
             <div class="lh-contact-touch" data-aos="fade-up" data-aos-duration="2000">
                 <div class="row">
-                @if (!empty($user))
-                
+                @if (!empty($user))     
                     <div class="row">
                         <div class="col-xxl-3">
                             <div class="card mt-n5">

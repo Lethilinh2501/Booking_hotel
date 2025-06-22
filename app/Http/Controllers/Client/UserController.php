@@ -14,13 +14,16 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
+        if (auth()->id() != $id) {
+            abort(403, 'Bạn không có quyền truy cập');
+        }
         $user = User::query()->findOrFail($id);
         return view('client.profileUse', compact('user'));
     }
     public function update(string $id ,Request $request)
     {
         $user = User::query()->findOrFail($id);
-        $data = $request->except('image');
+        $data = $request->except('avatar');
          // Xử lý ảnh
          if ($request->hasFile('avatar')) {
             $imagePath = Storage::put(self::PATH_UPLOAD_IMAGE, $request->file('avatar'));
