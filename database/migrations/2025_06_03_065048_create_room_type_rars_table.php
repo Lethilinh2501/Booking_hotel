@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_room_type_rars_table.php
         Schema::create('room_type_rars', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('room_type_id');
-            $table->string('requirement');
+            $table->bigInteger('room_type_id');
+            $table->bigInteger('rules_and_regulation_id');
             $table->timestamps();
+            $table->softDeletes(); //dekete_at xóa mềm
         });
     }
 

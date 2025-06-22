@@ -10,7 +10,13 @@ class Room extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'room_type_id', 'floor', 'is_available'];
+    protected $fillable = [
+        'name',
+        'room_type_id',
+        'floor',
+        'is_available',
+        'status',
+    ];
 
     public function roomType()
     {

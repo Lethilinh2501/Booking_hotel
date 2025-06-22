@@ -12,7 +12,14 @@ class ContactController extends Controller
         $contacts = Contact::latest()->paginate(10);
         return view('admin.contacts.index', compact('contacts'));
     }
-
+    public function store(Request $request)
+    {
+        $data = $request->all();
+        $data['status']='pending';
+        Contact::create($data);
+       return redirect()->back()->with('success', 'Gửi liên hệ thành công!');
+    }
+ 
     public function show($id)
     {
         $contact = Contact::findOrFail($id);
