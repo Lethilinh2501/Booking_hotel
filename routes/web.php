@@ -39,6 +39,19 @@ Route::prefix('client')->name('client.')->group(function () {
 
 Route::get('/', [HomeController::class, 'indexRoom'])->name('client.home');
 
+Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
+Route::get('/contacts/create', function () {
+    return view('client.contact');
+})->name('contacts.create');
+Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
+
+Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
+Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
+
+
+// Authenticated routes
+Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
 
 // Public routes
 Route::view('/', 'layout.client');
