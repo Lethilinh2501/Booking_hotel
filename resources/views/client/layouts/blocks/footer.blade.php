@@ -21,7 +21,7 @@
                 <div class="col-lg-6 rs-pb-24 order-lg-2 order-md-1 order-1">
                     <div class="lh-social-media">
                         <div class="footer-logos">
-                            <img src="{{ asset('themes/client/assets/img/logo/logo.png') }}" alt="logo">
+                            <img src="{{ asset('themes/client/assets/img/logo/logo11.png') }}" alt="logo">
                         </div>
                         <div class="lh-footer-social">
                             <p>This is the dolor sit amet consectetur adipisicing elit. Libero voluptatem soluta eaque
@@ -82,7 +82,7 @@
 
         <div class="footer-bottom-copy">
             <span>Copyright © <span id="copyright_year">{{ date('Y') }}</span>
-                <a href="{{ url('/') }}">Luxurious</a> All Rights Reserved</span>
+                <a href="{{ url('/') }}">LUMORA HOTEL</a> All Rights Reserved</span>
         </div>
     </div>
 </footer>

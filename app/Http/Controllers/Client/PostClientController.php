@@ -53,4 +53,15 @@ class PostClientController extends Controller
 
         return view('client.posts.index', compact('posts', 'postcategories', 'popularPosts', 'selectedCategory'));
     }
+
+    public function show($id)
+    {
+        $post = Post::where('status', 'published')->findOrFail($id);
+        $postcategories = PostCategory::withCount([
+            'posts' => function ($query) {
+                $query->where('status', 'published');
+            }
+        ])->get();
+        return view('client.posts.show', compact('post','postcategories'));
+    }
 }

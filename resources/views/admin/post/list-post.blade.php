@@ -35,13 +35,18 @@
                                 <td>
                                     @php
                                         $statusColors = [
-                                            'draft' => 'secondary',
+                                            'draft' => 'danger',
                                             'published' => 'success',
                                             'archived' => 'warning',
                                         ];
+                                        $statusLabels = [
+                                            'draft' => 'Bản nháp',
+                                            'published' => 'Công khai',
+                                            'archived' => 'Lưu trữ',
+                                        ];
                                     @endphp
                                     <span class="badge bg-{{ $statusColors[$post->status] ?? 'dark' }}">
-                                        {{ ucfirst($post->status) }}
+                                        {{ $statusLabels[$post->status] ?? 'Không xác định' }}
                                     </span>
                                 </td>
                                 <td>
