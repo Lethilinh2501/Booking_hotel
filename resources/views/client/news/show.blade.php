@@ -12,8 +12,6 @@
         </p>
     </div>
 
-
-
     <div class="mb-4">
         <h2 class="h5 text-dark mb-3">Nội dung</h2>
         <div class="bg-light p-3 rounded">

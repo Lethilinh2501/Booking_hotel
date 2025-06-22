@@ -1,14 +1,14 @@
 <?php
-// app/Models/SaleRoomType.php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SaleRoomType extends Model
 {
-    // use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'sale_room_types';
     protected $primaryKey = 'id';
@@ -23,16 +23,10 @@ class SaleRoomType extends Model
         'status',
     ];
 
-    // protected $dates = [
-    //     'start_date',
-    //     'end_date',
-    //     'created_at',
-    //     'updated_at',
-    //     'deleted_at',
-    // ];
-
     protected $casts = [
-        'status' => 'boolean', // active = true, inactive = false
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'status' => 'boolean',
     ];
 
     // Constants for status

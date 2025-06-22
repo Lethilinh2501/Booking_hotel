@@ -13,7 +13,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card h-100 shadow-sm border-0 overflow-hidden transition-all hover-shadow">
                         <div>
-                             @if ($post->image)
+                            @if ($post->image)
                             <div class="position-relative">
                                 @if ($post->category)
                                     <span class="badge bg-primary position-absolute top-10 start-10">
@@ -21,7 +21,7 @@
                                     </span>
                                 @endif
                             </div>
-                        @endif
+                            @endif
                         </div>
                        
                         <div class="card-body d-flex flex-column">

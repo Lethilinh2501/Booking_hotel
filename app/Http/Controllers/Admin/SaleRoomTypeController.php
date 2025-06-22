@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\SaleRoomType;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SaleRoomTypeRequest; 
+use Carbon\Carbon;
 
 class SaleRoomTypeController extends Controller
 {
@@ -22,25 +23,9 @@ class SaleRoomTypeController extends Controller
         return view('admin.sale_room_types.create', compact('roomTypes'));
     }
 
-    public function store(Request $request)
+    public function store(SaleRoomTypeRequest $request) 
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'value' => 'required|numeric',
-            'type' => 'required|string',
-            'room_type_id' => 'required|exists:room_types,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        SaleRoomType::create($request->all());
+        SaleRoomType::create($request->validated());
 
         return redirect()->route('admin.sale-room-types.index')
             ->with('success', 'Sale room type created successfully.');
@@ -59,27 +44,14 @@ class SaleRoomTypeController extends Controller
         return view('admin.sale_room_types.edit', compact('saleRoomType', 'roomTypes'));
     }
 
-    public function update(Request $request, $id)
+    public function update(SaleRoomTypeRequest $request, $id)
     {
         $saleRoomType = SaleRoomType::findOrFail($id);
         
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'value' => 'required|numeric',
-            'type' => 'required|string',
-            'room_type_id' => 'required|exists:room_types,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $saleRoomType->update($request->all());
+        $data = $request->validated();
+        $data['type'] = $data['type'] === 'percent' ? 'percent' : 'fixed';
+        
+        $saleRoomType->update($data);
 
         return redirect()->route('admin.sale-room-types.index')
             ->with('success', 'Sale room type updated successfully.');

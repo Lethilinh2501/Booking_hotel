@@ -4,30 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateSaleRoomTypesTable extends Migration
 {
-
-    public function up(): void
+    public function up()
     {
-      Schema::create('posts', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->string('slug')->unique();
-    $table->text('excerpt')->nullable();
-    $table->longText('content');
-    $table->string('image')->nullable();
-    $table->foreignId('category_id')->constrained('post_categories');
-    $table->foreignId('author_id')->constrained('users');
-    $table->timestamp('published_at')->nullable();
-    $table->boolean('is_featured')->default(false);
-    $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-    $table->timestamps();
-    $table->softDeletes();
-});
+        Schema::create('sale_room_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->decimal('value', 10, 2);
+            $table->string('type');
+            $table->foreignId('room_type_id')->constrained('room_types');
+            $table->dateTime('start_date');  // Using dateTime for more precise timing
+            $table->dateTime('end_date');    // Using dateTime for more precise timing
+            $table->boolean('status')->default(true);  // Using boolean for simpler status handling
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('sale_room_types');
     }
-};
+}

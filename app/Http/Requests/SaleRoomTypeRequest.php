@@ -9,12 +9,12 @@ class SaleRoomTypeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Cho phép tất cả người dùng (có thể thêm logic phân quyền nếu cần)
+        return true;
     }
 
     public function rules(): array
     {
-        // Quy tắc chung
+        // Common rules
         $rules = [
             'name' => [
                 'required',
@@ -23,19 +23,16 @@ class SaleRoomTypeRequest extends FormRequest
             ],
             'value' => 'required|numeric',
             'type' => 'required|string|in:percent,fixed',
-            'room_type_ids' => 'required|array', // Validate mảng room_type_ids
-            'room_type_ids.*' => 'exists:room_types,id', // Kiểm tra từng ID trong mảng
+            'room_type_id' => 'required|exists:room_types,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:active,inactive',
         ];
 
-        // Thêm quy tắc unique cho name
+        // Add unique rule for name
         if ($this->route()->getName() === 'admin.sale-room-types.store') {
-            // Khi tạo mới: không được trùng với bất kỳ bản ghi nào
             $rules['name'][] = 'unique:sale_room_types,name';
         } elseif ($this->route()->getName() === 'admin.sale-room-types.update') {
-            // Khi cập nhật: không được trùng với các bản ghi khác, trừ bản ghi hiện tại
             $saleRoomType = $this->route('saleRoomType');
             if ($saleRoomType) {
                 $saleRoomTypeId = $saleRoomType->id;
@@ -43,7 +40,7 @@ class SaleRoomTypeRequest extends FormRequest
             }
         }
 
-        // Nếu là toggleStatus, chỉ cần validate status
+        // For toggleStatus
         if ($this->route()->getName() === 'admin.sale-room-types.toggle-status') {
             return [
                 'status' => 'required|in:active,inactive',
@@ -64,9 +61,8 @@ class SaleRoomTypeRequest extends FormRequest
             'value.numeric' => 'Giá trị khuyến mãi phải là số.',
             'type.required' => 'Loại khuyến mãi là bắt buộc.',
             'type.in' => 'Loại khuyến mãi phải là "Phần trăm" hoặc "Số tiền cố định".',
-            'room_type_ids.required' => 'Loại phòng là bắt buộc.',
-            'room_type_ids.array' => 'Loại phòng phải là một mảng.',
-            'room_type_ids.*.exists' => 'Loại phòng không tồn tại.',
+            'room_type_id.required' => 'Loại phòng là bắt buộc.',
+            'room_type_id.exists' => 'Loại phòng không tồn tại.',
             'start_date.required' => 'Ngày giờ bắt đầu là bắt buộc.',
             'start_date.date' => 'Ngày giờ bắt đầu không hợp lệ.',
             'end_date.required' => 'Ngày giờ kết thúc là bắt buộc.',

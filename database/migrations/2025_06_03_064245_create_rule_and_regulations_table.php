@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_rules_and_regulations_table.php
         Schema::create('rules_and_regulations', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('content');
-            $table->boolean('is_active')->default(true);
+            $table->string('name');
+            $table->boolean('is_active');
             $table->timestamps();
+            $table->softDeletes(); //dekete_at xóa mềm
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rule_and_regulations');
+        Schema::dropIfExists('rules_and_regulations');
     }
 };

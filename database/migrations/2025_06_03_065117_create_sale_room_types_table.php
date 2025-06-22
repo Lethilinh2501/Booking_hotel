@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,9 +14,9 @@ class CreateSaleRoomTypesTable extends Migration
             $table->decimal('value', 10, 2);
             $table->string('type');
             $table->foreignId('room_type_id')->constrained('room_types');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('status')->default(true);
+            $table->dateTime('start_date');  // Using dateTime for more precise timing
+            $table->dateTime('end_date');    // Using dateTime for more precise timing
+            $table->boolean('status')->default(true);  // Using boolean for simpler status handling
             $table->timestamps();
             $table->softDeletes();
         });

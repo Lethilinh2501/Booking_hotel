@@ -17,7 +17,6 @@ class Booking extends Model
         'actual_check_in',
         'actual_check_out',
         'total_price',
-        'paid_amount',
         'discount_amount',
         'base_price',
         'service_total',
@@ -25,11 +24,9 @@ class Booking extends Model
         'total_guests',
         'children_count',
         'room_quantity',
+        'status',
         'user_id',
         'special_request',
-        'service_plus_status',
-        'status',
-        'service_plus_total'
     ];
 
     public function user()

@@ -20,15 +20,12 @@ class RoomType extends Model
         'children_free_limit',
         'is_active',
     ];
+
     public function rooms()
     {
         return $this->hasMany(Room::class, 'room_type_id');
     }
 
-    public function manager()
-    {
-        return $this->belongsTo(Staff::class, 'manager_id');
-    }
     public function roomTypeImages()
     {
         return $this->hasMany(RoomTypeImage::class, 'room_type_id');
@@ -48,10 +45,12 @@ class RoomType extends Model
     {
         return $this->belongsToMany(Amenity::class, 'room_type_amenities', 'room_type_id', 'amenity_id');
     }
+
     public function saleRoomTypes()
     {
         return $this->hasMany(SaleRoomType::class, 'room_type_id');
     }
+
     public function roomTypeServices()
     {
         return $this->hasMany(RoomTypeService::class, 'room_type_id');

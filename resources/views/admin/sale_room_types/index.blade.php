@@ -12,8 +12,7 @@
                 <th>ID</th>
                 <th>Tên</th>
                 <th>Loại Phòng</th>
-                <th>Giá Trị</th>
-                <th>Loại</th>
+                <th>Giá Trị Khuyến Mãi</th>
                 <th>Khoảng Thời Gian</th>
                 <th>Trạng Thái</th>
                 <th>Hành Động</th>
@@ -25,27 +24,22 @@
                 <td>{{ $saleRoomType->id }}</td>
                 <td>{{ $saleRoomType->name }}</td>
                 <td>{{ $saleRoomType->roomType->name ?? 'N/A' }}</td>
-                <td>{{ $saleRoomType->value }}</td>
-                <td>{{ $saleRoomType->type }}</td>
-                <td>{{ $saleRoomType->start_date->format('m/d/Y') }} - {{ $saleRoomType->end_date->format('m/d/Y') }}</td>
                 <td>
-                    <span class="badge {{ $saleRoomType->status ? 'bg-success' : 'bg-secondary' }}">
-                        {{ $saleRoomType->status ? 'Active' : 'Inactive' }}
+                    {{ $saleRoomType->value }}
+                    {{ $saleRoomType->type == 'percent' ? '%' : 'VND' }}
+                </td>
+                <td>{{ $saleRoomType->start_date->format('d/m/Y') }} - {{ $saleRoomType->end_date->format('d/m/Y') }}</td>
+                <td>
+                    <span class="badge {{ $saleRoomType->status == 'active' ? 'bg-success' : 'bg-secondary' }}">
+                        {{ $saleRoomType->status == 'active' ? 'Hoạt động' : 'Không hoạt động' }}
                     </span>
                 </td>
                 <td>
-                    <a href="{{ route('admin.sale-room-types.edit', $saleRoomType->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{{ route('admin.sale-room-types.edit', $saleRoomType->id) }}" class="btn btn-sm btn-warning">Sửa</a>
                     <form action="{{ route('admin.sale-room-types.destroy', $saleRoomType->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                    <form action="{{ route('admin.sale-room-types.toggle-status', $saleRoomType->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="btn btn-sm {{ $saleRoomType->status ? 'btn-secondary' : 'btn-success' }}">
-                            {{ $saleRoomType->status ? 'Deactivate' : 'Activate' }}
-                        </button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
                     </form>
                 </td>
             </tr>
@@ -55,4 +49,5 @@
     
     {{ $saleRoomTypes->links() }}
 </div>
+</main>
 @endsection

@@ -1,0 +1,162 @@
+* [33m535ef93[m[33m ([m[1;32mtam_thoi[m[33m)[m sửa booking, tiên nghi của admin và client chi tiết phòng
+*   [33mc3be3d8[m client bài viết
+[32m|[m[33m\[m  
+[32m|[m * [33m9fbcec6[m client bài viết
+[32m|[m[32m/[m  
+*   [33m227bac5[m Merge pull request #17 from Lethilinh2501/tuyen
+[34m|[m[35m\[m  
+[34m|[m *   [33m59e057e[m Merge branch 'main' into tuyen
+[34m|[m [36m|[m[34m\[m  
+[34m|[m [36m|[m[34m/[m  
+[34m|[m[34m/[m[36m|[m   
+* [36m|[m   [33ma578178[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #16 from Lethilinh2501/buitien
+[1;32m|[m[1;33m\[m [36m\[m  
+[1;32m|[m * [36m|[m [33mff1292c[m updatge client
+[1;32m|[m[1;32m/[m [36m/[m  
+* [36m|[m   [33m19b1c74[m Merge pull request #15 from Lethilinh2501/tuyen
+[1;34m|[m[1;35m\[m [36m\[m  
+[1;34m|[m [1;35m|[m * [33m773e125[m create contact
+[1;34m|[m [1;35m|[m[1;35m/[m  
+[1;34m|[m *   [33m8d7b69f[m Merge pull request #14 from Lethilinh2501/main
+[1;34m|[m [1;36m|[m[1;34m\[m  
+[1;34m|[m [1;36m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[1;36m|[m   
+* [1;36m|[m   [33m09662a1[m Merge pull request #13 from Lethilinh2501/LinhLe
+[32m|[m[33m\[m [1;36m\[m  
+[32m|[m * [1;36m\[m   [33m56d5dce[m Merge branch 'main' into LinhLe
+[32m|[m [34m|[m[32m\[m [1;36m\[m  
+[32m|[m [34m|[m[32m/[m [1;36m/[m  
+[32m|[m[32m/[m[34m|[m [1;36m|[m   
+* [34m|[m [1;36m|[m   [33mb1e340e[m conflic
+[36m|[m[1;31m\[m [34m\[m [1;36m\[m  
+[36m|[m * [34m\[m [1;36m\[m   [33ma5ad759[m Merge pull request #12 from Lethilinh2501/LinhLe
+[36m|[m [1;32m|[m[1;33m\[m [34m\[m [1;36m\[m  
+* [1;32m|[m [1;33m|[m [34m|[m [1;36m|[m [33m053de7c[m thay đổi 1 số file
+* [1;32m|[m [1;33m|[m [34m|[m [1;36m|[m [33mf5a85cc[m list
+[1;32m|[m[1;32m/[m [1;33m/[m [34m/[m [1;36m/[m  
+* [1;33m|[m [34m|[m [1;36m|[m   [33m7cf2b05[m Merge pull request #11 from Lethilinh2501/xuanmanh01
+[1;34m|[m[1;35m\[m [1;33m\[m [34m\[m [1;36m\[m  
+[1;34m|[m [1;35m|[m [1;33m|[m * [1;36m|[m [33m2a7b9fa[m Cập nhật routes
+[1;34m|[m [1;35m|[m [1;33m|[m * [1;36m|[m [33mdd09a7f[m sửa router1
+[1;34m|[m [1;35m|[m [1;33m|[m * [1;36m|[m [33mf31bdf6[m sửa router
+[1;34m|[m [1;35m|[m [1;33m|[m * [1;36m|[m [33maa53026[m list tạm
+[1;34m|[m [1;35m|[m [1;33m|[m[1;33m/[m [1;36m/[m  
+[1;34m|[m [1;35m|[m * [1;36m|[m   [33medef11b[m Merge branch 'buitien' of https://github.com/Lethilinh2501/Booking_hotel into LinhLe
+[1;34m|[m [1;35m|[m [1;36m|[m[31m\[m [1;36m\[m  
+[1;34m|[m [1;35m|[m [1;36m|[m * [1;36m|[m [33m5e494a1[m updater
+[1;34m|[m [1;35m|[m * [31m|[m [1;36m|[m [33ma160d47[m quản lý service
+[1;34m|[m [1;35m|[m [31m|[m[31m/[m [1;36m/[m  
+[1;34m|[m [1;35m|[m * [1;36m|[m [33m6be4871[m update logo
+[1;34m|[m [1;35m|[m * [1;36m|[m [33m49fc783[m thay dao diện Auth
+[1;34m|[m [1;35m|[m * [1;36m|[m [33m7b91d6e[m update
+[1;34m|[m [1;35m|[m * [1;36m|[m [33md57855f[m Client/Rooms/index đổ dữ liệu
+[1;34m|[m [1;35m|[m[1;34m/[m [1;36m/[m  
+[1;34m|[m[1;34m/[m[1;35m|[m [1;36m|[m   
+[1;34m|[m [1;35m|[m [1;36m|[m * [33m242cd73[m[33m ([m[1;36mHEAD -> [m[1;32mxuanmanh01[m[33m, [m[1;31morigin/xuanmanh01[m[33m)[m sửa hết đặt phòng , khuyẽn mai tien ich
+[1;34m|[m [1;35m|[m [1;36m|[m[1;35m/[m  
+[1;34m|[m [1;35m|[m[1;35m/[m[1;36m|[m   
+[1;34m|[m * [1;36m|[m [33me305992[m[33m ([m[1;32mbuitien[m[33m)[m xuanmanh
+[1;34m|[m [32m|[m [1;36m|[m * [33mdfeef98[m[33m ([m[1;35mrefs/stash[m[33m)[m WIP on xuanmanh01: 828bb8e update
+[1;34m|[m [32m|[m [1;36m|[m[32m/[m[34m|[m 
+[1;34m|[m [32m|[m[32m/[m[1;36m|[m [34m|[m 
+[1;34m|[m [32m|[m [1;36m|[m * [33m98e7308[m index on xuanmanh01: 828bb8e update
+[1;34m|[m [32m|[m [1;36m|[m[32m/[m  
+[1;34m|[m [32m|[m[32m/[m[1;36m|[m   
+[1;34m|[m [32m|[m [1;36m|[m * [33mf3c44a4[m[33m ([m[1;32mmain[m[33m)[m Update promotion seeder, roomtype seeder, sidebar, routes
+[1;34m|[m [32m|[m [1;36m|[m *   [33m094c5a0[m Merge branch 'xuanmanh01' of https://github.com/Lethilinh2501/Booking_hotel
+[1;34m|[m [32m|[m [1;36m|[m [36m|[m[32m\[m  
+[1;34m|[m [32m|[m [1;36m|[m[32m_[m[36m|[m[32m/[m  
+[1;34m|[m [32m|[m[32m/[m[1;36m|[m [36m|[m   
+[1;34m|[m * [1;36m|[m [36m|[m [33m828bb8e[m update
+[1;34m|[m [1;31m|[m [1;36m|[m * [33mba8ea10[m nhanh xuanmanh01
+[1;34m|[m [1;31m|[m[1;34m_[m[1;36m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[1;31m|[m [1;36m|[m   
+* [1;31m|[m [1;36m|[m   [33mba04d11[m Quản lý phòng admin #10 from Lethilinh2501/LinhLe
+[1;32m|[m[1;33m\[m [1;31m\[m [1;36m\[m  
+[1;32m|[m * [1;31m|[m [1;36m|[m [33m5634dee[m quản lý phòng
+* [1;33m|[m [1;31m|[m [1;36m|[m [33mc814ff9[m  sửa lại post, thêm trình soạn thảo CKEditor5, sửa phông chữ
+[1;34m|[m[1;33m\[m[1;33m|[m [1;31m|[m [1;36m|[m 
+[1;34m|[m * [1;31m|[m [1;36m|[m [33m8c1cc32[m sửa lại post, thêm trình soạn thảo CKEditor5, sửa phông chữ
+* [1;35m|[m [1;31m|[m [1;36m|[m [33m62c4c86[m sửa lại migration + factory, thêm system #8 from Lethilinh2501/LinhLe
+[1;31m|[m[1;35m\[m[1;35m|[m [1;31m|[m [1;36m|[m 
+[1;31m|[m [1;35m|[m[1;31m/[m [1;36m/[m  
+[1;31m|[m[1;31m/[m[1;35m|[m [1;36m|[m   
+[1;31m|[m * [1;36m|[m [33mf1419af[m thêm system
+[1;31m|[m * [1;36m|[m [33ma9f6401[m migrate + factory
+[1;31m|[m[1;31m/[m [1;36m/[m  
+* [1;36m|[m   [33m9e37007[m[33m ([m[1;31morigin/xuanmanh[m[33m, [m[1;31morigin/LinhLe[m[33m)[m sửa conflic views
+[32m|[m[33m\[m [1;36m\[m  
+[32m|[m * [1;36m\[m   [33m2298ca7[m Merge pull request #5 from Lethilinh2501/buitien
+[32m|[m [34m|[m[35m\[m [1;36m\[m  
+[32m|[m [34m|[m * [1;36m\[m   [33m2de1daf[m[33m ([m[1;31morigin/buitien[m[33m)[m update
+[32m|[m [34m|[m [36m|[m[34m\[m [1;36m\[m  
+[32m|[m [34m|[m [36m|[m[34m/[m [1;36m/[m  
+[32m|[m [34m|[m[34m/[m[36m|[m [1;36m|[m   
+[32m|[m * [36m|[m [1;36m|[m   [33m8402df0[m Merge pull request #7 from Lethilinh2501/tuyen
+[32m|[m [1;32m|[m[1;36m\[m [36m\[m [1;36m\[m  
+[32m|[m [1;32m|[m [1;36m|[m [36m|[m[1;36m/[m  
+[32m|[m [1;32m|[m [1;36m|[m[1;36m/[m[36m|[m   
+[32m|[m [1;32m|[m * [36m|[m [33m16f019e[m[33m ([m[1;31morigin/tuyen[m[33m)[m Chuyển hướng tạm về trang chủ
+[32m|[m [1;32m|[m * [36m|[m [33me7653eb[m Sửa lại thông báo với comment
+[32m|[m [1;32m|[m * [36m|[m [33m3477466[m Làm code controller trước chờ giao diện
+[32m|[m [1;32m|[m * [36m|[m [33m0da7ff6[m sửa code
+[32m|[m * [1;33m|[m [36m|[m   [33ma0a4f32[m Sửa qly danh mục bài viết và qly bài viết
+[32m|[m [1;33m|[m[1;35m\[m [1;33m\[m [36m\[m  
+[32m|[m [1;33m|[m [1;35m|[m[1;33m/[m [36m/[m  
+[32m|[m [1;33m|[m[1;33m/[m[1;35m|[m [36m|[m   
+[32m|[m [1;33m|[m * [36m|[m   [33m042c560[m Merge branch 'main' into LinhLe
+[32m|[m [1;33m|[m [1;36m|[m[1;33m\[m [36m\[m  
+[32m|[m [1;33m|[m [1;36m|[m[1;33m/[m [36m/[m  
+[32m|[m [1;33m|[m[1;33m/[m[1;36m|[m [36m|[m   
+[32m|[m [1;33m|[m * [36m|[m [33m5b51512[m sửa lại qly danh mục bài viết và qly bài viết
+[32m|[m [1;33m|[m [31m|[m * [33m8019954[m đăng nhập đăng ký & thống kê
+[32m|[m [1;33m|[m [31m|[m * [33m34bd9a7[m Lưu thay đổi trong routes/web.php trước khi pop stash
+[32m|[m [1;33m|[m [31m|[m[1;33m/[m  
+[32m|[m [1;33m|[m[1;33m/[m[31m|[m   
+* [1;33m/[m [31m|[m [33mebc70be[m sửa qly danh mục bài viết và qly bài viết
+[1;33m|[m[1;33m/[m [31m/[m  
+* [31m|[m   [33m87526ac[m cập nhật giao diện qtri lien hệ, bài viết #1 from Lethilinh2501/ngocdung
+[32m|[m[33m\[m [31m\[m  
+[32m|[m [33m|[m [31m|[m * [33mb458dbf[m[33m ([m[1;31morigin/PH53245[m[33m)[m Lần đầu đẩy branch PH53245
+[32m|[m [33m|[m [31m|[m * [33m27ffbf6[m[33m ([m[1;31morigin/ngocdung[m[33m)[m Saleroom
+[32m|[m [33m|[m [31m|[m[33m/[m  
+[32m|[m [33m|[m[33m/[m[31m|[m   
+[32m|[m * [31m|[m   [33md0c0949[m Merge branch 'main' into ngocdung
+[32m|[m [35m|[m[32m\[m [31m\[m  
+[32m|[m [35m|[m[32m/[m [31m/[m  
+[32m|[m[32m/[m[35m|[m [31m|[m   
+* [35m|[m [31m|[m   [33mdd17f28[m Merge pull request #4 from Lethilinh2501/buitien
+[31m|[m[1;32m\[m [35m\[m [31m\[m  
+[31m|[m [1;32m|[m[31m_[m[35m|[m[31m/[m  
+[31m|[m[31m/[m[1;32m|[m [35m|[m   
+[31m|[m * [35m|[m   [33m0bb099d[m Merge branch 'main' into buitien
+[31m|[m [1;33m|[m[31m\[m [35m\[m  
+[31m|[m [1;33m|[m[31m/[m [35m/[m  
+[31m|[m[31m/[m[1;33m|[m [35m|[m   
+* [1;33m|[m [35m|[m   [33m526cf50[m Merge pull request #3 from Lethilinh2501/LinhLe
+[1;35m|[m[1;36m\[m [1;33m\[m [35m\[m  
+[1;35m|[m * [1;33m\[m [35m\[m   [33m0d16c36[m Merge branch 'main' into LinhLe
+[1;35m|[m [31m|[m[1;35m\[m [1;33m\[m [35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m [1;33m/[m [35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m [1;33m|[m [35m|[m   
+* [31m|[m [1;33m|[m [35m|[m [33m6bef997[m thêm quản trị bài viết và 1 số
+[32m|[m * [1;33m|[m [35m|[m [33m5191861[m sửa 1 số, thêm tin tức
+[32m|[m [32m|[m * [35m|[m [33m7d5ebc1[m cắt dao diện người dùng
+[32m|[m [32m|[m * [35m|[m [33m9c734fd[m cắt dao diện
+[32m|[m [32m|[m[32m/[m [35m/[m  
+[32m|[m[32m/[m[32m|[m [35m|[m   
+* [32m|[m [35m|[m [33me34c6e2[m Thêm model Category quản lý danh mục
+* [32m|[m [35m|[m [33mf3fad9e[m update web routes
+* [32m|[m [35m|[m [33mc4b6d2c[m migrate + seeder tin tức, xử lý crud nhân viên
+[33m|[m[32m\[m[32m|[m [35m|[m 
+[33m|[m * [35m|[m [33mb111459[m migrate + seeder tin tức, qtrị nhân viên
+[33m|[m[33m/[m [35m/[m  
+* [35m|[m [33m2788c53[m sửa 1 số, thêm factory, list-detail staff
+[34m|[m * [33ma0099e1[m Thêm file Category.php
+[34m|[m * [33m84e30d8[m Quản lý danh mục bài viết
+[34m|[m * [33mfd5d01f[m Cập nhật giao diện quản trị liên hệ
+[34m|[m[34m/[m  
+* [33m2f8eeb1[m Cập nhật ContactSeeder, routes và thêm ContactController cùng views
+* [33mbab9514[m bổ sung crud banner
+* [33m5d82b9a[m[33m ([m[1;31morigin/trungtuyen[m[33m, [m[1;31morigin/tien[m[33m, [m[1;31morigin/phamdung[m[33m)[m Add README file
+* [33m6dc5872[m DATN

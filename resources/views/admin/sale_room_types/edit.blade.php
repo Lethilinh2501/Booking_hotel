@@ -2,116 +2,102 @@
 
 @section('content')
 <main class="lh-main-content">
-    <div class="lh-main-content">
-        <div class="container-fluid">
-            <div class="lh-page-title">
-                <h5>Chỉnh sửa mối quan hệ Loại phòng - Khuyến mãi</h5>
+    <div class="container">
+        <h1>Chỉnh sửa Khuyến mãi Phòng</h1>
+        
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="lh-card">
-                        <div class="lh-card-header">
-                            <h4 class="lh-card-title">Form chỉnh sửa</h4>
-                        </div>
-                        <div class="lh-card-content">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            <form action="{{ route('admin.sale-room-types.update', $saleRoomType) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Tên khuyến mãi</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="name" class="form-control" value="{{ old('name', $saleRoomType->name) }}" placeholder="Tên khuyến mãi">
-                                        @error('name')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Giá trị</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" name="value" class="form-control" value="{{ old('value', $saleRoomType->value) }}" placeholder="Giá trị khuyến mãi">
-                                        @error('value')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Loại</label>
-                                    <div class="col-sm-9">
-                                        <select name="type" class="form-control">
-                                            <option {{ old('type', $saleRoomType->type) == 'percent' ? 'selected' : '' }} value="percent">Phần trăm</option>
-                                            <option {{ old('type', $saleRoomType->type) == 'fixed' ? 'selected' : '' }} value="fixed">Số tiền cố định</option>
-                                        </select>
-                                        @error('type')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Loại phòng</label>
-                                    <div class="col-sm-9">
-                                        <select name="room_type_ids[]" class="form-control" multiple>
-                                            @foreach ($roomTypes as $roomType)
-                                                <option value="{{ $roomType->id }}"
-                                                    {{ in_array($roomType->id, old('room_type_ids', $relatedSaleRoomTypes)) ? 'selected' : '' }}>
-                                                    {{ $roomType->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('room_type_ids')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                        @error('room_type_ids.*')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Ngày giờ bắt đầu</label>
-                                    <div class="col-sm-9">
-                                        <input type="datetime-local" name="start_date" class="form-control" value="{{ old('start_date', $saleRoomType->start_date ? \Carbon\Carbon::parse($saleRoomType->start_date)->format('Y-m-d\TH:i') : '') }}">
-                                        @error('start_date')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Ngày giờ kết thúc</label>
-                                    <div class="col-sm-9">
-                                        <input type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date', $saleRoomType->end_date ? \Carbon\Carbon::parse($saleRoomType->end_date)->format('Y-m-d\TH:i') : '') }}">
-                                        @error('end_date')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row align-items-center">
-                                    <label class="form-label-title col-sm-3 mb-0">Trạng thái</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control" name="status">
-                                            <option {{ old('status', $saleRoomType->status) == 'active' ? 'selected' : '' }} value="active">Hoạt động</option>
-                                            <option {{ old('status', $saleRoomType->status) == 'inactive' ? 'selected' : '' }} value="inactive">Không hoạt động</option>
-                                        </select>
-                                        @error('status')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                <a href="{{ route('admin.sale-room-types.index') }}" class="btn btn-secondary">Quay lại</a>
-                            </form>
-                        </div>
-                    </div>
+        @endif
+
+        <form action="{{ route('admin.sale-room-types.update', $saleRoomType->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên khuyến mãi</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       value="{{ old('name', $saleRoomType->name) }}" required>
+                @error('name')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="room_type_id" class="form-label">Loại Phòng</label>
+                <select class="form-control" id="room_type_id" name="room_type_id" required>
+                    <option value="">Chọn Loại Phòng</option>
+                    @foreach($roomTypes as $roomType)
+                        <option value="{{ $roomType->id }}" 
+                            {{ old('room_type_id', $saleRoomType->room_type_id) == $roomType->id ? 'selected' : '' }}>
+                            {{ $roomType->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('room_type_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="type" class="form-label">Loại khuyến mãi</label>
+                <select class="form-control" id="type" name="type" required>
+                    <option value="">-- Chọn loại --</option>
+                    <option value="percent" {{ old('type', $saleRoomType->type) == 'percent' ? 'selected' : '' }}>Phần trăm</option>
+                    <option value="fixed" {{ old('type', $saleRoomType->type) == 'fixed' ? 'selected' : '' }}>Số tiền cố định</option>
+                </select>
+                @error('type')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="value" class="form-label">Giá trị</label>
+                <input type="number" step="0.01" class="form-control" id="value" name="value" 
+                       value="{{ old('value', $saleRoomType->value) }}" required>
+                @error('value')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="start_date" class="form-label">Ngày bắt đầu</label>
+                    <input type="datetime-local" class="form-control" id="start_date" name="start_date" 
+                           value="{{ old('start_date', $saleRoomType->start_date ? \Carbon\Carbon::parse($saleRoomType->start_date)->format('Y-m-d\TH:i') : '') }}" required>
+                    @error('start_date')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="end_date" class="form-label">Ngày kết thúc</label>
+                    <input type="datetime-local" class="form-control" id="end_date" name="end_date" 
+                           value="{{ old('end_date', $saleRoomType->end_date ? \Carbon\Carbon::parse($saleRoomType->end_date)->format('Y-m-d\TH:i') : '') }}" required>
+                    @error('end_date')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
-        </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select class="form-control" id="status" name="status" required>
+                    <option value="active" {{ old('status', $saleRoomType->status) == 'active' ? 'selected' : '' }}>Hoạt động</option>
+                    <option value="inactive" {{ old('status', $saleRoomType->status) == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
+                </select>
+                @error('status')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a href="{{ route('admin.sale-room-types.index') }}" class="btn btn-secondary">Quay lại</a>
+        </form>
     </div>
+</main>
 @endsection
