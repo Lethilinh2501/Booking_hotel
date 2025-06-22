@@ -12,17 +12,13 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-
-    public function indexRoom(Request $request)
+    private function filterRooms(Request $request)
     {
-
-        $services = Service::where('is_active', 1)->get();
-
         Carbon::setLocale('vi');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         $checkIn = $request->input('check_in', Carbon::today()->setHour(14)->setMinute(0)->setSecond(0)->toDateTimeString());
-        $checkOut = $request->input('check_out', Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0)->toDateTimeString());
+        $checkOut = $request->input('check_out', Carbon::today()->addDays(3)->setHour(12)->setMinute(0)->setSecond(0)->toDateTimeString());
         $totalGuests = (int) $request->input('total_guests', 2);
         $childrenCount = (int) $request->input('children_count', 0);
         $roomCount = (int) $request->input('room_count', 1);
@@ -32,7 +28,7 @@ class HomeController extends Controller
             $checkOutDate = Carbon::parse($checkOut);
 
             if ($checkInDate->gte($checkOutDate)) {
-                $checkOutDate = $checkInDate->copy()->addDay()->setHour(12)->setMinute(0)->setSecond(0);
+                $checkOutDate = $checkInDate->copy()->addDays(3)->setHour(12)->setMinute(0)->setSecond(0);
             }
 
             $nights = max(1, $checkInDate->diffInDays($checkOutDate));
@@ -67,26 +63,44 @@ class HomeController extends Controller
             'bed_type',
             'children_free_limit'
         ])
-
             ->where('max_capacity', '>=', $totalPeople)
             ->where('is_active', 1)
             ->get();
 
         $roomTypes = $roomTypes->map(function ($roomType) use ($nights, $roomCount) {
             $roomType->total_original_price = $roomType->price * $nights * $roomCount;
-            $roomType->available_rooms = 1; // Placeholder
+            $roomType->available_rooms = $roomType->rooms()->count() ?? 1; // Giả định số phòng nếu chưa có quan hệ
             return $roomType;
         });
 
-        return view('client.home', compact('roomTypes', 'nights', 'totalGuests', 'childrenCount', 'roomCount', 'services'));
+        return [
+            'roomTypes' => $roomTypes,
+            'nights' => $nights,
+            'totalGuests' => $totalGuests,
+            'childrenCount' => $childrenCount,
+            'roomCount' => $roomCount,
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut
+        ];
     }
 
-    public function roomdetail($id)
+    public function indexRoom(Request $request)
     {
-        $roomType = RoomType::findOrFail($id);
+        $services = Service::where('is_active', 1)->get();
+        $filterData = $this->filterRooms($request);
 
+        return view('client.home', array_merge($filterData, ['services' => $services]));
+    }
+
+    public function roomdetail($id, Request $request)
+    {
+        $checkIn = $request->input('check_in', Carbon::today()->setHour(14)->setMinute(0)->setSecond(0)->toDateTimeString());
+        $checkOut = $request->input('check_out', Carbon::today()->addDays(3)->setHour(12)->setMinute(0)->setSecond(0)->toDateTimeString());
+
+        $roomType = RoomType::findOrFail($id);
         $amenities = Amenity::where('is_active', 1)->get();
         $rules = RulesAndRegulation::where('is_active', 1)->get();
-        return view('client.rooms.roomdetail', compact('roomType', 'amenities', 'rules'));
+
+        return view('client.rooms.roomdetail', compact('roomType', 'amenities', 'rules', 'checkIn', 'checkOut'));
     }
 }
