@@ -85,33 +85,3 @@
         </div>
     </section>
 @endsection
-
-<style>
-    .room-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 20px;
-        padding: 15px;
-    }
-
-    .room-image {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        background-color: #f0f0f0;
-    }
-
-    .discount-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: #ff4d4f;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: bold;
-        z-index: 10;
-    }
-</style>
