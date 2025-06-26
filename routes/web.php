@@ -25,6 +25,7 @@ use App\Http\Controllers\Client\UserController;
 
 use App\Http\Controllers\Receptionist\GuestController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\CheckAdminAccess;
 
 // Laravel Auth
 Auth::routes();
@@ -73,7 +74,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Banners
@@ -105,6 +106,15 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
+
+    // Users
+    Route::prefix('users')->as('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        // Route::post('/{id}/status', [UserController::class, 'updateStatus'])->name('updateStatus');
+        // Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
 
     // Post Categories
     Route::prefix('postcategory')->as('postcategory.')->group(function () {
