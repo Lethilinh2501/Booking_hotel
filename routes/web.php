@@ -106,6 +106,15 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
+    // Users
+    Route::prefix('users')->as('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        // Route::post('/{id}/status', [UserController::class, 'updateStatus'])->name('updateStatus');
+        // Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+
     // Post Categories
     Route::prefix('postcategory')->as('postcategory.')->group(function () {
         Route::get('/', [PostCategoryController::class, 'index'])->name('index');
