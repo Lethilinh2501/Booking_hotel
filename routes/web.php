@@ -25,6 +25,7 @@ use App\Http\Controllers\Client\UserController;
 
 use App\Http\Controllers\Receptionist\GuestController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\CheckAdminAccess;
 
 // Laravel Auth
 Auth::routes();
@@ -73,7 +74,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Banners
