@@ -7,10 +7,10 @@
     <main class="lh-main-content">
         <div class="container-fluid">
         <div class="col-md-8">
-            <h1 class="h3 mb-0">Danh sách liên hệ</h1>
+            <h1 class="h3 mb-0">Danh sách khách hàng</h1>
         </div>
         <div class="col-md-4 text-right">
-            <form action="{{ route('admin.contacts.index') }}" method="GET" class="form-inline">
+            <form action="{{ route('admin.users.index') }}" method="GET" class="form-inline">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="{{ request('search') }}">
                     <div class="input-group-append">
@@ -39,35 +39,50 @@
                     <thead class="thead-light">
                         <tr>
                             <th>ID</th>
-                            <th>Tiêu đề</th>
+                            <th>TÊN</th>
+                            <th>AVATAR</th>               
                             <th>Email</th>
                             <th>Trạng thái</th>
-                            <th>Ngày gửi</th>
+                            <th>QUYỀN SỞ HỮU</th>
+                            <th>NGÀY GỬI</th>
                             <th class="text-center">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($contacts as $contact)
+                        @forelse($users as $user)
                         <tr>
-                            <td>{{ $contact->id }}</td>
-                            <td>{{ Str::limit($contact->title, 30) }}</td>
-                            <td>{{ $contact->email }}</td>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->name }}</td>
                             <td>
-                                <span class="badge badge-{{
-                                    $contact->status == 'approved' ? 'success' :
-                                    ($contact->status == 'rejected' ? 'danger' : 'warning')
-                                }}">
-                                    {{ ucfirst($contact->status) }}
-                                </span>
+                            @if ($user->avatar)
+                                <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"
+                                    src="{{asset('storage/' . $user->avatar)}}" style="width: 50px;height: 50px"
+                                    alt="Avatar"/>
+                            @else
+                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"
+                                    style="width: 50px;height: 50px">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            </td>                                          
+                            <td>{{ $user->email }}</td>       
+                            <td>                    
+                                   @if ($user->is_active == '1')
+                                   <span class="badge bg-success">Hoạt động</span>
+                                   @else
+                                   <span class="badge bg-danger">Vô hiệu hóa</span>
+                                   @endif
+                                </span>                     
                             </td>
-                            <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
+                            <td>{{ $user->role }}</td>
+                            <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('admin.contacts.show', $contact->id) }}"
-                                       class="btn btn-sm btn-info" title="Xem chi tiết">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
+                                <a href="{{route('admin.users.show', $user->id) }}"
+                                class="btn btn-sm btn-info" >
+                                    <i class="fas fa-eye">Chi tiết</i>
+                                </a>    
+                                    {{-- <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                                 class="btn btn-sm btn-danger"
@@ -75,7 +90,7 @@
                                                 onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </div>
                             </td>
                         </tr>
@@ -89,34 +104,26 @@
             </div>
 
             @php
-                $currentPageContac = $contacts->currentPage();
-                $lastPageContac = $contacts->lastPage();
+                $currentPage = $users->currentPage();
+                $lastPage = $users->lastPage();
             @endphp
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    Hiển thị {{ $contacts->firstItem() }} đến {{ $contacts->lastItem() }} trong tổng số {{ $contacts->total() }} liên hệ
-                </div>
-                <ul class="pagination mb-0">
-                    <li class="page-item {{ $currentPageContac == 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $currentPageContac == 1 ? '#' : $contacts->appends(request()->query())->url($currentPageContac - 1) }}">
-                            Previous
-                        </a>
-                    </li>
+            <ul class="pagination"> 
+                <li class="page-item {{ $currentPage == 1 ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $currentPage == 1 ? '#' : $users->url($currentPage - 1) }}">Previous</a>
+                </li>
 
-                    @for ($i = 1; $i <= $lastPageContac; $i++)
-                        <li class="page-item {{ $currentPageContac == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $contacts->appends(request()->query())->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-
-                    <li class="page-item {{ $currentPageContac == $lastPageContac ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $currentPageContac == $lastPageContac ? '#' : $contacts->appends(request()->query())->url($currentPageContac + 1) }}">
-                            Next
-                        </a>
+                @for ($i = 1; $i <= $lastPage; $i++)
+                    <li class="page-item {{ $currentPage == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $users->url($i) }}">{{ $i }}</a>
                     </li>
-                </ul>
-</div>
+                @endfor
+
+                <li class="page-item {{ $currentPage == $lastPage ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $currentPage == $lastPage ? '#' : $users->url($currentPage + 1) }}">Next</a>
+                </li>
+            </ul>
+
 
         </div>
     </div>

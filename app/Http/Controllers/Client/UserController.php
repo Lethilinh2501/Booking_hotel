@@ -12,6 +12,16 @@ class UserController extends Controller
 {
     const PATH_UPLOAD_IMAGE = 'users';
 
+    public function index()
+    {
+        $users = User::latest()->paginate(10);
+        return view('admin.users.list', compact('users'));
+    }
+      public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.show', compact('user'));
+    }
     public function edit(string $id)
     {
         if (auth()->id() != $id) {

@@ -3,30 +3,31 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\UserController;
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\RoomTypeController;
-
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Receptionist\GuestController;
-
-use App\Http\Controllers\Admin\RoomTypeImageController;
-use App\Http\Controllers\Client\RoomTypeClientController;
-use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
+
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\Client\UserController;
+
+use App\Http\Controllers\Receptionist\GuestController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\CheckAdminAccess;
 
 // Laravel Auth
 Auth::routes();
@@ -75,7 +76,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Banners
@@ -108,6 +109,15 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
+    // Users
+    Route::prefix('users')->as('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        // Route::post('/{id}/status', [UserController::class, 'updateStatus'])->name('updateStatus');
+        // Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+
     // Post Categories
     Route::prefix('postcategory')->as('postcategory.')->group(function () {
         Route::get('/', [PostCategoryController::class, 'index'])->name('index');
@@ -137,6 +147,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth')->group(function () {
         Route::get('/create', [RoomController::class, 'create'])->name('create');
         Route::post('/store', [RoomController::class, 'store'])->name('store');
         Route::get('/{id}', [RoomController::class, 'show'])->name('show');
+        Route::get('/booked', [RoomController::class, 'bookedRooms'])->name('booked');
         Route::get('/{id}/edit', [RoomController::class, 'edit'])->name('edit');
         Route::put('/{id}', [RoomController::class, 'update'])->name('update');
         Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
