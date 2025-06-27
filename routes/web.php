@@ -145,6 +145,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)
         Route::get('/create', [RoomController::class, 'create'])->name('create');
         Route::post('/store', [RoomController::class, 'store'])->name('store');
         Route::get('/{id}', [RoomController::class, 'show'])->name('show');
+        Route::get('/booked', [RoomController::class, 'bookedRooms'])->name('booked');
         Route::get('/{id}/edit', [RoomController::class, 'edit'])->name('edit');
         Route::put('/{id}', [RoomController::class, 'update'])->name('update');
         Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
