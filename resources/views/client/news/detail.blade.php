@@ -3,6 +3,7 @@
 @section('title', $post->title)
 
 @section('content')
+
     <h1>{{ $post->title }}</h1>
 
     <p class="text-muted">

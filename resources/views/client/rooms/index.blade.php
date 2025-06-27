@@ -100,4 +100,83 @@
         @endif
     </div>
 </section>
+<section class="section-news py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary">Tin tức mới nhất</h2>
+            <div class="border-bottom border-primary border-3 mx-auto" style="width: 100px;"></div>
+        </div>
+
+        <div class="row g-4">
+            @foreach($posts as $post)
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                    @if($post->image)
+                    <div class="news-img-container" style="height: 200px; overflow: hidden;">
+                        <img src="{{ asset('storage/' . $post->image) }}" 
+                             class="card-img-top h-100 w-100 object-fit-cover" 
+                             alt="{{ $post->title }}"
+                             style="transition: transform 0.3s;">
+                    </div>
+                    @endif
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                <i class="far fa-calendar-alt me-1"></i> 
+                                {{ $post->created_at->format('d/m/Y') }}
+                            </span>
+                        </div>
+                        <h5 class="card-title fw-bold">
+                            <a href="{{ route('client.news.list', $post->id) }}" 
+                               class="text-decoration-none text-dark hover-text-primary">
+                                {{ $post->title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted">{{ Str::limit(strip_tags($post->content), 100) }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ route('client.news.list', $post->id) }}" 
+                           class="btn btn-outline-primary rounded-pill px-4">
+                            Xem thêm <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        @if($posts->count() > 0)
+        <div class="text-center mt-5">
+            <a href="{{ route('client.news.list') }}" 
+               class="btn btn-primary btn-lg rounded-pill px-4 shadow">
+                Xem tất cả tin tức <i class="fas fa-newspaper ms-2"></i>
+            </a>
+        </div>
+        @endif
+    </div>
+</section>
+
+@push('styles')
+<style>
+    .hover-text-primary:hover {
+        color: #0d6efd !important;
+    }
+    .news-img-container:hover img {
+        transform: scale(1.05);
+    }
+    .card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .border-primary {
+        border-color: #0d6efd !important;
+    }
+</style>
+@endpush
+</section>
+
 @endsection

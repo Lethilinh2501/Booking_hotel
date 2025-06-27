@@ -40,6 +40,8 @@ class SaleRoomTypeController extends Controller
     public function edit($id)
     {
         $saleRoomType = SaleRoomType::findOrFail($id);
+        \Log::info('Edit SaleRoomType Status:', ['id' => $id, 'status' => $saleRoomType->status]);
+        
         $roomTypes = RoomType::all();
         return view('admin.sale_room_types.edit', compact('saleRoomType', 'roomTypes'));
     }
@@ -69,11 +71,11 @@ class SaleRoomTypeController extends Controller
     public function toggleStatus($id)
     {
         $saleRoomType = SaleRoomType::findOrFail($id);
-        $saleRoomType->update([
-            'status' => !$saleRoomType->status
-        ]);
+        $newStatus = $saleRoomType->status === 'active' ? 'inactive' : 'active';
+        
+        $saleRoomType->update(['status' => $newStatus]);
 
         return redirect()->back()
-            ->with('success', 'Status updated successfully.');
+            ->with('success', 'Trạng thái đã được cập nhật thành công');
     }
 }

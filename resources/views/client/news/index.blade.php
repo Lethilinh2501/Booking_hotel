@@ -1,6 +1,10 @@
 @extends('layout.client')
 
 @section('content')
+<h1></h1>
+<h1></h1>
+<h1></h1>
+
 <div class="container py-5">
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold text-primary">Tin tức mới nhất</h1>

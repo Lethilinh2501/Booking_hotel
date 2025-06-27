@@ -31,7 +31,7 @@ use App\Http\Controllers\Admin\RoomTypeServiceController as AdminRoomTypeService
 Route::get('/news', [PostController::class, 'indexClient'])->name('client.news.list');
 Route::get('/news/category/{id}', [PostController::class, 'byCategory'])->name('client.news.category');
 Route::get('/news/{id}', [PostController::class, 'showClient'])->name('client.news.detail');
-
+Route::get('/rooms/{id}/detail', [RoomTypeClientController::class, 'showDetail'])->name('client.rooms.roomdetail');
 Auth::routes();
 require __DIR__ . '/auth.php';
 

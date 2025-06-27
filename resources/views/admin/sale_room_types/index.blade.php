@@ -30,8 +30,8 @@
                 </td>
                 <td>{{ $saleRoomType->start_date->format('d/m/Y') }} - {{ $saleRoomType->end_date->format('d/m/Y') }}</td>
                 <td>
-                    <span class="badge {{ $saleRoomType->status == 'active' ? 'bg-success' : 'bg-secondary' }}">
-                        {{ $saleRoomType->status == 'active' ? 'Hoạt động' : 'Không hoạt động' }}
+                    <span class="badge {{ $saleRoomType->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
+                        {{ $saleRoomType->status === 'active' ? 'Hoạt động' : 'Không hoạt động' }}
                     </span>
                 </td>
                 <td>

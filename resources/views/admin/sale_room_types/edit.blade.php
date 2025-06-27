@@ -87,12 +87,9 @@
             <div class="mb-3">
                 <label for="status" class="form-label">Trạng thái</label>
                 <select class="form-control" id="status" name="status" required>
-                    <option value="active" {{ old('status', $saleRoomType->status) == 'active' ? 'selected' : '' }}>Hoạt động</option>
-                    <option value="inactive" {{ old('status', $saleRoomType->status) == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
+                    <option value="active" {{ $saleRoomType->status === 'active' ? 'selected' : '' }}>Hoạt động</option>
+                    <option value="inactive" {{ $saleRoomType->status === 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                 </select>
-                @error('status')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">Cập nhật</button>

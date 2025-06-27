@@ -26,7 +26,7 @@ class SaleRoomType extends Model
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'status' => 'boolean',
+        'status' => 'string',
     ];
 
     // Constants for status
@@ -55,5 +55,10 @@ class SaleRoomType extends Model
         $now = now()->format('Y-m-d');
         return $query->where('start_date', '<=', $now)
                     ->where('end_date', '>=', $now);
+    }
+
+        public function getStatusAttribute($value)
+    {
+        return in_array($value, ['active', 'inactive']) ? $value : 'inactive';
     }
 }

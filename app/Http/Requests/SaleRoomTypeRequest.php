@@ -43,7 +43,7 @@ class SaleRoomTypeRequest extends FormRequest
         // For toggleStatus
         if ($this->route()->getName() === 'admin.sale-room-types.toggle-status') {
             return [
-                'status' => 'required|in:active,inactive',
+                // 'status' => 'required|in:active,inactive',
             ];
         }
 
