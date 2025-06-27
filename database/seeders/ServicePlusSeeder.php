@@ -2,17 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\ServicePlus;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\ServicePlus;
 
 class ServicePlusSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        ServicePlus::factory()->count(10)->create();
+        $data = [
+            ['name' => 'Tính phí đổ vỡ', 'price' => 0, 'is_active' => true],
+            ['name' => 'Dịch vụ dọn vệ sinh đặc biệt', 'price' => 200000, 'is_active' => true],
+            ['name' => 'Ghi nhận dùng minibar', 'price' => 0, 'is_active' => true],
+            ['name' => 'Phí phát sinh giờ trả phòng', 'price' => 150000, 'is_active' => true],
+        ];
+
+        foreach ($data as $item) {
+            ServicePlus::create($item);
+        }
     }
 }

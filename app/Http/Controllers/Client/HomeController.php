@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\RulesAndRegulation;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 
 class HomeController extends Controller
 {
@@ -41,11 +42,16 @@ class HomeController extends Controller
     public function indexRoom(Request $request)
     {
         $services = Service::where('is_active', true)->get();
+        $posts = Post::where('status', 'published')
+            ->whereNotNull('published_at')
+            ->latest('published_at')
+            ->take(6)
+            ->get();
         $data = $this->filterRooms($request); // Lọc danh sách phòng
 
         if ($data['error']) return back()->with('error', $data['error']);
 
-        return view('client.home', array_merge($data, ['services' => $services]));
+        return view('client.home', array_merge($data, ['services' => $services, 'posts' => $posts ]));
     }
 
     private function formatDateRange($checkInDate, $checkOutDate)
