@@ -25,6 +25,8 @@
 
                 <li class="lh-sb-item"><a href="{{ route('admin.bookings.index') }}"><i class="ri-hotel-bed-line"></i>
                         <span>Đặt phòng</span></a></li>
+                <li class="lh-sb-item"><a href="{{ route('admin.roomtypes.index') }}"><i class="ri-hotel-bed-line"></i>
+                        <span>loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.rooms.index') }}"><i class="ri-home-8-line"></i>
                         <span>Phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.services.index') }}"><i class="ri-service-line"></i>

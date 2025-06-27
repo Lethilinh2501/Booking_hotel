@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
 
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
@@ -210,7 +212,29 @@ Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)
         Route::put('/update/{id}', [PromotionController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [PromotionController::class, 'destroy'])->name('destroy');
     });
-});
+    // // Route loại phòng
+    Route::prefix('roomtypes')->name('roomtypes.')->group(function () {
+        Route::get('/', [RoomTypeController::class, 'index'])->name('index');
+        Route::get('/create', [RoomTypeController::class, 'create'])->name('create');
+        Route::post('/store', [RoomTypeController::class, 'store'])->name('store');
+        Route::get('/{id}', [RoomTypeController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [RoomTypeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [RoomTypeController::class, 'update'])->name('update');
+        Route::delete('/{id}', [RoomTypeController::class, 'destroy'])->name('destroy');
+
+        // Route ảnh loại phòng — PHẢI NẰM TRONG roomtypes
+        Route::prefix('{roomType}/images')->name('images.')->group(function () {
+            Route::get('/', [RoomTypeImageController::class, 'index'])->name('index');
+            Route::get('/create', [RoomTypeImageController::class, 'create'])->name('create');
+            Route::post('/', [RoomTypeImageController::class, 'store'])->name('store');
+            Route::get('/{image}/edit', [RoomTypeImageController::class, 'edit'])->name('edit');
+            Route::put('/{image}', [RoomTypeImageController::class, 'update'])->name('update');
+            Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
+        });
+    });
+    });
+
+
 
 // ------ RECEPTIONIST ROUTES -----
 Route::prefix('receptionist')->as('receptionist.')->group(function () {
