@@ -18,12 +18,16 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Admin\FaqController;
+
 
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\PromotionClientController;
 use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\Client\UserController;
+use App\Http\Controllers\Client\FaqClientController;
+
 
 use App\Http\Controllers\Receptionist\GuestController;
 use App\Http\Controllers\ReviewController;
@@ -39,6 +43,11 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
     Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('rooms.roomdetail');
 });
+
+//faq
+Route::get('/faqs', [FaqClientController::class, 'index'])->name('client.faqs.index');
+Route::post('/faqs/submit', [FaqClientController::class, 'submit'])->name('client.faqs.submit');
+
 
 // Phòng
 Route::get('/roomtypes', [RoomTypeClientController::class, 'index'])->name('roomtypes');
@@ -77,7 +86,12 @@ Route::middleware('auth')->group(function () {
 
 // ------------------- ADMIN ROUTES -------------------
 Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)->group(function () {
+// Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('faqs', FaqController::class);
+    Route::patch('faqs/{faq}/restore', [FaqController::class, 'restore'])->name('faqs.restore');
+    Route::delete('faqs/{faq}/force-delete', [FaqController::class, 'forceDelete'])->name('faqs.forceDelete');
 
     // Banners
     Route::prefix('banners')->as('banners.')->group(function () {

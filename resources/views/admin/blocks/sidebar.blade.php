@@ -65,6 +65,18 @@
                     </ul>
                 </li>
 
+
+                <li class="lh-sb-item sb-drop-item">
+                    <a href="javascript:void(0)" class="lh-drop-toggle">
+                        <i class="ri-image-line"></i> <span>FAQ <i
+                                class="drop-arrow ri-arrow-down-s-line"></i></span>
+                    </a>
+                    <ul class="lh-sb-drop" style="display: none;">
+                        <li><a href="{{ route('admin.faqs.index') }}" class="lh-page-link drop">Danh sách</a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- Nhân viên --}}
                 <li class="lh-sb-item sb-drop-item">
                     <a href="javascript:void(0)" class="lh-drop-toggle">

@@ -46,6 +46,11 @@
                                 Tin tức
                             </a>
                         </li>
+                         <li class="nav-item dropdown">
+                            <a class="nav-link " href="{{ route('client.faqs.index') }}">
+                                FAQ
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
