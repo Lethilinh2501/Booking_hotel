@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Role;
 use App\Models\Staff;
+use App\Models\StaffRole;
+use App\Models\StaffShift;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StaffFactory extends Factory
@@ -13,11 +15,11 @@ class StaffFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->phoneNumber(),
-            'role_id' => Role::inRandomOrder()->value('id'), // random role_id từ DB
-            'is_active' => $this->faker->boolean(90), // 90% true
+            'user_id' => User::factory(),
+            'role_id' => StaffRole::inRandomOrder()->first()->id ?? StaffRole::factory(),
+            'shift_id' => StaffShift::inRandomOrder()->first()->id ?? null,
+            'status' => $this->faker->randomElement(['active', 'inactive']),
+            'notes' => $this->faker->sentence(),
         ];
     }
 }

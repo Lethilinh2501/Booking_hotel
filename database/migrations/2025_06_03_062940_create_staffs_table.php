@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_staffs_table.php
         Schema::create('staffs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->unsignedBigInteger('role_id');
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Liên kết tai khoan
+            $table->foreignId('role_id')->constrained('staff_roles')->onDelete('cascade'); // Liên kết vai trò
+            $table->foreignId('shift_id')->nullable()->constrained('staff_shifts')->onDelete('set null'); // Ca làm việc
+            $table->enum('status', ['active', 'inactive'])->default('active'); // Trạng thái làm việc
+            $table->text('notes')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->softDeletes();//dekete_at xóa mềm
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('staffs');
