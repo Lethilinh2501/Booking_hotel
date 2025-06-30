@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class StaffRole extends Model
 {
+
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'permissions',
+    ];
 
-    protected $fillable = ['name'];
-
-    public function staffs()
+    public function staff()
     {
-        return $this->hasMany(Staff::class);
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 }

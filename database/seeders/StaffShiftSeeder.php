@@ -2,17 +2,36 @@
 
 namespace Database\Seeders;
 
-use App\Models\StaffShift;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\StaffShift;
 
 class StaffShiftSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        StaffShift::factory()->count(10)->create();
+
+        StaffShift::insert([
+            [
+                'name' => 'Ca sáng',
+                'start_time' => '06:00:00',
+                'end_time' => '14:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Ca chiều',
+                'start_time' => '14:00:00',
+                'end_time' => '22:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Ca tối',
+                'start_time' => '22:00:00',
+                'end_time' => '06:00:00',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }

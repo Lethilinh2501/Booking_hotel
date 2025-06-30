@@ -9,6 +9,15 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        Role::factory()->count(10)->create();
+        $roles = [
+            ['name' => 'Super Admin', 'guard_name' => 'web'],
+            ['name' => 'Admin', 'guard_name' => 'web'],
+            ['name' => 'Lễ tân', 'guard_name' => 'web'],
+            ['name' => 'Customer', 'guard_name' => 'web'],
+        ];
+
+        foreach ($roles as $roleData) {
+            Role::firstOrCreate($roleData);
+        }
     }
 }

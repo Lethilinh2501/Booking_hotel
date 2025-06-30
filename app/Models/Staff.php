@@ -8,24 +8,30 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Staff extends Model
 {
+    use HasFactory, SoftDeletes;
     protected $table = 'staffs';
 
-    use HasFactory, SoftDeletes;
-
-    protected $fillable = ['name', 'email', 'phone', 'role_id', 'is_active'];
-
+    protected $fillable = [
+        'user_id',
+        'role_id',
+        'status',
+        'notes',
+    ];
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'manager_id');
+    }
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(StaffRole::class, 'role_id');
     }
 
-    public function attendances()
+    public function shift()
     {
-        return $this->hasMany(StaffAttendance::class);
+        return $this->belongsTo(StaffShift::class, 'shift_id', 'id');
     }
-
-    public function shifts()
+    public function user()
     {
-        return $this->belongsToMany(StaffShift::class, 'staff_shifts_staff');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_staff_shifts_staff_table.php (pivot table for many-to-many)
-        Schema::create('staff_shifts_staff', function (Blueprint $table) {
+        Schema::create('staff_roles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('staff_id');
-            $table->unsignedBigInteger('staff_shift_id');
+            $table->string('name')->unique(); // Tên vai trò (Admin, Nhân viên...)
+            $table->json('permissions')->nullable(); // Quyền hạn (dạng JSON)
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff_shifts_staff');
+        Schema::dropIfExists('staff_roles');
     }
 };
