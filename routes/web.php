@@ -3,35 +3,36 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Middleware\CheckAdminAccess;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\RuleAndRegulationController;
 use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\RoomTypeController;
-use App\Http\Controllers\Admin\RoomTypeImageController;
-use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\DashboardController;
 
 
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\PostClientController;
-use App\Http\Controllers\Client\PromotionClientController;
-use App\Http\Controllers\Client\RoomTypeClientController;
-use App\Http\Controllers\Client\UserController;
+use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Client\FaqClientController;
-
-
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\RefundPolicyController;
 use App\Http\Controllers\Receptionist\GuestController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Middleware\CheckAdminAccess;
+
+
+use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Admin\RuleAndRegulationController;
 
 // Laravel Auth
 Auth::routes();
@@ -246,6 +247,17 @@ Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)
             Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
         });
     });
+Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
+        Route::get('/', [RefundPolicyController::class, 'index'])->name('index');
+        Route::get('/create', [RefundPolicyController::class, 'create'])->name('create');
+        Route::post('/store', [RefundPolicyController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [RefundPolicyController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [RefundPolicyController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [RefundPolicyController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [RefundPolicyController::class, 'destroy'])->name('destroy');
+    });
+
+
     });
 
 
