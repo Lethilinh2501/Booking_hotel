@@ -28,6 +28,7 @@ use App\Http\Controllers\Client\PromotionClientController;
 use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Client\FaqClientController;
+use App\Http\Controllers\Client\BookingController as ClientBookingController;
 
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\CheckAdminAccess;
@@ -268,3 +269,24 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::delete('/delete/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
     });
 });
+
+
+Route::prefix('bookings')
+    ->as('bookings.')
+    // ->middleware('auth') // Nếu client cần đăng nhập
+    ->group(function () {
+        Route::get('/', [ClientBookingController::class, 'index'])->name('index');
+        Route::get('/create', [ClientBookingController::class, 'create'])->name('create');
+        Route::post('/confirm', [ClientBookingController::class, 'confirm'])->name('confirm'); // Chuyển từ create sang confirm
+        Route::post('/store', [ClientBookingController::class, 'store'])->name('store'); // Lưu dữ liệu từ confirm
+        Route::get('{id}/returnVnpay', [ClientBookingController::class, 'returnVnpay'])->name('return.vnpay');
+        Route::get('{id}/show', [ClientBookingController::class, 'show'])->name('show');
+        Route::get('{id}/edit', [ClientBookingController::class, 'edit'])->name('edit');
+        Route::put('{id}', [ClientBookingController::class, 'update'])->name('update');
+        Route::delete('{id}/destroy', [ClientBookingController::class, 'destroy'])->name('destroy');
+        Route::post('/check-promotion', [ClientBookingController::class, 'checkPromotion'])->name('check-promotion');
+
+        Route::get('/payment/callback', [ClientBookingController::class, 'paymentCallback'])->name('payment.callback');
+        Route::get('/success', [ClientBookingController::class, 'success'])->name('success');
+        Route::post('{id}/process-next-payment', [ClientBookingController::class, 'processNextPayment'])->name('process-next-payment');
+    });

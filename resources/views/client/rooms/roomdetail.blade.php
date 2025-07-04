@@ -87,7 +87,7 @@
                                     {{ session('warning') }}
                                 </div>
                             @endif
-                            <form action="" method="GET" id="booking-form">
+                            <form action="{{ route('bookings.create') }}" method="GET" id="booking-form">
                                 @csrf
                                 <div class="lh-side-reservation-from">
                                     <label>Ngày nhận phòng - trả phòng</label>
