@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('staff_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // Tên vai trò (Admin, Nhân viên...)
-            $table->json('permissions')->nullable(); // Quyền hạn (dạng JSON)
+            $table->string('name')->unique();
+            $table->json('permissions')->nullable();
             $table->timestamps();
         });
     }

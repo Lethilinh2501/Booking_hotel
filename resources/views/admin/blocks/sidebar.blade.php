@@ -35,7 +35,13 @@
                         <span>Dịch vụ phòng Plus</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.amenities.index') }}"><i class="ri-service-line"></i>
                         <span>Tiện nghi</span></a></li>
-
+                <li class="lh-sb-item">
+    <a href="{{ route('admin.refund-policies.index') }}">
+        <i class="ri-refund-line"></i>
+        <span>Chính sách đền bù</span>
+    </a>
+</li>
+                </li>
                 {{-- Quản lý nội dung --}}
                 <li class="lh-sb-item-separator"></li>
                 <li class="lh-sb-title">Quản lý nội dung</li>
@@ -70,8 +76,7 @@
 
                 <li class="lh-sb-item sb-drop-item">
                     <a href="javascript:void(0)" class="lh-drop-toggle">
-                        <i class="ri-image-line"></i> <span>FAQ <i
-                                class="drop-arrow ri-arrow-down-s-line"></i></span>
+                        <i class="ri-image-line"></i> <span>FAQ <i class="drop-arrow ri-arrow-down-s-line"></i></span>
                     </a>
                     <ul class="lh-sb-drop" style="display: none;">
                         <li><a href="{{ route('admin.faqs.index') }}" class="lh-page-link drop">Danh sách</a>
@@ -107,25 +112,29 @@
                         {{-- <li><a href="{{ route('admin.post.listPost') }}" class="lh-page-link drop"><i
                                     class="ri-git-commit-line"></i>Bài viết</a></li> --}}
                     </ul>
-                </li>  
+                </li>
                 <li class="lh-sb-item"><a href="{{ route('admin.contacts.index') }}"><i class="ri-phone-line"></i>
                         <span>Liên hệ</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.promotions.index') }}"><i
                             class="ri-discount-percent-line"></i> <span>Khuyến mãi</span></a></li>
+                <li class="lh-sb-item"><a href="{{ route('admin.sale_room_types.index') }}"><i
+                            class="ri-discount-percent-line"></i> <span>Khuyến mãi loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.payment.index') }}"><i class="ri-wallet-3-line"></i>
                         <span>Thanh toán</span></a></li>
 
                 {{-- Tài khoản --}}
                 <li class="lh-sb-item-separator"></li>
                 <li class="lh-sb-title">Tài khoản</li>
-                <li class="lh-sb-item"><a href="{{ route('profile') }}"><i class="ri-user-settings-line"></i> <span>Cá
+                <li class="lh-sb-item"><a href="{{ route('profile') }}"><i class="ri-user-settings-line"></i>
+                        <span>Cá
                             nhân</span></a></li>
                 <li class="lh-sb-item">
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="ri-logout-box-line"></i> <span>Đăng xuất</span>
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf
+                    </form>
                 </li>
             </ul>
         </div>

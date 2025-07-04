@@ -30,6 +30,8 @@ class BookingController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
+            'customer_name' => 'required|string|max:255',
+            'status' => 'required|in:confirmed,paid,check_in,check_out,cancelled,refunded'
         ]);
 
         Booking::create($request->all());
@@ -38,11 +40,10 @@ class BookingController extends Controller
     }
 
     public function show($id)
-{
-    $booking = Booking::with('user')->findOrFail($id);
-    return view('admin.bookings.detail', compact('booking'));
-}
-
+    {
+        $booking = Booking::with('user')->findOrFail($id);
+        return view('admin.bookings.detail', compact('booking'));
+    }
 
     public function edit($id)
     {
@@ -61,6 +62,8 @@ class BookingController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
+            'customer_name' => 'required|string|max:255',
+            'status' => 'required|in:confirmed,paid,check_in,check_out,cancelled,refunded'
         ]);
 
         $booking->update($request->all());
@@ -73,20 +76,6 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
         $booking->delete();
 
-        return redirect()->route('admin.bookings.index')->with('success', 'Xoá đặt phòng thành công!');
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        $request->validate([
-            'status' => 'required|in:pending,confirmed,canceled,completed'
-        ]);
-
-        $booking->update([
-            'status' => $request->status
-        ]);
-
-        return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');
+        return redirect()->route('admin.bookings.index')->with('success', 'Xóa đặt phòng thành công!');
     }
 }
