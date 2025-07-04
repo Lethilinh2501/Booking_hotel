@@ -246,7 +246,8 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         });
     });
 
-Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
+    // chính sách hoàn tiền
+    Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
         Route::get('/', [RefundPolicyController::class, 'index'])->name('index');
         Route::get('/create', [RefundPolicyController::class, 'create'])->name('create');
         Route::post('/store', [RefundPolicyController::class, 'store'])->name('store');
@@ -254,9 +255,6 @@ Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
         Route::get('/edit/{id}', [RefundPolicyController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [RefundPolicyController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [RefundPolicyController::class, 'destroy'])->name('destroy');
-    });
-
-
     });
 
     // Route sale theo loại phòng
