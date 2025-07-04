@@ -110,6 +110,8 @@
                         <span>Liên hệ</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.promotions.index') }}"><i
                             class="ri-discount-percent-line"></i> <span>Khuyến mãi</span></a></li>
+                <li class="lh-sb-item"><a href="{{ route('admin.sale_room_types.index') }}"><i
+                            class="ri-discount-percent-line"></i> <span>Khuyến mãi loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.payment.index') }}"><i class="ri-wallet-3-line"></i>
                         <span>Thanh toán</span></a></li>
 
