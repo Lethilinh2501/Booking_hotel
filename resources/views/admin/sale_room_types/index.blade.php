@@ -59,7 +59,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <div class="btn-group">
+                                        
                                             <a href="{{ route('admin.sale_room_types.show', $sale->id) }}"
                                                 class="btn btn-sm btn-info" title="Xem chi tiết">
                                                 <i class="ri-eye-line"></i>
@@ -77,7 +77,7 @@
                                                     <i class="ri-delete-bin-line"></i>
                                                 </button>
                                             </form>
-                                        </div>
+                                        
                                     </td>
                                 </tr>
                             @empty

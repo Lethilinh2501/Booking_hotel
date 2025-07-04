@@ -55,7 +55,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
+                                     
                                             <a href="{{ route('admin.roomtypes.show', $item->id) }}" class="btn btn-info btn-sm">Xem</a>
                                             <a href="{{ route('admin.roomtypes.edit', $item->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                             <form action="{{ route('admin.roomtypes.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa loại phòng này?')">
@@ -63,7 +63,7 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Xoá</button>
                                             </form>
-                                        </div>
+                                       
                                     </td>
                                 </tr>
                             @empty
