@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\RoomTypeImageController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Admin\RefundPolicyController;
+
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\PromotionClientController;
@@ -242,6 +244,19 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
             Route::put('/{image}', [RoomTypeImageController::class, 'update'])->name('update');
             Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
         });
+    });
+
+Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
+        Route::get('/', [RefundPolicyController::class, 'index'])->name('index');
+        Route::get('/create', [RefundPolicyController::class, 'create'])->name('create');
+        Route::post('/store', [RefundPolicyController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [RefundPolicyController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [RefundPolicyController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [RefundPolicyController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [RefundPolicyController::class, 'destroy'])->name('destroy');
+    });
+
+
     });
 
     // Route sale theo loại phòng
