@@ -3,25 +3,31 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\StaffRole;
+use Illuminate\Support\Facades\DB;
 
 class StaffRoleSeeder extends Seeder
 {
     public function run(): void
     {
-
-        // 1. Tạo Admin full quyền
-        StaffRole::create([
-            'name' => 'Admin',
-            'permissions' => json_encode([
-                'view' => true,
-                'edit' => true,
-                'delete' => true,
-                'create' => true,
-            ]),
+        DB::table('staff_roles')->insert([
+            [
+                'name' => 'Quản trị hệ thống',
+                'permissions' => json_encode(['manage_users', 'manage_rooms', 'view_reports']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Lễ tân',
+                'permissions' => json_encode(['check_in', 'check_out', 'manage_bookings']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Kế toán',
+                'permissions' => json_encode(['view_reports', 'manage_payments']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
-
-        // 2. Tạo 4 vai trò ngẫu nhiên còn lại bằng factory
-        StaffRole::factory()->count(4)->create();
     }
 }

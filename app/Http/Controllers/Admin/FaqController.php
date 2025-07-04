@@ -58,7 +58,7 @@ $request->validate([
         $faq->delete();
         
         return redirect()->route('admin.faqs.index')
-               ->with('success', 'FAQ moved to trash.');
+               ->with('success', 'Đã xóa câu hỏi.');
     }
 
     public function restore($id)
@@ -67,7 +67,7 @@ $request->validate([
         $faq->restore();
         
         return redirect()->route('admin.faqs.index')
-               ->with('success', 'FAQ restored successfully.');
+               ->with('success', 'Thành công.');
     }
 
     public function forceDelete($id)
@@ -79,7 +79,7 @@ $request->validate([
         $faq->forceDelete();
         
         return redirect()->route('admin.faqs.index')
-               ->with('success', 'FAQ permanently deleted.');
+               ->with('success', 'Đã xóa câu hỏi.');
     }
 
     /**

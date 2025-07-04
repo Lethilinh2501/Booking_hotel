@@ -9,7 +9,15 @@ class SaleRoomType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['room_type_id', 'sale_price', 'start_date', 'end_date'];
+    protected $fillable = [
+    'name',
+    'value',
+    'type',
+    'room_type_id',
+    'start_date',
+    'end_date',
+    'status',
+];
 
     public function roomType()
     {
