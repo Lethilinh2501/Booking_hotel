@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ServicePlus extends Model
 {
     use HasFactory, SoftDeletes;
-
+    protected $table = 'service_plus';
     protected $fillable = ['name', 'price', 'is_active'];
 
     public function bookingServicePluses()

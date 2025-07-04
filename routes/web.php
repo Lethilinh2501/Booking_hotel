@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\RoomTypeImageController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\admin\ServicePlusController;
+
 use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
 
@@ -180,6 +182,17 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::get('/{id}/edit', [ServiceController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ServiceController::class, 'update'])->name('update');
         Route::delete('/{id}', [ServiceController::class, 'destroy'])->name('destroy');
+    });
+
+    // Services plusspluss
+    Route::prefix('servicesPlus')->as('servicesPlus.')->group(function () {
+        Route::get('/', [ServicePlusController::class, 'index'])->name('index');
+        Route::get('/create', [ServicePlusController::class, 'create'])->name('create');
+        Route::post('/store', [ServicePlusController::class, 'store'])->name('store');
+        Route::get('/{id}', [ServicePlusController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ServicePlusController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ServicePlusController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ServicePlusController::class, 'destroy'])->name('destroy');
     });
 
     // Payments

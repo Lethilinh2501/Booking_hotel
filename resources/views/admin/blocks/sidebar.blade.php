@@ -31,6 +31,8 @@
                         <span>Phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.services.index') }}"><i class="ri-service-line"></i>
                         <span>Dịch vụ phòng</span></a></li>
+                <li class="lh-sb-item"><a href="{{ route('admin.servicesPlus.index') }}"><i class="ri-service-line"></i>
+                        <span>Dịch vụ phòng Plus</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.amenities.index') }}"><i class="ri-service-line"></i>
                         <span>Tiện nghi</span></a></li>
                 <li class="lh-sb-item">
