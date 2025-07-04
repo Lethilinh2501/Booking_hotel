@@ -29,12 +29,12 @@
                         @foreach ($listStaff as $key => $staff)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $staff->name }}</td>
-                                <td>{{ $staff->email }}</td>
-                                <td>{{ $staff->phone }}</td>
+                                <td>{{ $staff->user->name }}</td>
+                                <td>{{ $staff->user->email }}</td>
+                                <td>{{ $staff->user->phone }}</td>
                                 <td>{{ $staff->role ? $staff->role->name : 'Không có' }}</td>
                                 <td>
-                                    @if ($staff->is_active)
+                                    @if ($staff->status == 'active')
                                         <span class="badge bg-success">Hoạt động</span>
                                     @else
                                         <span class="badge bg-danger">Ngưng hoạt động</span>

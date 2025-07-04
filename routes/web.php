@@ -3,36 +3,34 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Middleware\CheckAdminAccess;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\UserController;
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\DashboardController;
-
-
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Client\FaqClientController;
-use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Admin\RefundPolicyController;
-use App\Http\Controllers\Receptionist\GuestController;
-
-
-use App\Http\Controllers\Admin\RoomTypeImageController;
-use App\Http\Controllers\Client\RoomTypeClientController;
-use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Admin\RefundPolicyController;
+
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\Client\UserController;
+use App\Http\Controllers\Client\FaqClientController;
+
+use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\CheckAdminAccess;
 
 // Laravel Auth
 Auth::routes();
@@ -86,8 +84,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)->group(function () {
-// Route::prefix('admin')->as('admin.')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class)->group(function () {
+    // Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('faqs', FaqController::class);
@@ -247,6 +245,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth',CheckAdminAccess::class)
             Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
         });
     });
+
 Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
         Route::get('/', [RefundPolicyController::class, 'index'])->name('index');
         Route::get('/create', [RefundPolicyController::class, 'create'])->name('create');
@@ -260,17 +259,14 @@ Route::prefix('refund-policies')->as('refund-policies.')->group(function () {
 
     });
 
-
-
-// ------ RECEPTIONIST ROUTES -----
-Route::prefix('receptionist')->as('receptionist.')->group(function () {
-    Route::prefix('guests')->as('guests.')->group(function () {
-        Route::get('/', [GuestController::class, 'listGuest'])->name('listGuest');
-        Route::get('/add-guest', [GuestController::class, 'addGuest'])->name('addGuest');
-        Route::post('/add-guest', [GuestController::class, 'addPostGuest'])->name('addPostGuest');
-        Route::get('/detail-guest/{idGuest}', [GuestController::class, 'detailGuest'])->name('detailGuest');
-        Route::delete('/delete-guest', [GuestController::class, 'deleteGuest'])->name('deleteGuest');
-        Route::get('update-guest/{idGuest}', [GuestController::class, 'updateGuest'])->name('updateGuest');
-        Route::patch('update-guest/{idGuest}', [GuestController::class, 'updatePatchGuest'])->name('updatePatchGuest');
+    // Route sale theo loại phòng
+    Route::prefix('admin/sale-room-types')->name('sale_room_types.')->group(function () {
+        Route::get('/', [SaleRoomTypeController::class, 'index'])->name('index');
+        Route::get('/create', [SaleRoomTypeController::class, 'create'])->name('create');
+        Route::post('/store', [SaleRoomTypeController::class, 'store'])->name('store');
+        Route::get('/{id}', [SaleRoomTypeController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [SaleRoomTypeController::class, 'edit'])->name('edit');
+        Route::patch('/update/{id}', [SaleRoomTypeController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
     });
 });
