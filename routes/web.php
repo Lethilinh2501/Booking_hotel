@@ -103,8 +103,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-// Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class)->group(function () {
-    Route::prefix('admin')->as('admin.')->group(function () {
+Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class)->group(function () {
+    // Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('faqs', FaqController::class);
