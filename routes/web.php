@@ -20,6 +20,10 @@ use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\RoomTypeImageController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\admin\ServicePlusController;
+use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\SystemController;
+
+
 
 use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
@@ -31,6 +35,10 @@ use App\Http\Controllers\Client\RoomTypeClientController;
 use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Client\FaqClientController;
 use App\Http\Controllers\Client\BookingController as ClientBookingController;
+use App\Http\Controllers\Client\AboutController as ClientAboutController;
+use App\Http\Controllers\Client\SystemController as ClientSystemController;
+
+
 
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\CheckAdminAccess;
@@ -44,6 +52,14 @@ Route::prefix('client')->name('client.')->group(function () {
     // Trang chủ + tìm kiếm
     Route::get('/', [HomeController::class, 'indexRoom'])->name('home');
     Route::get('/roomtypes/{id}', [HomeController::class, 'roomdetail'])->name('rooms.roomdetail');
+});
+
+//system
+Route::get('/system', [ClientSystemController::class, 'index'])->name('client.system.index');
+
+//about
+Route::prefix('about')->as('client.about.')->group(function () {
+    Route::get('/', [ClientAboutController::class, 'index'])->name('index');
 });
 
 //faq
@@ -87,13 +103,23 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------- ADMIN ROUTES -------------------
-Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class)->group(function () {
-    // Route::prefix('admin')->as('admin.')->group(function () {
+// Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class)->group(function () {
+    Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('faqs', FaqController::class);
     Route::patch('faqs/{faq}/restore', [FaqController::class, 'restore'])->name('faqs.restore');
     Route::delete('faqs/{faq}/force-delete', [FaqController::class, 'forceDelete'])->name('faqs.forceDelete');
+
+    //systems 
+    Route::prefix('system')->as('system.')->group(function () {
+        Route::get('/', [SystemController::class, 'index'])->name('index');
+        Route::get('/create', [SystemController::class, 'create'])->name('create');
+        Route::post('/store', [SystemController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [SystemController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [SystemController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [SystemController::class, 'destroy'])->name('destroy');
+    });
 
     // Banners
     Route::prefix('banners')->as('banners.')->group(function () {
@@ -104,6 +130,16 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::delete('/delete', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
         Route::get('/{idBanner}/edit', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::patch('/{idBanner}', [BannerController::class, 'updatePatchBanner'])->name('updatePatchBanner');
+    });
+
+    //about
+    Route::prefix('about')->as('about.')->group(function () {
+        Route::get('/', [AboutController::class, 'index'])->name('index');
+        Route::get('/edit', [AboutController::class, 'edit'])->name('edit');
+        Route::post('/update', [AboutController::class, 'update'])->name('update');
+        Route::get('/create', [AboutController::class, 'create'])->name('create');
+        Route::post('/store', [AboutController::class, 'store'])->name('store');
+        Route::delete('/{id}', [AboutController::class, 'destroy'])->name('destroy');    
     });
 
     // Staffs

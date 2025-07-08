@@ -56,8 +56,14 @@
                                 <span class="badge badge-{{
                                     $contact->status == 'approved' ? 'success' :
                                     ($contact->status == 'rejected' ? 'danger' : 'warning')
-                                }}">
-                                    {{ ucfirst($contact->status) }}
+                                }} text-dark font-weight-bold">
+                                    @if($contact->status == 'approved')
+                                        Đã duyệt
+                                    @elseif($contact->status == 'rejected')
+                                        Đã từ chối
+                                    @else
+                                        Chờ xử lý
+                                    @endif
                                 </span>
                             </td>
                             <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
@@ -65,7 +71,7 @@
                                 <div class="btn-group" role="group">
                                     <a href="{{ route('admin.contacts.show', $contact->id) }}"
                                        class="btn btn-sm btn-info" title="Xem chi tiết">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye">Xem</i>
                                     </a>
                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
@@ -73,7 +79,7 @@
                                                 class="btn btn-sm btn-danger"
                                                 title="Xóa"
                                                 onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-trash">Xóa</i>
                                         </button>
                                     </form>
                                 </div>

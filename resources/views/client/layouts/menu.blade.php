@@ -20,12 +20,6 @@
                                 Danh sách loại phòng
                             </a>
                         </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link " href="">
-                                Giới thiệu
-                            </a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link " href="{{ route('contacts.create') }}">
                                 Liên lạc
@@ -46,9 +40,19 @@
                                 Tin tức
                             </a>
                         </li>
-                         <li class="nav-item dropdown">
+                        <li class="nav-item dropdown">
                             <a class="nav-link " href="{{ route('client.faqs.index') }}">
                                 FAQ
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="{{ route('client.about.index') }}">
+                                Giới thiệu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('client.system.index') }}">
+                                Hệ thống
                             </a>
                         </li>
                     </ul>

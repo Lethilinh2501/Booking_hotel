@@ -73,6 +73,33 @@
                     </ul>
                 </li>
 
+                {{-- Quản lý About --}}
+                <li class="lh-sb-item sb-drop-item">
+                    <a href="javascript:void(0)" class="lh-drop-toggle">
+                        <i class="ri-information-line"></i> 
+                        <span>Giới thiệu <i class="drop-arrow ri-arrow-down-s-line"></i></span>
+                    </a>
+                    <ul class="lh-sb-drop" style="display: none;">
+                        <li><a href="{{ route('admin.about.create') }}" class="lh-page-link drop">Thêm</a></li>
+                        <li><a href="{{ route('admin.about.index') }}" class="lh-page-link drop">Danh sách</a></li>
+                    </ul>
+                </li>
+
+                {{-- Quản lý hệ thống --}}
+                <li class="lh-sb-item sb-drop-item">
+                    <a href="javascript:void(0)" class="lh-drop-toggle">
+                        <i class="ri-settings-3-line"></i> <span>Hệ thống <i
+                                class="drop-arrow ri-arrow-down-s-line"></i></span>
+                    </a>
+                    <ul class="lh-sb-drop" style="display: none;">
+                        <li>
+                            <a href="{{ route('admin.system.create') }}" class="lh-page-link drop">Thêm</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.system.index') }}" class="lh-page-link drop">Danh sách</a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="lh-sb-item sb-drop-item">
                     <a href="javascript:void(0)" class="lh-drop-toggle">
