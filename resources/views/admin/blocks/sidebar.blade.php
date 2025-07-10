@@ -36,12 +36,21 @@
                 <li class="lh-sb-item"><a href="{{ route('admin.amenities.index') }}"><i class="ri-service-line"></i>
                         <span>Tiện nghi</span></a></li>
                 <li class="lh-sb-item">
-    <a href="{{ route('admin.refund-policies.index') }}">
-        <i class="ri-refund-line"></i>
-        <span>Chính sách đền bù</span>
+                    <a href="{{ route('admin.refund-policies.index') }}">
+                        <i class="ri-refund-line"></i>
+                        <span>Chính sách đền bù</span>
+                    </a>
+                 <div class="sidebar-item">
+                        <a href="{{ route('admin.refunds.index') }}">
+                            <i class="ri-exchange-dollar-line"></i>
+                            <span>Đền bù </span> </a> </a></div> </li>
+                            <div class="sidebar-item">
+    <a href="{{ route('admin.roles.index') }}">
+        <i class="ri-user-settings-line"></i>
+        <span>Quyền hạn</span>
     </a>
-</li>
-                </li>
+</div>
+
                 {{-- Quản lý nội dung --}}
                 <li class="lh-sb-item-separator"></li>
                 <li class="lh-sb-title">Quản lý nội dung</li>
@@ -76,7 +85,7 @@
                 {{-- Quản lý About --}}
                 <li class="lh-sb-item sb-drop-item">
                     <a href="javascript:void(0)" class="lh-drop-toggle">
-                        <i class="ri-information-line"></i> 
+                        <i class="ri-information-line"></i>
                         <span>Giới thiệu <i class="drop-arrow ri-arrow-down-s-line"></i></span>
                     </a>
                     <ul class="lh-sb-drop" style="display: none;">

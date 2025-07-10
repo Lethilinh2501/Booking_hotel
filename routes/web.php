@@ -3,45 +3,47 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Middleware\CheckAdminAccess;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Admin\SystemController;
+use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\RuleAndRegulationController;
 use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\RoomTypeController;
-use App\Http\Controllers\Admin\RoomTypeImageController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\admin\ServicePlusController;
-use App\Http\Controllers\Admin\AboutController;
-use App\Http\Controllers\Admin\SystemController;
 
 
 
-use App\Http\Controllers\Admin\SaleRoomTypeController;
-use App\Http\Controllers\Admin\RefundPolicyController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PromotionController;
 
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\PostClientController;
-use App\Http\Controllers\Client\PromotionClientController;
-use App\Http\Controllers\Client\RoomTypeClientController;
-use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Client\FaqClientController;
-use App\Http\Controllers\Client\BookingController as ClientBookingController;
+use App\Http\Controllers\admin\ServicePlusController;
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\RefundPolicyController;
+use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\Client\PromotionClientController;
+
+
+
+use App\Http\Controllers\Admin\RuleAndRegulationController;
 use App\Http\Controllers\Client\AboutController as ClientAboutController;
 use App\Http\Controllers\Client\SystemController as ClientSystemController;
-
-
-
-use App\Http\Controllers\ReviewController;
-use App\Http\Middleware\CheckAdminAccess;
+use App\Http\Controllers\Client\BookingController as ClientBookingController;
 
 // Laravel Auth
 Auth::routes();
@@ -317,6 +319,28 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::patch('/update/{id}', [SaleRoomTypeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('refunds')->as('refunds.')->group(function  () {
+    Route::get('/', [RefundController::class, 'index'])->name('index');
+    Route::get('/create', [RefundController::class, 'create'])->name('create');
+    Route::post('/store', [RefundController::class, 'store'])->name('store');
+    Route::get('/{id}', [RefundController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [RefundController::class, 'edit'])->name('edit');
+    Route::patch('/update/{id}', [RefundController::class, 'update'])->name('update');
+    Route::delete('/delete/{id}', [RefundController::class, 'destroy'])->name('destroy');
+});
+Route::prefix('roles')->name('roles.')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('index');
+    Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::post('/store', [RoleController::class, 'store'])->name('store');
+    Route::get('/show/{id}', [RoleController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [RoleController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('destroy');
+});
+
+
+
 });
 
 
@@ -339,3 +363,4 @@ Route::prefix('bookings')
         Route::get('/success', [ClientBookingController::class, 'success'])->name('success');
         Route::post('{id}/process-next-payment', [ClientBookingController::class, 'processNextPayment'])->name('process-next-payment');
     });
+       
