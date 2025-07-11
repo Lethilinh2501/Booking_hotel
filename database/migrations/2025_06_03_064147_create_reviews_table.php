@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->tinyInteger('rating');
             $table->text('comment')->nullable();
+            $table->text('response')->nullable(); // Phản hồi từ admin
             $table->timestamps();
             $table->softDeletes();
         });

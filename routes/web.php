@@ -1,49 +1,46 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Middleware\CheckAdminAccess;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\AboutController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\UserController;
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\RoomTypeController;
-
-
-
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PromotionController;
-
-use App\Http\Controllers\Client\FaqClientController;
-use App\Http\Controllers\admin\ServicePlusController;
-use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PostCategoryController;
-use App\Http\Controllers\Admin\RefundPolicyController;
-use App\Http\Controllers\Admin\SaleRoomTypeController;
-use App\Http\Controllers\Admin\RoomTypeImageController;
-use App\Http\Controllers\Client\RoomTypeClientController;
-use App\Http\Controllers\Client\PromotionClientController;
-
-
-
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuleAndRegulationController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\RoomTypeImageController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\admin\ServicePlusController;
+use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\SystemController;
+use App\Http\Controllers\Admin\SaleRoomTypeController;
+use App\Http\Controllers\Admin\RefundPolicyController;
+use App\Http\Controllers\Admin\StaffShiftController;
+use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RefundController;
+
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClientController;
+use App\Http\Controllers\Client\PromotionClientController;
+use App\Http\Controllers\Client\RoomTypeClientController;
+use App\Http\Controllers\Client\UserController;
+use App\Http\Controllers\Client\FaqClientController;
+use App\Http\Controllers\Client\BookingController as ClientBookingController;
 use App\Http\Controllers\Client\AboutController as ClientAboutController;
 use App\Http\Controllers\Client\SystemController as ClientSystemController;
-use App\Http\Controllers\Client\BookingController as ClientBookingController;
+
+use App\Http\Controllers\ReviewController;
+use App\Http\Middleware\CheckAdminAccess;
 
 // Laravel Auth
 Auth::routes();
@@ -77,7 +74,7 @@ Route::get('/promotions', [PromotionClientController::class, 'index'])->name('cl
 
 // router tin tức client
 Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
-Route::get('/tin-tuc/{id}', [PostClientController::class, 'show'])->name('client.posts.show');
+Route::get('/tin-tuc/{post:slug}', [PostClientController::class, 'show'])->name('client.posts.show');
 Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
 
 // Liên hệ
@@ -141,7 +138,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::post('/update', [AboutController::class, 'update'])->name('update');
         Route::get('/create', [AboutController::class, 'create'])->name('create');
         Route::post('/store', [AboutController::class, 'store'])->name('store');
-        Route::delete('/{id}', [AboutController::class, 'destroy'])->name('destroy');    
+        Route::delete('/{id}', [AboutController::class, 'destroy'])->name('destroy');
     });
 
     // Staffs
@@ -155,12 +152,29 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::patch('/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
     });
 
+    // Staff_shifts
+    Route::prefix('staff_shifts')->as('staff_shifts.')->group(function () {
+        Route::get('/', [StaffShiftController::class, 'index'])->name('index');
+        Route::get('/create', [StaffShiftController::class, 'create'])->name('create');
+        Route::post('/store', [StaffShiftController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [StaffShiftController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch'], '/{id}', [StaffShiftController::class, 'update'])->name('update');
+        Route::delete('/{id}', [StaffShiftController::class, 'destroy'])->name('destroy');
+    });
+
     // Contacts
     Route::prefix('contacts')->as('contacts.')->group(function () {
         Route::get('/', [ContactController::class, 'index'])->name('index');
         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
+    });
+
+    // Admin_Accounts
+    Route::prefix('admin_accounts')->as('admin_accounts.')->group(function () {
+        Route::get('/', [AdminAccountController::class, 'index'])->name('index');
+        Route::get('{id}/edit', [AdminAccountController::class, 'edit'])->name('edit');
+        Route::put('{id}/update', [AdminAccountController::class, 'update'])->name('update');
     });
 
     // Users
@@ -277,7 +291,8 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::put('/update/{id}', [PromotionController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [PromotionController::class, 'destroy'])->name('destroy');
     });
-    // // Route loại phòng
+
+    // Route loại phòng
     Route::prefix('roomtypes')->name('roomtypes.')->group(function () {
         Route::get('/', [RoomTypeController::class, 'index'])->name('index');
         Route::get('/create', [RoomTypeController::class, 'create'])->name('create');
@@ -296,6 +311,14 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
             Route::put('/{image}', [RoomTypeImageController::class, 'update'])->name('update');
             Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
         });
+    });
+
+    // reviews
+    Route::prefix('reviews')->as('reviews.')->group(function () {
+        Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+        Route::get('{review}/show', [AdminReviewController::class, 'show'])->name('show');
+        Route::post('{review}/response', [AdminReviewController::class, 'response'])->name('response');
+        Route::delete('{review}/destroy', [AdminReviewController::class, 'destroy'])->name('destroy');
     });
 
     // chính sách hoàn tiền
@@ -363,4 +386,3 @@ Route::prefix('bookings')
         Route::get('/success', [ClientBookingController::class, 'success'])->name('success');
         Route::post('{id}/process-next-payment', [ClientBookingController::class, 'processNextPayment'])->name('process-next-payment');
     });
-       
