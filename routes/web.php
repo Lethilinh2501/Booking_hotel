@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAccountController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,7 @@ use App\Http\Controllers\admin\ServicePlusController;
 
 use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
-
+use App\Http\Controllers\Admin\StaffShiftController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\PromotionClientController;
@@ -59,7 +60,7 @@ Route::get('/promotions', [PromotionClientController::class, 'index'])->name('cl
 
 // router tin tức client
 Route::get('/tin-tuc', [PostClientController::class, 'index'])->name('client.posts.index');
-Route::get('/tin-tuc/{id}', [PostClientController::class, 'show'])->name('client.posts.show');
+Route::get('/tin-tuc/{post:slug}', [PostClientController::class, 'show'])->name('client.posts.show');
 Route::get('/tin-tuc/danh-muc/{id}', [PostClientController::class, 'byCategory'])->name('client.posts.byCategory');
 
 // Liên hệ
@@ -117,12 +118,29 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::patch('/{idStaff}', [StaffController::class, 'updatePatchStaff'])->name('updatePatchStaff');
     });
 
+    // Staff_shifts
+    Route::prefix('staff_shifts')->as('staff_shifts.')->group(function () {
+        Route::get('/', [StaffShiftController::class, 'index'])->name('index');
+        Route::get('/create', [StaffShiftController::class, 'create'])->name('create');
+        Route::post('/store', [StaffShiftController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [StaffShiftController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch'], '/{id}', [StaffShiftController::class, 'update'])->name('update');
+        Route::delete('/{id}', [StaffShiftController::class, 'destroy'])->name('destroy');
+    });
+
     // Contacts
     Route::prefix('contacts')->as('contacts.')->group(function () {
         Route::get('/', [ContactController::class, 'index'])->name('index');
         Route::get('/{id}', [ContactController::class, 'show'])->name('show');
         Route::post('/{id}/status', [ContactController::class, 'updateStatus'])->name('updateStatus');
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
+    });
+
+    // Admin_Accounts
+    Route::prefix('admin_accounts')->as('admin_accounts.')->group(function () {
+        Route::get('/', [AdminAccountController::class, 'index'])->name('index');
+        Route::get('{id}/edit', [AdminAccountController::class, 'edit'])->name('edit');
+        Route::put('{id}/update', [AdminAccountController::class, 'update'])->name('update');
     });
 
     // Users
@@ -239,7 +257,8 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::put('/update/{id}', [PromotionController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [PromotionController::class, 'destroy'])->name('destroy');
     });
-    // // Route loại phòng
+
+    // Route loại phòng
     Route::prefix('roomtypes')->name('roomtypes.')->group(function () {
         Route::get('/', [RoomTypeController::class, 'index'])->name('index');
         Route::get('/create', [RoomTypeController::class, 'create'])->name('create');

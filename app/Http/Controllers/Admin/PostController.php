@@ -12,7 +12,7 @@ class PostController extends Controller
 {
     public function listPost()
     {
-        $listPost = Post::with(['author.role', 'category'])
+        $listPost = Post::with(['author.userRole', 'category'])
             ->orderBy('created_at', 'desc')
             ->paginate(5);
         return view('admin.post.list-post', compact('listPost'));

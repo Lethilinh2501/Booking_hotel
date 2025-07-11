@@ -11,8 +11,8 @@ class StaffShift extends Model
 
     protected $fillable = ['name', 'start_time', 'end_time'];
 
-    public function staffs()
+    public function staff()
     {
-        return $this->belongsToMany(Staff::class, 'staff_shifts_staff');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 }

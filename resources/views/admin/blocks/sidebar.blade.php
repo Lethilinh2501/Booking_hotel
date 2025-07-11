@@ -91,8 +91,8 @@
                                 class="drop-arrow ri-arrow-down-s-line"></i></span>
                     </a>
                     <ul class="lh-sb-drop" style="display: none;">
-                        <li><a href="{{ route('admin.staffs.addStaff') }}" class="lh-page-link drop">Thêm</a></li>
-                        <li><a href="{{ route('admin.staffs.listStaff') }}" class="lh-page-link drop">Danh sách</a>
+                        <li><a href="{{ route('admin.staffs.listStaff') }}" class="lh-page-link drop">Nhân sự</a>
+                        <li><a href="{{ route('admin.staff_shifts.index') }}" class="lh-page-link drop">Ca làm việc</a>
                         </li>
                         <li><a href="#" class="lh-page-link drop">Thùng rác</a></li>
                     </ul>
@@ -113,6 +113,8 @@
                                     class="ri-git-commit-line"></i>Bài viết</a></li> --}}
                     </ul>
                 </li>
+                <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i class="ri-phone-line"></i>
+                        <span>Quản trị viên</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.contacts.index') }}"><i class="ri-phone-line"></i>
                         <span>Liên hệ</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.promotions.index') }}"><i
