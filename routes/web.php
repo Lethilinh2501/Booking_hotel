@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +26,9 @@ use App\Http\Controllers\Admin\RefundPolicyController;
 use App\Http\Controllers\Admin\StaffShiftController;
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RefundController;
+
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\PromotionClientController;
@@ -340,6 +342,28 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::patch('/update/{id}', [SaleRoomTypeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('refunds')->as('refunds.')->group(function  () {
+    Route::get('/', [RefundController::class, 'index'])->name('index');
+    Route::get('/create', [RefundController::class, 'create'])->name('create');
+    Route::post('/store', [RefundController::class, 'store'])->name('store');
+    Route::get('/{id}', [RefundController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [RefundController::class, 'edit'])->name('edit');
+    Route::patch('/update/{id}', [RefundController::class, 'update'])->name('update');
+    Route::delete('/delete/{id}', [RefundController::class, 'destroy'])->name('destroy');
+});
+Route::prefix('roles')->name('roles.')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('index');
+    Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::post('/store', [RoleController::class, 'store'])->name('store');
+    Route::get('/show/{id}', [RoleController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [RoleController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('destroy');
+});
+
+
+
 });
 
 
