@@ -127,19 +127,9 @@
 
                 {{-- Quản lý khác --}}
                 <li class="lh-sb-item-separator"></li>
-                <li class="lh-sb-title">Khác</li>
-                <li class="lh-sb-item sb-drop-item">
-                    <a href="javascript:void(0)" class="lh-drop-toggle">
-                        <i class="ri-user-2-fill"></i> <span>khách hàng <i
-                                class="drop-arrow ri-arrow-down-s-line"></i></span>
-                    </a>
-                    <ul class="lh-sb-drop" style="display: none;">
-                        <li><a href="{{ route('admin.users.index') }}" class="lh-page-link drop"><i
-                                    class="ri-git-commit-line"></i>Danh sách</a></li>
-                        {{-- <li><a href="{{ route('admin.post.listPost') }}" class="lh-page-link drop"><i
-                                    class="ri-git-commit-line"></i>Bài viết</a></li> --}}
-                    </ul>
-                </li>
+                <li class="lh-sb-title">Khác</li>      
+                <li class="lh-sb-item"><a href="{{ route('admin.users.index') }}"><i class="ri-user-2-fill"></i>
+                        <span>khách hàng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i class="ri-phone-line"></i>
                         <span>Quản trị viên</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.contacts.index') }}"><i class="ri-phone-line"></i>
@@ -149,7 +139,9 @@
                 <li class="lh-sb-item"><a href="{{ route('admin.sale_room_types.index') }}"><i
                             class="ri-discount-percent-line"></i> <span>Khuyến mãi loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.payment.index') }}"><i class="ri-wallet-3-line"></i>
-                        <span>Thanh toán</span></a></li>
+                        <span>Thanh toán</span></a></li>   
+                <li class="lh-sb-item"><a href="{{ route('admin.users.index') }}"><i class="fa-regular fa-star"></i>
+                        <span>Đánh giá</span></a></li>
 
                 {{-- Tài khoản --}}
                 <li class="lh-sb-item-separator"></li>

@@ -28,6 +28,7 @@
     <link href="{{ asset('themes/admin/assets/css/vendor/remixicon.css') }}" rel="stylesheet">
 
     <!-- Vendor -->
+
     <link href='{{ asset('themes/admin/assets/css/vendor/datatables.bootstrap5.min.css') }}' rel='stylesheet'>
     <link href='{{ asset('themes/admin/assets/css/vendor/responsive.datatables.min.css') }}' rel='stylesheet'>
     <link href='{{ asset('themes/admin/assets/css/vendor/daterangepicker.css') }}' rel='stylesheet'>
@@ -42,6 +43,8 @@
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Main CSS -->
 

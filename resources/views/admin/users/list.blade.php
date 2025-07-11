@@ -80,7 +80,7 @@
                                 <div class="btn-group" role="group">
                                 <a href="{{route('admin.users.show', $user->id) }}"
                                 class="btn btn-sm btn-info" >
-                                    <i class="fas fa-eye">Chi tiết</i>
+                                    <i class="fas fa-eye"></i>
                                 </a>    
                                     {{-- <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
