@@ -42,7 +42,7 @@
                             <div class="lh-our-blog-contain">
                                 <div class="lh-our-blog-contain-heading">
                                     <h4>
-                                        <a href="">{{ $post->title }}</a>
+                                        <a href="{{ route('client.posts.show', $post) }}">{{ $post->title }}</a>
                                     </h4>
                                     <span>By Admin - {{ $post->comments_count ?? 0 }} Comment</span>
                                 </div>
@@ -50,7 +50,7 @@
                                     <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
                                 </div>
                                 <div class="lh-our-blog-contain-buttons">
-                                    <a class="lh-buttons" href="{{ route('client.posts.show', $post->id) }}">
+                                    <a class="lh-buttons" href="{{ route('client.posts.show', $post) }}">
                                         Xem thêm
                                     </a>
                                 </div>

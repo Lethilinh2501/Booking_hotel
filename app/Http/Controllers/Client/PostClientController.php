@@ -10,11 +10,20 @@ use Illuminate\Http\Request;
 class PostClientController extends Controller
 {
     // Trang danh sách tất cả bài viết
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::where('status', 'published')
-            ->latest('published_at')
-            ->paginate(6);
+        $keyword = $request->input('keyword');
+
+        $postsQuery = Post::where('status', 'published');
+
+        if (!empty($keyword)) {
+            $postsQuery->where(function ($query) use ($keyword) {
+                $query->where('title', 'like', "%$keyword%")
+                    ->orWhere('content', 'like', "%$keyword%");
+            });
+        }
+
+        $posts = $postsQuery->latest('published_at')->paginate(6);
 
         $postcategories = PostCategory::withCount([
             'posts' => function ($query) {
@@ -27,7 +36,12 @@ class PostClientController extends Controller
             ->limit(3)
             ->get();
 
-        return view('client.posts.index', compact('posts', 'postcategories', 'popularPosts'));
+        return view('client.posts.index', compact(
+            'posts',
+            'postcategories',
+            'popularPosts',
+            'keyword'
+        ));
     }
 
     // Hiển thị bài viết theo danh mục
@@ -54,14 +68,21 @@ class PostClientController extends Controller
         return view('client.posts.index', compact('posts', 'postcategories', 'popularPosts', 'selectedCategory'));
     }
 
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::where('status', 'published')->findOrFail($id);
+        abort_if($post->status !== 'published', 404);
+
         $postcategories = PostCategory::withCount([
             'posts' => function ($query) {
                 $query->where('status', 'published');
             }
         ])->get();
-        return view('client.posts.show', compact('post','postcategories'));
+
+        $popularPosts = Post::where('status', 'published')
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        return view('client.posts.show', compact('post', 'postcategories', 'popularPosts'));
     }
 }
