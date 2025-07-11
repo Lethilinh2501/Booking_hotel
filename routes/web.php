@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminAccountController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +22,11 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\admin\ServicePlusController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\SystemController;
-
-
-
 use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
 use App\Http\Controllers\Admin\StaffShiftController;
+use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\PostClientController;
 use App\Http\Controllers\Client\PromotionClientController;
@@ -38,8 +36,6 @@ use App\Http\Controllers\Client\FaqClientController;
 use App\Http\Controllers\Client\BookingController as ClientBookingController;
 use App\Http\Controllers\Client\AboutController as ClientAboutController;
 use App\Http\Controllers\Client\SystemController as ClientSystemController;
-
-
 
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\CheckAdminAccess;
@@ -140,7 +136,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::post('/update', [AboutController::class, 'update'])->name('update');
         Route::get('/create', [AboutController::class, 'create'])->name('create');
         Route::post('/store', [AboutController::class, 'store'])->name('store');
-        Route::delete('/{id}', [AboutController::class, 'destroy'])->name('destroy');    
+        Route::delete('/{id}', [AboutController::class, 'destroy'])->name('destroy');
     });
 
     // Staffs
@@ -313,6 +309,14 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
             Route::put('/{image}', [RoomTypeImageController::class, 'update'])->name('update');
             Route::delete('/{image}', [RoomTypeImageController::class, 'destroy'])->name('destroy');
         });
+    });
+
+    // reviews
+    Route::prefix('reviews')->as('reviews.')->group(function () {
+        Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+        Route::get('{review}/show', [AdminReviewController::class, 'show'])->name('show');
+        Route::post('{review}/response', [AdminReviewController::class, 'response'])->name('response');
+        Route::delete('{review}/destroy', [AdminReviewController::class, 'destroy'])->name('destroy');
     });
 
     // chính sách hoàn tiền
