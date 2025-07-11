@@ -110,3 +110,47 @@
 </script>
 
 @endsection
+<td>
+    @php
+        $statusClassMap = [
+            'confirmed' => 'badge bg-info text-white',
+            'paid' => 'badge bg-dark text-white',
+            'refunded' => 'badge bg-dark text-white',
+            'check_out' => 'badge bg-dark text-white',
+            'check_in' => 'badge bg-dark text-white',
+        ];
+    @endphp
+    <span class="{{ $statusClassMap[strtolower($booking->status)] ?? 'badge bg-secondary' }}">
+        {{ ucfirst($booking->status) }}
+    </span>
+</td>
+
+<td>
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Hành động
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ route('admin.bookings.show', $booking->id) }}"><i class="bi bi-eye me-2"></i>Chi tiết</a></li>
+            <li><a class="dropdown-item" href="{{ route('admin.bookings.edit', $booking->id) }}"><i class="bi bi-pencil me-2"></i>Sửa</a></li>
+            <li>
+                <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>Xóa</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</td>
+<style>
+    .badge.bg-dark {
+        background-color: #3c3c3c !important;
+        color: #fff;
+    }
+    .badge.bg-info {
+        background-color: #0dcaf0 !important;
+        color: #fff;
+    }
+</style>
+
