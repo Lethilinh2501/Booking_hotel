@@ -26,9 +26,6 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
     @endif
 
@@ -68,10 +65,10 @@
                             </td>
                             <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
                             <td class="text-center">
-                                <div class="btn-group" role="group">
+                           
                                     <a href="{{ route('admin.contacts.show', $contact->id) }}"
                                        class="btn btn-sm btn-info" title="Xem chi tiết">
-                                        <i class="fas fa-eye">Xem</i>
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
@@ -79,10 +76,10 @@
                                                 class="btn btn-sm btn-danger"
                                                 title="Xóa"
                                                 onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')">
-                                            <i class="fas fa-trash">Xóa</i>
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                </div>
+                              
                             </td>
                         </tr>
                         @empty

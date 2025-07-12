@@ -24,9 +24,7 @@
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show">
                     {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    
                 </div>
             @endif
 
@@ -84,7 +82,7 @@
                                                 <option value="rejected" {{ $contact->status == 'rejected' ? 'selected' : '' }}>Từ chối</option>
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn-block">
+                                        <button type="submit" class="btn btn-primary btn-block mt-2 ">
                                             <i class="fas fa-save"></i> Lưu thay đổi
                                         </button>
                                     </form>
