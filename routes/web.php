@@ -170,6 +170,14 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::delete('/{id}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
+    //  đánhgias-reviews
+    Route::prefix('reviews')->as('reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+        // Route::get('/{id}', [ReviewController::class, 'show'])->name('show');
+        Route::post('/{id}/response', [ReviewController::class, 'updateResponse'])->name('updateResponse');
+        // Route::delete('/{id}', [ReviewController::class, 'destroy'])->name('destroy');
+    });
+
     // Admin_Accounts
     Route::prefix('admin_accounts')->as('admin_accounts.')->group(function () {
         Route::get('/', [AdminAccountController::class, 'index'])->name('index');

@@ -141,8 +141,8 @@
                         <span>khách hàng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i class="ri-phone-line"></i>
                         <span>Quản trị viên</span></a></li>
-                <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i class="ri-phone-line"></i>
-                        <span>Đánh giá</span></a></li>
+                {{-- <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i class="ri-phone-line"></i>
+                        <span>Đánh giá</span></a></li> --}}
                 <li class="lh-sb-item"><a href="{{ route('admin.contacts.index') }}"><i class="ri-phone-line"></i>
                         <span>Liên hệ</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.promotions.index') }}"><i
@@ -151,7 +151,7 @@
                             class="ri-discount-percent-line"></i> <span>Khuyến mãi loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.payment.index') }}"><i class="ri-wallet-3-line"></i>
                         <span>Thanh toán</span></a></li>   
-                <li class="lh-sb-item"><a href="{{ route('admin.users.index') }}"><i class="fa-regular fa-star"></i>
+                <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i class="fa-regular fa-star"></i>
                         <span>Đánh giá</span></a></li>
 
                 {{-- Tài khoản --}}
