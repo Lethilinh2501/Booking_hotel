@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
             LogSeeder::class,
             PostCategorySeeder::class,
             PostSeeder::class,
+            ReviewSeeder::class
         ]);
     }
 }

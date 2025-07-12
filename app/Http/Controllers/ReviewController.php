@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    public function index()
+    {
+        $reviews = Review::with('user')->latest()->paginate(10);
+         dd($reviews);
+        return view('admin.reviews.index', compact('reviews'));
+    }
     public function reviewForm($bookingID)
     {
         $booking = \App\Models\Booking::findOrFail($bookingID);
@@ -45,4 +51,29 @@ class ReviewController extends Controller
 
         return redirect('/')->with('success', 'Đánh giá thành công.');
     }
+    public function show($id)
+    {
+        $review = Review::with(['user','booking'])->findOrFail($id);
+        return view('admin.reviews.show', compact('review'));
+    }
+     public function updateResponse(Request $request, $id)
+    {
+        $request->validate([
+            'response' => 'required|string'
+        ]);
+
+        $review = Review::findOrFail($id);
+        $review->response = $request->response;
+        $review->save();
+
+        return redirect()->back()->with('success', 'Cập nhật phản hồi thành công.');
+    }
+    // public function destroy($id)
+    // {
+    //     $contact = Review::findOrFail($id);
+    //     $contact->delete();
+
+    //     return redirect()->back()->with('success', 'Xóa liên hệ thành công.');
+    // }
+    
 }
