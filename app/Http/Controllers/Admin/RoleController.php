@@ -6,73 +6,90 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    // Danh sách role
     public function index()
     {
         $roles = Role::latest()->paginate(10);
         return view('admin.roles.index', compact('roles'));
     }
 
-    // Form tạo role mới
     public function create()
     {
-        return view('admin.roles.create');
+        $permission_groups = Permission::get()->groupBy('guard_name');
+        return view('admin.roles.create', compact('permission_groups'));
     }
 
-    // Lưu role mới
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'       => 'required|string|max:255|unique:roles,name',
-            'guard_name' => 'required|string|max:255',
-        ]);
+        try {
+            $data = $request->all();
 
-        Role::create($validated);
+            $role = Role::create([
+                'name' => $data['name'],
+                'guard_name' => $data['guard_name'] ?? 'web',
+            ]);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Tạo role thành công!');
+            if (!empty($data['permissions'])) {
+                $role->syncPermissions($data['permissions']);
+            }
+
+            return redirect()->route('admin.roles.index')->with('success', 'Tạo mới thành công');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Lỗi: ' . $th->getMessage());
+        }
     }
 
-    // Xem chi tiết role
-    public function show($id)
-    {
-        $role = Role::findOrFail($id);
-        return view('admin.roles.show', compact('role'));
-    }
-
-    // Form chỉnh sửa role
     public function edit($id)
     {
-        $role = Role::findOrFail($id);
-        return view('admin.roles.edit', compact('role'));
+        $role = Role::with('permissions')->findOrFail($id);
+        $permission_groups = Permission::get()->groupBy('guard_name');
+
+        return view('admin.roles.edit', compact('role', 'permission_groups'));
     }
 
-   public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'name' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('roles', 'name')->ignore($id),
-        ],
-        'guard_name' => 'required|string|max:255',
-    ]);
-
-    $role = Role::findOrFail($id);
-    $role->update($validated);
-
-    return redirect()->route('admin.roles.index')->with('success', 'Cập nhật role thành công!');
-}
-
-    // Xóa role
-    public function destroy($id)
+    public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->ignore($id),
+            ],
+            'permissions' => ['nullable', 'array'],
+        ]);
+
         $role = Role::findOrFail($id);
+        $role->update([
+            'name' => $validated['name'],
+        ]);
+
+        // Gán lại quyền (nếu có)
+        $role->syncPermissions($request->permissions ?? []);
+
+        return redirect()->route('admin.roles.index')->with('success', 'Cập nhật vai trò thành công!');
+    }
+
+
+    public function destroy(string $id)
+    {
+        $role = Role::withCount('users')->findOrFail($id);
+
+        $protectedRoles = ['super admin', 'admin', 'lễ tân', 'customer'];
+
+        if (in_array(strtolower($role->name), $protectedRoles)) {
+            return back()->with('error', "Không thể xóa vai trò đặc biệt: {$role->name}");
+        }
+
+        if ($role->users_count > 0) {
+            return back()->with('error', 'Không thể xóa vai trò vì đã có người dùng');
+        }
+
         $role->delete();
 
-        return redirect()->route('admin.roles.index')->with('success', 'Xóa role thành công!');
+        return back()->with('success', 'Xóa vai trò thành công');
     }
 }
