@@ -1,82 +1,103 @@
 @extends('layout.admin')
 
 @section('content')
-
 <main class="lh-main-content">
     <div class="container-fluid">
-        @if (session('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
 
         <h2 class="mb-4">Danh Sách Đặt Phòng</h2>
 
-        <div class="card p-4">
-            <table class="table table-bordered table-hover align-middle text-center">
+        {{-- BỘ LỌC --}}
+        <form method="GET" action="{{ route('admin.bookings.index') }}" class="row g-2 mb-3">
+            <div class="col-md-3">
+                <input type="date" name="start_date" class="form-control" placeholder="Ngày bắt đầu">
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="end_date" class="form-control" placeholder="Ngày kết thúc">
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="pending">Chưa thanh toán</option>
+                    <option value="paid">Đã thanh toán</option>
+                    <option value="check_in">Đã check in</option>
+                    <option value="check_out">Đã checkout</option>
+                    <option value="canceled">Đã huỷ</option>
+                    <option value="refunded">Đã hoàn tiền</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button class="btn btn-primary" type="submit">Áp dụng</button>
+                <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">Xoá bộ lọc</a>
+            </div>
+        </form>
+
+        {{-- BẢNG --}}
+        <div class="card p-3">
+            <table class="table table-hover text-center align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th style="width: 50px">#</th>
-                        <th>Mã Đặt Phòng</th>
-                        <th>Người Đặt</th>
-                        <th>Check In</th>
-                        <th>Check Out</th>
-                        <th>Tổng Tiền</th>
-                        <th>Số Khách</th>
-                        <th>Số Phòng</th>
+                        <th>#</th>
+                        <th>Mã</th>
+                        <th>Khách Hàng</th>
+                        <th>Phòng</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Tổng Giá</th>
+                        <th>Đòi Trả</th>
+                        <th>Hoàn Tiền</th>
                         <th>Trạng Thái</th>
                         <th>Hành Động</th>
                     </tr>
-                </thead>
+                </thead> // SỬA Ở ĐÂY
                 <tbody>
-                    @foreach ($bookings as $key => $booking)
+                    @foreach ($bookings as $index => $booking)
                         <tr>
-                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $index + 1 }}</td>
                             <td>{{ $booking->booking_code }}</td>
-                            <td>{{ $booking->user ? $booking->user->name : 'Chưa có' }}</td>
-                            <td>{{ $booking->check_in }}</td>
-                            <td>{{ $booking->check_out }}</td>
-                            <td>{{ number_format($booking->total_price, 0, ',', '.') }} VND</td>
-                            <td>{{ $booking->total_guests }}</td>
-                            <td>{{ $booking->room_quantity }}</td>
                             <td>
-                                @php
-                                    $badgeClass = match ($booking->status) {
-                                        'pending' => 'bg-warning',
-                                        'confirmed' => 'bg-info',
-                                        'canceled' => 'bg-danger',
-                                        'completed' => 'bg-success',
-                                        default => 'bg-secondary',
-                                    };
-                                @endphp
-                                <span class="badge {{ $badgeClass }}">{{ ucfirst($booking->status) }}</span>
+                                Người Đặt: {{ $booking->user->name ?? 'Ẩn danh' }}<br>
+                                Người Ở: {{ $booking->guest_name ?? 'Ẩn danh' }}
+                            </td>
+                            <td>{{ $booking->room->room_number ?? '---' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($booking->check_in)->format('d-m-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($booking->check_out)->format('d-m-Y') }}</td>
+                            <td>{{ number_format($booking->total_price, 0, ',', '.') }}VND</td>
+                            <td>{{ number_format($booking->refundable_amount ?? 0, 0, ',', '.') }}VND</td>
+                            <td>
+                                @if ($booking->is_refunded)
+                                    <span class="badge bg-success">Đã Hoàn Tiền</span>
+                                @else
+                                    <span class="badge bg-secondary">Không Có</span>
+                                @endif
+                            </td>
+                            <td>
+                                <form action="{{ route('admin.bookings.updateStatus', $booking->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Chưa thanh toán</option>
+                                        <option value="deposit" {{ $booking->status == 'deposit' ? 'selected' : '' }}>Đã cọc</option>
+                                        <option value="paid" {{ $booking->status == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
+                                        <option value="check_in" {{ $booking->status == 'check_in' ? 'selected' : '' }}>Đã check in</option>
+                                        <option value="check_out" {{ $booking->status == 'check_out' ? 'selected' : '' }}>Đã checkout</option>
+                                        <option value="canceled" {{ $booking->status == 'canceled' ? 'selected' : '' }}>Đã huỷ</option>
+                                        <option value="refunded" {{ $booking->status == 'refunded' ? 'selected' : '' }}>Đã hoàn tiền</option>
+                                    </select>
+                                </form>
                             </td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                            id="dropdownMenuButton{{ $booking->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Hành động
+                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-gear"></i>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $booking->id }}">
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ route('admin.bookings.show', $booking->id) }}"><i class="bi bi-eye me-2"></i>Chi tiết</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin.bookings.edit', $booking->id) }}"><i class="bi bi-pencil me-2"></i>Sửa</a></li>
                                         <li>
-                                            <a href="{{ route('admin.bookings.show', $booking->id) }}" class="dropdown-item">
-                                                <i class="bi bi-eye me-2"></i>Chi tiết
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('admin.bookings.edit', $booking->id) }}" class="dropdown-item">
-                                                <i class="bi bi-pencil-square me-2"></i>Sửa
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST"
-                                                class="d-inline" onsubmit="showSpinner({{ $booking->id }})">
+                                            <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" onsubmit="return confirm('Xác nhận xoá?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger" id="delete-button{{ $booking->id }}">
-                                                    <i class="bi bi-trash me-2"></i>Xóa
-                                                    <span id="spinner{{ $booking->id }}" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                </button>
+                                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>Xoá</button>
                                             </form>
                                         </li>
                                     </ul>
@@ -87,70 +108,10 @@
                 </tbody>
             </table>
 
-            {{-- Phân trang --}}
             {{ $bookings->links('pagination::bootstrap-5') }}
         </div>
-       
     </div>
 </main>
 
-<!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-<script>
-    // Hiển thị spinner khi nhấn vào nút xóa
-    function showSpinner(bookingId) {
-        var spinner = document.getElementById('spinner' + bookingId);
-        var deleteButton = document.getElementById('delete-button' + bookingId);
-
-        // Hiển thị spinner và ẩn nút xóa
-        spinner.classList.remove('d-none');
-        deleteButton.disabled = true;
-    }
-</script>
-
 @endsection
-<td>
-    @php
-        $statusClassMap = [
-            'confirmed' => 'badge bg-info text-white',
-            'paid' => 'badge bg-dark text-white',
-            'refunded' => 'badge bg-dark text-white',
-            'check_out' => 'badge bg-dark text-white',
-            'check_in' => 'badge bg-dark text-white',
-        ];
-    @endphp
-    <span class="{{ $statusClassMap[strtolower($booking->status)] ?? 'badge bg-secondary' }}">
-        {{ ucfirst($booking->status) }}
-    </span>
-</td>
-
-<td>
-    <div class="dropdown">
-        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Hành động
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ route('admin.bookings.show', $booking->id) }}"><i class="bi bi-eye me-2"></i>Chi tiết</a></li>
-            <li><a class="dropdown-item" href="{{ route('admin.bookings.edit', $booking->id) }}"><i class="bi bi-pencil me-2"></i>Sửa</a></li>
-            <li>
-                <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>Xóa</button>
-                </form>
-            </li>
-        </ul>
-    </div>
-</td>
-<style>
-    .badge.bg-dark {
-        background-color: #3c3c3c !important;
-        color: #fff;
-    }
-    .badge.bg-info {
-        background-color: #0dcaf0 !important;
-        color: #fff;
-    }
-</style>
-
