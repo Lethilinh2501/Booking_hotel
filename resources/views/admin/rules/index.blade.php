@@ -1,35 +1,116 @@
 @extends('layout.admin')
-
 @section('content')
-<div class="container mt-4">
-    <h2>Danh sách quy định</h2>
-    <a href="{{ route('admin.rules.create') }}" class="btn btn-success mb-3">+ Thêm mới</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Tiêu đề</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($rules as $rule)
-            <tr>
-                <td>{{ $rule->id }}</td>
-                <td>{{ $rule->title }}</td>
-                <td>{{ $rule->is_active ? 'Hoạt động' : 'Ẩn' }}</td>
-                <td>
-                    <a href="{{ route('admin.rules.edit', $rule->id) }}" class="btn btn-warning btn-sm">Sửa</a>
-                    <form action="{{ route('admin.rules.destroy', $rule->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Xóa thật hả sếp?')">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+    <div class="lh-main-content">
+        <div class="container-fluid">
+            <div class="lh-page-title">
+                <div class="lh-breadcrumb">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li>Dashboard</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12 col-md-12">
+                    <div class="lh-card" id="bookingtbl">
+                        <div class="lh-card-header">
+                            <h4 class="lh-card-title">Danh sách quy tắc - quy định</h4>
+                            <div class="header-tools">
+                                <a href="javascript:void(0)" class="m-r-10 lh-full-card"><i class="ri-fullscreen-line"
+                                        title="Full Screen"></i></a>
+                                <div class="lh-date-range dots">
+                                    <span></span>
+                                </div>
+                                <button class="btn btn-primary ms-2"
+                                    onclick="window.location.href='{{ route('admin.rules.create') }}'">
+                                    Tạo mới Quy Định
+                                </button>
+                            </div>
+                        </div>
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+                        <div class="lh-card-content card-default">
+                            <div class="booking-table">
+                                <div class="table-responsive">
+                                    <table id="booking_table" class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên Loại Quy Định </th>
+                                                <th>Loại Phòng </th>
+                                                <th>Trạng thái</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($rules as $rule => $item)
+                                                <tr>
+                                                    <td class="text-center">{{ $rule + 1 }}</td>
+                                                    <td>{{ $item->name }}</td>
+                                                    <td>
+                                                        @foreach ($item->roomTypes as $roomType)
+                                                            <span class="badge bg-primary">{{ $roomType->name }}</span>
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
+                                                        @if ($item->roomTypes->isEmpty())
+                                                            <span class="badge bg-secondary">Chưa gán loại phòng</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge {{ $item->is_active ? 'bg-success' : 'bg-danger' }}">
+                                                            {{ $item->is_active ? 'Hoạt động' : 'Không hoạt động' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <button type="button"
+                                                                class="btn btn-outline-secondary dropdown-toggle"
+                                                                data-bs-toggle="dropdown">
+                                                                <i class="ri-settings-3-line"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('admin.rules.edit', $item->id) }}">
+                                                                        <i class="ri-edit-line"></i> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form
+                                                                        action="{{ route('admin.rules.destroy', $item->id) }}"
+                                                                        method="POST"
+                                                                        onsubmit="return confirm('Bạn có muốn xóa mềm không?');">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="dropdown-item text-danger">
+                                                                            <i class="ri-delete-bin-line"></i> Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
