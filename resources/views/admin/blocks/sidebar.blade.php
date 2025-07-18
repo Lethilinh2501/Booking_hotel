@@ -141,8 +141,8 @@
                         <span>khách hàng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i class="ri-phone-line"></i>
                         <span>Quản trị viên</span></a></li>
-                {{-- <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i class="ri-phone-line"></i>
-                        <span>Đánh giá</span></a></li> --}}
+                <li class="lh-sb-item"><a href="{{ route('admin.rules.index') }}"><i class="ri-phone-line"></i>
+                        <span>Quy tắc - Quy định</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.contacts.index') }}"><i class="ri-phone-line"></i>
                         <span>Liên hệ</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.promotions.index') }}"><i

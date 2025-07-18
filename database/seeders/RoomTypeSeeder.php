@@ -14,7 +14,7 @@ class RoomTypeSeeder extends Seeder
                 'name' => 'Phòng đơn',
                 'description' => 'Phòng đơn dành cho 1 người với giường đơn.',
                 'price' => 500000,
-                'max_capacity' => 1,
+                'max_capacity' => 2,
                 'size' => 15,
                 'bed_type' => 'single',
                 'children_free_limit' => 0,
