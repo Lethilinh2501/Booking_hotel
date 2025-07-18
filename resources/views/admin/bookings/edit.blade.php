@@ -38,7 +38,7 @@
 
                             <tr>
                                 <th>Tên khách hàng</th>
-                                <td>
+                                <td> // SỬA Ở ĐÂY
                                     <input type="text" name="customer_name" class="form-control"
                                         value="{{ old('customer_name', $booking->customer_name) }}" required>
                                 </td>

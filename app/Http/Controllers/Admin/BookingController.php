@@ -7,7 +7,7 @@ use App\Models\Booking;
 use App\Models\User;
 use App\Models\Room;
 use Illuminate\Http\Request;
-
+ // SỬA Ở ĐÂY
 class BookingController extends Controller
 {
    public function index(Request $request)

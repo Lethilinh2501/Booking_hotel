@@ -48,7 +48,7 @@
                         <th>Trạng Thái</th>
                         <th>Hành Động</th>
                     </tr>
-                </thead>
+                </thead> // SỬA Ở ĐÂY
                 <tbody>
                     @foreach ($bookings as $index => $booking)
                         <tr>
