@@ -13,7 +13,7 @@ class RoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->bothify('###'),
+            'room_number' => $this->faker->unique()->bothify('###'),
             'room_type_id' => RoomType::inRandomOrder()->first()?->id ?? RoomType::factory(),
             'floor' => $this->faker->numberBetween(1, 10),
             'status' => $this->faker->randomElement([
