@@ -14,8 +14,11 @@ return new class extends Migration
         // Migration: create_refund_policies_table.php
         Schema::create('refund_policies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('content');
+            $table->string('name');
+            $table->integer('days_before_checkin')->default(0);
+            $table->decimal('refund_percentage', 5, 2)->default(0);
+            $table->decimal('cancellation_fee_percentage', 5, 2)->default(0);
+            $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

@@ -9,7 +9,15 @@ class RefundTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['refund_id', 'amount', 'note'];
+    protected $fillable = [
+        'refund_id',
+        'transaction_type',
+        'amount',
+        'status',
+        'payment_method',
+        'transaction_id',
+        'notes',
+    ];
 
     public function refund()
     {

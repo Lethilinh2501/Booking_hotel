@@ -9,5 +9,17 @@ class RefundPolicy extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'is_active'];
+    protected $fillable = [
+        'name',
+        'days_before_checkin',
+        'refund_percentage',
+        'cancellation_fee_percentage',
+        'description',
+        'is_active',
+    ];
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class);
+    }
 }

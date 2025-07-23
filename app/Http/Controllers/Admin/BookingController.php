@@ -6,30 +6,47 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Room;
+use App\Models\ServicePlus;
 use Illuminate\Http\Request;
- // SỬA Ở ĐÂY
+
 class BookingController extends Controller
 {
-   public function index(Request $request)
-{
-    $query = Booking::query()->with(['user', 'rooms']); // SỬA Ở ĐÂY
+    public function index(Request $request)
+    {
+        $title = 'Đơn đặt phòng mới nhất';
 
-    if ($request->filled('start_date')) {
-        $query->whereDate('check_in', '>=', $request->start_date);
+        // Khởi tạo query
+        $query = Booking::with('user', 'rooms', 'refund', 'refund.refundPolicy')->latest();
+
+        // Lọc theo khoảng thời gian
+        if ($request->has('start_date') && $request->has('end_date') && $request->input('start_date') && $request->input('end_date')) {
+            $startDate = $request->input('start_date') . ' 00:00:00';
+            $endDate = $request->input('end_date') . ' 23:59:59';
+            if ($startDate) {
+                $query->where('check_in', '>=', $startDate);
+            }
+            if ($endDate) {
+                $query->where('check_out', '<=', $endDate);
+            }
+        }
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->input('status') !== null) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Phân trang
+        $bookings = $query->paginate(10);
+
+        // Truyền dữ liệu lọc để hiển thị lại trên giao diện
+        $filterData = [
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'status' => $request->input('status'),
+        ];
+
+        return view('admin.bookings.index', compact('bookings', 'title', 'filterData'));
     }
-
-    if ($request->filled('end_date')) {
-        $query->whereDate('check_out', '<=', $request->end_date);
-    }
-
-    if ($request->filled('status')) {
-        $query->where('status', $request->status);
-    }
-
-    $bookings = $query->latest()->paginate(10);
-
-    return view('admin.bookings.index', compact('bookings'));
-}
 
 
     public function create()
@@ -60,8 +77,26 @@ class BookingController extends Controller
 
     public function show($id)
     {
-        $booking = Booking::with(['user', 'rooms'])->findOrFail($id);
-        return view('admin.bookings.detail', compact('booking'));
+        $booking = Booking::with([
+            'user',
+            'rooms.roomType' => function ($query) {
+                $query->with(['amenities', 'rulesAndRegulations', 'services']);
+            },
+            'rooms' => function ($query) {
+                $query->withTrashed();
+            },
+            'servicePlus',
+            'payments',
+            'guests',
+        ])->findOrFail($id);
+
+        if (request()->ajax()) {
+            return response()->json(['booking' => $booking]);
+        }
+
+        $title = 'Chi tiết đơn đặt phòng';
+        $availableServicePlus = ServicePlus::where('is_active', 1)->get();
+        return view('admin.bookings.detail', compact('title', 'booking', 'availableServicePlus'));
     }
 
     public function edit($id)

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Refund;
 
 class Booking extends Model
 {
@@ -54,10 +55,10 @@ class Booking extends Model
         return $this->hasMany(BookingRoomTypeService::class);
     }
 
-    public function servicePluses()
-    {
-        return $this->hasMany(BookingServicePlus::class);
-    }
+    // public function servicePluses()
+    // {
+    //     return $this->hasMany(BookingServicePlus::class);
+    // }
     public function rooms()
     {
         return $this->belongsToMany(Room::class, 'booking_rooms', 'booking_id', 'room_id');
@@ -65,5 +66,20 @@ class Booking extends Model
     public function guests()
     {
         return $this->hasMany(BookingGuest::class);
+    }
+    public function refund()
+    {
+        return $this->hasOne(Refund::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function servicePlus()
+    {
+        return $this->belongsToMany(ServicePlus::class, 'booking_service_plus', 'booking_id', 'service_plus_id')
+            ->withTimestamps(); // nếu bảng trung gian có cột created_at, updated_at
     }
 }

@@ -5,66 +5,106 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RefundPolicy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RefundPolicyController extends Controller
 {
-    // Danh sách chính sách
     public function index()
     {
         $policies = RefundPolicy::paginate(10);
         return view('admin.refund-policies.index', compact('policies'));
     }
 
-    // Form tạo mới
     public function create()
     {
         return view('admin.refund-policies.create');
     }
 
-    // Lưu chính sách mới
     public function store(Request $request)
     {
-        $request->validate([
-            'title'     => 'required|string|max:255',
-            'content'   => 'required|string',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'penalty_percent' => 'required|integer|min:0|max:100',
+            'days_before_checkin' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
+        ], [
+            'name.required' => 'Tiêu đề không được để trống.',
+            'name.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+            'penalty_percent.required' => 'Vui lòng nhập phí phạt.',
+            'penalty_percent.integer' => 'Phí phạt phải là số nguyên.',
+            'penalty_percent.min' => 'Phí phạt không được nhỏ hơn :min%.',
+            'penalty_percent.max' => 'Phí phạt không được vượt quá :max%.',
+            'days_before_checkin.required' => 'Vui lòng nhập số ngày trước check-in.',
+            'days_before_checkin.integer' => 'Số ngày phải là số nguyên.',
+            'days_before_checkin.min' => 'Số ngày không được nhỏ hơn :min.',
+            'is_active.required' => 'Vui lòng chọn trạng thái.',
+            'is_active.boolean' => 'Trạng thái không hợp lệ.',
         ]);
 
-        RefundPolicy::create($request->all());
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        return redirect()->route('admin.refund-policies.index')->with('success', 'Thêm chính sách thành công!');
+        RefundPolicy::create($request->only([
+            'name',
+            'content',
+            'penalty_percent',
+            'days_before_checkin',
+            'is_active'
+        ]));
+
+        return redirect()->route('admin.refund-policies.index')->with('success', 'Thêm chính sách thành công.');
     }
 
-    // Xem chi tiết
     public function show($id)
     {
         $policy = RefundPolicy::findOrFail($id);
         return view('admin.refund-policies.show', compact('policy'));
     }
 
-    // Form sửa
     public function edit($id)
     {
         $policy = RefundPolicy::findOrFail($id);
         return view('admin.refund-policies.edit', compact('policy'));
     }
 
-    // Cập nhật chính sách
-    public function update(Request $request, $id)
+    public function update(Request $request, RefundPolicy $refundPolicy)
     {
-        $request->validate([
-            'title'     => 'required|string|max:255',
-            'content'   => 'required|string',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'penalty_percent' => 'required|integer|min:0|max:100',
+            'days_before_checkin' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
+        ], [
+            'name.required' => 'Tiêu đề không được để trống.',
+            'name.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+            'penalty_percent.required' => 'Vui lòng nhập phí phạt.',
+            'penalty_percent.integer' => 'Phí phạt phải là số nguyên.',
+            'penalty_percent.min' => 'Phí phạt không được nhỏ hơn :min%.',
+            'penalty_percent.max' => 'Phí phạt không được vượt quá :max%.',
+            'days_before_checkin.required' => 'Vui lòng nhập số ngày trước check-in.',
+            'days_before_checkin.integer' => 'Số ngày phải là số nguyên.',
+            'days_before_checkin.min' => 'Số ngày không được nhỏ hơn :min.',
+            'is_active.required' => 'Vui lòng chọn trạng thái.',
+            'is_active.boolean' => 'Trạng thái không hợp lệ.',
         ]);
 
-        $policy = RefundPolicy::findOrFail($id);
-        $policy->update($request->all());
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        return redirect()->route('admin.refund-policies.index')->with('success', 'Cập nhật thành công!');
+        $refundPolicy->update($request->only([
+            'name',
+            'content',
+            'penalty_percent',
+            'days_before_checkin',
+            'is_active'
+        ]));
+
+        return redirect()->route('admin.refund-policies.index')->with('success', 'Cập nhật chính sách thành công.');
     }
-
-    // Xóa chính sách
     public function destroy($id)
     {
         $policy = RefundPolicy::findOrFail($id);
