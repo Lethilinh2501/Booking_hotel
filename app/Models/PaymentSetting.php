@@ -10,5 +10,6 @@ class PaymentSetting extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['gateway', 'is_enabled', 'config'];
+
+    protected $fillable = ['deposit_percentage'];
 }

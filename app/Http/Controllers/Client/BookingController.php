@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Models\BookingRoomTypeService;
 use App\Models\PaymentSetting;
@@ -69,8 +68,6 @@ class BookingController extends Controller
         $taxFee = $subTotal * 0.08;
         $totalPrice = $subTotal + $taxFee;
 
-        // dd($totalPrice, $basePrice, $discountedPrice, $serviceTotal, $taxFee);
-
         $request->validate([
             'room_type_id' => 'required|exists:room_types,id',
             'check_in' => 'required|date|after_or_equal:today',
@@ -84,7 +81,6 @@ class BookingController extends Controller
             'service_total' => 'required|numeric|min:0',
         ]);
 
-        // Chuẩn hóa ngày nhận và trả phòng
         $checkIn = Carbon::parse($checkIn)->startOfDay();
         $checkOut = Carbon::parse($checkOut)->startOfDay();
         $now = Carbon::now();
@@ -189,8 +185,6 @@ class BookingController extends Controller
 
     public function confirm(Request $request)
     {
-        Log::info('Confirm method called with method: ' . $request->method(), $request->all());
-
         if ($request->isMethod('post')) {
             $validated = $request->validate([
                 'check_in' => 'required|date|after_or_equal:today',
@@ -206,14 +200,17 @@ class BookingController extends Controller
                 'guest.country' => 'required|string|max:255',
                 'guest.relationship' => 'nullable|string|max:50',
                 'services' => 'nullable|array',
+                'services.*.id' => 'exists:room_type_services,id',
+                'services.*.quantity' => 'integer|min:1',
+                'services.*.price' => 'numeric|min:0',
                 'discount_amount' => 'nullable|numeric|min:0',
                 'base_price' => 'required|numeric|min:0',
                 'service_total' => 'required|numeric|min:0',
             ]);
 
             $roomType = RoomType::with('services')->findOrFail($request->room_type_id);
-            $checkIn = Carbon::parse($request->check_in);
-            $checkOut = Carbon::parse($request->check_out);
+            $checkIn = Carbon::parse($validated['check_in']);
+            $checkOut = Carbon::parse($validated['check_out']);
             $days = $checkOut->diffInDays($checkIn);
 
             $basePrice = (float) $request->base_price;
@@ -223,58 +220,55 @@ class BookingController extends Controller
             $roomQuantity = (int) $request->room_quantity;
             $serviceTotal = (float) $request->service_total;
 
-            $subTotal = $basePrice + $serviceTotal - $discountAmount;
+            $selectedServices = [];
+            $serviceQuantities = [];
+            if (!empty($validated['services'])) {
+                $serviceIds = array_column($validated['services'], 'id');
+                $selectedServices = $roomType->services->whereIn('id', $serviceIds)->all();
+
+                foreach ($validated['services'] as $serviceData) {
+                    $serviceId = (int) $serviceData['id'];
+                    $quantity = (int) ($serviceData['quantity'] ?? 1);
+                    $serviceQuantities[$serviceId] = $quantity;
+                    $serviceTotal += ($serviceData['price'] ?? 0) * $quantity;
+                }
+            }
+
+            $subTotal = ($basePrice - $discountAmount) + $serviceTotal;
             $taxFee = $subTotal * 0.08;
             $totalPrice = $subTotal + $taxFee;
 
             $guestData = $request->input('guest');
-            $selectedServices = [];
-            $serviceQuantities = [];
+            $paymentSetting = PaymentSetting::first();
+            $depositPercentage = $paymentSetting ? $paymentSetting->deposit_percentage : 0;
 
-            if (!empty($request->services)) {
-                $serviceIds = array_map(function ($service) {
-                    return $service['id'];
-                }, $request->services);
-
-                $selectedServices = $roomType->services->whereIn('id', $serviceIds)->all();
-
-                foreach ($request->services as $serviceData) {
-                    $serviceId = $serviceData['id'];
-                    $quantity = (int) $serviceData['quantity'];
-                    $serviceQuantities[$serviceId] = $quantity;
-                }
-
-                $serviceTotal = array_reduce($selectedServices, function ($carry, $service) use ($serviceQuantities) {
-                    return $carry + ($service->price * ($serviceQuantities[$service->id] ?? 1));
-                }, 0);
-            }
-
-            return view('client.bookings.confirm', compact(
-                'roomType',
-                'checkIn',
-                'checkOut',
-                'days',
-                'basePrice',
-                'serviceTotal',
-                'subTotal',
-                'taxFee',
-                'totalPrice',
-                'selectedServices',
-                'discountAmount',
-                'totalGuests',
-                'childrenCount',
-                'roomQuantity',
-                'serviceQuantities',
-                'guestData'
-            ));
+            return view('client.bookings.confirm', [
+                'roomType' => $roomType,
+                'checkIn' => $checkIn->toDateString(),
+                'checkOut' => $checkOut->toDateString(),
+                'days' => $days,
+                'basePrice' => $basePrice,
+                'serviceTotal' => $serviceTotal,
+                'subTotal' => $subTotal,
+                'taxFee' => $taxFee,
+                'totalPrice' => $totalPrice,
+                'selectedServices' => $selectedServices,
+                'discountAmount' => $discountAmount,
+                'totalGuests' => $totalGuests,
+                'childrenCount' => $childrenCount,
+                'roomQuantity' => $roomQuantity,
+                'serviceQuantities' => $serviceQuantities,
+                'guestData' => $guestData,
+                'deposit_percentage' => $depositPercentage,
+            ]);
         }
 
-        return redirect()->route('bookings.create')->with('error', 'Phương thức không được hỗ trợ. Vui lòng sử dụng form để xác nhận.');
+        return redirect()->route('bookings.create')->with('error', 'Vui lòng hoàn tất thông tin đặt phòng trước khi xác nhận.');
     }
 
     public function calculateDepositAmount($totalAmount)
     {
-        // $depositPercentage = PaymentSetting::first()->deposit_percentage;
+        $depositPercentage = PaymentSetting::first()->deposit_percentage;
         return $totalAmount * ($depositPercentage / 100);
     }
 
@@ -283,7 +277,6 @@ class BookingController extends Controller
         try {
             DB::beginTransaction();
 
-            // Validate dữ liệu từ request
             $validated = $request->validate([
                 'check_in' => 'required|date|after_or_equal:today',
                 'check_out' => 'required|date|after:check_in',
@@ -298,15 +291,17 @@ class BookingController extends Controller
                 'guests.*.country' => 'required|string|max:255',
                 'guests.*.relationship' => 'nullable|string|max:50',
                 'services' => 'nullable|array',
+                'services.*.id' => 'exists:room_type_services,id',
+                'services.*.quantity' => 'integer|min:1',
+                'services.*.price' => 'numeric|min:0',
                 'discount_amount' => 'nullable|numeric|min:0',
                 'payment_method' => 'required|in:cash,online',
-                'online_payment_method' => 'required_if:payment_method,online|in:momo,vnpay',
+                'online_payment_method' => 'required_if:payment_method,online|in:vnpay',
                 'base_price' => 'required|numeric|min:0',
                 'service_total' => 'required|numeric|min:0',
                 'tax_fee' => 'required|numeric|min:0',
                 'sub_total' => 'required|numeric|min:0',
                 'total_price' => 'required|numeric|min:0',
-                'payment_amount_type' => 'required|in:full,partial',
             ]);
 
             $data = $request->all();
@@ -317,17 +312,17 @@ class BookingController extends Controller
             }
 
             $paymentMethod = $request->input('payment_method');
-            $onlinePaymentMethod = $request->input('online_payment_method', null);
+            $onlinePaymentMethod = $request->input('online_payment_method');
             if ($paymentMethod === 'online' && !$onlinePaymentMethod) {
-                return redirect()->back()->with('error', 'Vui lòng chọn một cổng thanh toán (MoMo hoặc VNPay).');
+                return redirect()->back()->with('error', 'Vui lòng chọn một cổng thanh toán (VNPay).');
             }
 
-            // Xử lý thời gian check-in và check-out
+            Log::info('Request data in store:', $data);
+
             $checkIn = Carbon::parse($validated['check_in'])->setTime(14, 0, 0);
             $checkOut = Carbon::parse($validated['check_out'])->setTime(12, 0, 0);
             $days = $checkOut->diffInDays($checkIn);
 
-            // Lấy thông tin room type
             $roomType = RoomType::findOrFail($validated['room_type_id']);
             $basePrice = (float) $request->input('base_price');
             $discountAmount = (float) $request->input('discount_amount', 0);
@@ -336,7 +331,6 @@ class BookingController extends Controller
             $subTotal = (float) $request->input('sub_total');
             $totalPrice = (float) $request->input('total_price');
 
-            // Tạo bản ghi Booking
             $booking = Booking::create([
                 'booking_code' => 'BOOK' . time(),
                 'check_in' => $checkIn,
@@ -359,48 +353,17 @@ class BookingController extends Controller
                 'paid_amount' => 0,
             ]);
 
-            // Create Payment record immediately
-            $paymentData = [
-                'booking_id' => $booking->id,
-                'amount' => $totalPrice,
-                'method' => $paymentMethod == 'cash' ? 'cash' : $onlinePaymentMethod,
-                'status' => 'pending',
-            ];
-            $payment = Payment::create($paymentData);
-            Log::info('Payment created', $paymentData);
-
-            if (!empty($validated['services']) && is_array($validated['services'])) {
-                foreach ($validated['services'] as $serviceId => $serviceData) {
-                    if (!is_array($serviceData) || !isset($serviceData['id'])) {
-                        Log::warning('Dữ liệu dịch vụ không hợp lệ trong store:', ['serviceId' => $serviceId, 'serviceData' => $serviceData]);
-                        continue;
-                    }
-
-                    $serviceId = (int) $serviceData['id'];
-                    $quantity = (int) ($serviceData['quantity'] ?? 1);
-                    $price = (float) ($serviceData['price'] ?? 0);
-
-                    if ($serviceId <= 0 || $quantity <= 0) {
-                        continue;
-                    }
-
-                    Log::info('Lưu dịch vụ:', [
-                        'booking_id' => $booking->id,
-                        'room_type_service_id' => $serviceId,
-                        'quantity' => $quantity,
-                        'price' => $price,
-                    ]);
-
+            if (!empty($validated['services'])) {
+                foreach ($validated['services'] as $serviceData) {
                     BookingRoomTypeService::create([
                         'booking_id' => $booking->id,
-                        'room_type_service_id' => $serviceId,
-                        'quantity' => $quantity,
-                        'price' => $price,
+                        'room_type_service_id' => $serviceData['id'],
+                        'quantity' => $serviceData['quantity'],
+                        'price' => $serviceData['price'],
                     ]);
                 }
             }
 
-            // Xử lý mã giảm giá (promotion)
             if (!empty($data['promotion_id'])) {
                 $promotion = Promotion::findOrFail($data['promotion_id']);
                 $hasUsedPromotion = DB::table('booking_promotions')
@@ -422,7 +385,6 @@ class BookingController extends Controller
                 }
             }
 
-            // Kiểm tra và gán phòng
             $allRooms = $roomType->rooms;
             $bookedRoomIds = Booking::whereHas('rooms', function ($query) use ($roomType) {
                 $query->where('room_type_id', $roomType->id);
@@ -450,17 +412,14 @@ class BookingController extends Controller
                 ->toArray();
 
             $availableRooms = $allRooms->whereNotIn('id', $bookedRoomIds);
-            $roomQuantity = $validated['room_quantity'];
-
-            if ($roomQuantity > $availableRooms->count()) {
+            if ($validated['room_quantity'] > $availableRooms->count()) {
                 DB::rollBack();
                 return redirect()->route('home')->with('error', 'Không đủ phòng trống để đặt.');
             }
 
-            $selectedRooms = $availableRooms->take($roomQuantity);
+            $selectedRooms = $availableRooms->take($validated['room_quantity']);
             $booking->rooms()->attach($selectedRooms->pluck('id'));
 
-            // Lưu thông tin khách
             $guests = $request->input('guests', []);
             foreach ($guests as $guestData) {
                 $guest = Guest::create([
@@ -474,94 +433,38 @@ class BookingController extends Controller
             }
 
             $isPartial = $request->input('payment_amount_type') === 'partial';
-            $depositAmount = $this->calculateDepositAmount($totalPrice);
-            if ($isPartial) {
-                $totalPrice = $depositAmount;
-                $payment->update(['amount' => $totalPrice]); // Update payment amount for partial payment
-            }
+            $depositPercentage = PaymentSetting::first()->deposit_percentage ?? 0;
+            $depositAmount = $isPartial ? ($totalPrice * ($depositPercentage / 100)) : $totalPrice;
 
-            // Xử lý thanh toán
+            $paymentData = [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'amount' => $depositAmount,
+                'status' => 'pending',
+                'transaction_id' => null,
+                'is_partial' => $isPartial,
+            ];
+
             if ($paymentMethod == 'cash') {
-                $payment->update(['status' => 'pending']);
-                $message = 'Đặt phòng của bạn đã hoàn tất! Thông tin chi tiết đã được gửi qua email. Vui lòng thanh toán bằng tiền mặt khi đến nhận phòng.';
+                $paymentData['method'] = 'cash';
+                $payment = Payment::create($paymentData);
                 Mail::to($user->email)->send(new BookingSuccess($booking));
                 DB::commit();
-                return redirect()->route('bookings.show', $booking->id)->with('success', $message);
+                return redirect()->route('bookings.show', $booking->id)->with('success', 'Đặt phòng của bạn đã hoàn tất! Thông tin chi tiết đã được gửi qua email. Vui lòng thanh toán bằng tiền mặt khi đến nhận phòng.');
             } else {
-                if ($onlinePaymentMethod == 'momo') {
-                    $partnerCode = env('MOMO_PARTNER_CODE');
-                    $accessKey = env('MOMO_ACCESS_KEY');
-                    $secretKey = env('MOMO_SECRET_KEY');
-                    $endpoint = env('MOMO_ENDPOINT');
-                    $redirectUrl = env('MOMO_REDIRECT_URL');
-                    $ipnUrl = env('MOMO_IPN_URL');
+                $paymentData['method'] = $onlinePaymentMethod;
+                $payment = Payment::create($paymentData);
 
-                    $orderId = $booking->booking_code . '-' . time();
-                    $requestId = time() . '';
-                    $orderInfo = 'Thanh toán đặt phòng ' . $booking->booking_code;
-                    $amount = (int) $totalPrice;
-                    $extraData = base64_encode(json_encode(['booking_id' => $booking->id]));
-
-                    $rawHash = "accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=captureWallet";
-                    $signature = hash_hmac("sha256", $rawHash, $secretKey);
-
-                    $data = [
-                        'partnerCode' => $partnerCode,
-                        'partnerName' => "Hotel Booking",
-                        'storeId' => "HotelBookingStore",
-                        'requestId' => $requestId,
-                        'amount' => $amount,
-                        'orderId' => $orderId,
-                        'orderInfo' => $orderInfo,
-                        'redirectUrl' => $redirectUrl,
-                        'ipnUrl' => $ipnUrl,
-                        'lang' => 'vi',
-                        'extraData' => $extraData,
-                        'requestType' => 'captureWallet',
-                        'signature' => $signature,
-                    ];
-
-                    try {
-                        $response = Http::post($endpoint, $data);
-                        $result = $response->json();
-
-                        if (isset($result['payUrl']) && isset($result['qrCodeUrl'])) {
-                            $payment->update(['transaction_id' => $orderId]);
-                            DB::commit();
-                            return response()->json([
-                                'success' => true,
-                                'qrCodeUrl' => $result['qrCodeUrl'],
-                                'payUrl' => $result['payUrl'],
-                            ]);
-                        } else {
-                            DB::rollBack();
-                            $booking->delete();
-                            $payment->delete();
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'Không thể tạo yêu cầu thanh toán MoMo. Vui lòng thử lại.',
-                            ], 400);
-                        }
-                    } catch (\Exception $e) {
-                        DB::rollBack();
-                        $booking->delete();
-                        $payment->delete();
-                        Log::error('MoMo API Error: ' . $e->getMessage());
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Lỗi khi gọi API MoMo: ' . $e->getMessage(),
-                        ], 500);
-                    }
-                } else if ($onlinePaymentMethod == 'vnpay') {
+                if ($onlinePaymentMethod == 'vnpay') {
                     $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
                     $vnp_Returnurl = route('bookings.return.vnpay', $booking->id);
-                    $vnp_TmnCode = "6Q5Z9DG8";
-                    $vnp_HashSecret = "NSEYDYAIT1XETEVUA24DF40DOCMC6NYE";
+                    $vnp_TmnCode = env('VNP_TMNCODE', '6Q5Z9DG8');
+                    $vnp_HashSecret = env('VNP_HASHSECRET', 'NSEYDYAIT1XETEVUA24DF40DOCMC6NYE');
 
                     $vnp_TxnRef = $booking->booking_code . '-' . time();
                     $vnp_OrderInfo = 'Thanh toán đặt phòng ' . $booking->booking_code;
                     $vnp_OrderType = 'billpayment';
-                    $vnp_Amount = (int) $totalPrice * 100;
+                    $vnp_Amount = (int) $depositAmount * 100;
                     $vnp_Locale = 'vn';
                     $vnp_BankCode = '';
                     $vnp_IpAddr = $request->ip();
@@ -584,12 +487,7 @@ class BookingController extends Controller
                         "vnp_ExpireDate" => $vnp_ExpireDate,
                     ];
 
-                    if (!empty($vnp_BankCode)) {
-                        $inputData['vnp_BankCode'] = $vnp_BankCode;
-                    }
-
                     ksort($inputData);
-
                     $hashdata = "";
                     $first = true;
                     foreach ($inputData as $key => $value) {
@@ -604,18 +502,21 @@ class BookingController extends Controller
                     $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
                     $vnp_Url .= "?" . $hashdata . "&vnp_SecureHash=" . $vnpSecureHash;
 
+                    Log::info('VNPay URL generated:', ['url' => $vnp_Url]);
+
                     $payment->update(['transaction_id' => $vnp_TxnRef]);
                     DB::commit();
 
-                    return redirect($vnp_Url);
+                    return redirect()->away($vnp_Url);
                 }
             }
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Error in store method at ' . now() . ': ' . $exception->getMessage(), ['request' => $request->all()]);
-            return redirect()->route('bookings.create')->with('error', 'Đã xảy ra lỗi khi xử lý đặt phòng: ' . $exception->getMessage());
+            Log::error('Error in store method:', ['exception' => $exception->getMessage(), 'trace' => $exception->getTraceAsString()]);
+            return redirect()->route('bookings.create')->with('error', 'Đã xảy ra lỗi: ' . $exception->getMessage());
         }
     }
+
     public function paymentCallback(Request $request)
     {
         $data = $request->all();
@@ -676,17 +577,16 @@ class BookingController extends Controller
         ])->findOrFail($id);
 
         $paymentSetting = PaymentSetting::first();
-        // // $deposit_percentage = $paymentSetting->deposit_percentage;
         $refundPolicies = RefundPolicy::all();
 
         $title = 'Chi tiết đơn đặt phòng';
-        // return view('clients.bookings.show', compact('title', 'booking', 'deposit_percentage', 'refundPolicies'));
+        return view('client.bookings.show', compact('title', 'booking', 'paymentSetting', 'refundPolicies'));
     }
 
     public function edit(string $id)
     {
         $booking = Booking::with(['rooms', 'rooms.roomType', 'servicePlus'])->findOrFail($id);
-        return view('clients.bookings.edit', compact('booking'));
+        return view('client.bookings.edit', compact('booking'));
     }
 
     public function update(Request $request, string $id)
@@ -712,7 +612,6 @@ class BookingController extends Controller
     {
         $booking = Booking::findOrFail($id);
 
-        // Kiểm tra quyền sở hữu
         if ($booking->user_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
@@ -720,7 +619,6 @@ class BookingController extends Controller
             ], 403);
         }
 
-        // Điều kiện: Chỉ cho xóa nếu trạng thái là 'pending' và trước ngày check_in ít nhất 24 giờ
         $now = Carbon::now();
         $checkInDate = Carbon::parse($booking->check_in);
         if ($booking->status !== 'pending' || $checkInDate->diffInHours($now) < 24) {
@@ -730,7 +628,6 @@ class BookingController extends Controller
             ], 400);
         }
 
-        // Xóa mềm
         $booking->delete();
 
         return response()->json([
@@ -787,7 +684,7 @@ class BookingController extends Controller
                 'message' => 'Tổng giá trị đơn hàng chưa đạt mức tối thiểu ' . number_format($minBookingAmount, 0, ',', '.') . ' VND để áp dụng mã này.'
             ]);
         }
-        // percent or fixed
+
         $discountAmount = $promotion->type === 'percent'
             ? $subTotal * ($promotionValue / 100)
             : $promotionValue;
@@ -797,13 +694,10 @@ class BookingController extends Controller
         }
 
         $discountAmount = min($discountAmount, $subTotal);
-
         $discountAmount = round($discountAmount, 2);
 
         $newSubTotal = $subTotal - $discountAmount;
-
         $taxFee = round($newSubTotal * 0.08, 2);
-
         $newTotalPrice = round($newSubTotal + $taxFee, 2);
 
         return response()->json([
@@ -816,79 +710,43 @@ class BookingController extends Controller
         ]);
     }
 
-    public function returnVnpay(Request $request, $id)
+    public function returnVnpay($id)
     {
-        $vnp_HashSecret = "NSEYDYAIT1XETEVUA24DF40DOCMC6NYE"; // Đảm bảo đúng HashSecret từ VNPay
+        $booking = Booking::findOrFail($id);
+        $vnp_ResponseCode = request('vnp_ResponseCode');
+        $vnp_TxnRef = request('vnp_TxnRef');
+        $vnp_SecureHash = request('vnp_SecureHash');
 
-        // Lấy tất cả tham số từ VNPay trả về
-        $vnp_SecureHash = $request->input('vnp_SecureHash');
-        $vnp_ResponseCode = $request->input('vnp_ResponseCode');
-        $vnp_TransactionNo = $request->input('vnp_TransactionNo');
-        $vnp_Amount = $request->input('vnp_Amount') / 100; // Chuyển đổi từ VND sang số thực
-
-        // Loại bỏ các tham số không cần thiết để tạo chữ ký
-        $inputData = $request->except(['vnp_SecureHash', 'vnp_SecureHashType']);
+        $inputData = request()->all();
+        $vnp_HashSecret = env('VNP_HASHSECRET', 'NSEYDYAIT1XETEVUA24DF40DOCMC6NYE');
         ksort($inputData);
-
-        // Tạo chuỗi dữ liệu để kiểm tra chữ ký
-        $hashdata = "";
+        $hashData = "";
         $first = true;
         foreach ($inputData as $key => $value) {
-            if ($first) {
-                $hashdata .= $key . "=" . urlencode($value);
-                $first = false;
-            } else {
-                $hashdata .= "&" . $key . "=" . urlencode($value);
+            if ($key !== 'vnp_SecureHash' && $value !== '') {
+                if ($first) {
+                    $hashData .= $key . '=' . $value;
+                    $first = false;
+                } else {
+                    $hashData .= '&' . $key . '=' . $value;
+                }
             }
         }
+        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
 
-        // Tạo chữ ký để so sánh
-        $checkSum = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+        if ($vnp_ResponseCode == '00' && $secureHash === $vnp_SecureHash) {
+            $booking->status = 'paid';
+            $booking->paid_amount = $booking->total_price;
+            $booking->save();
 
-        // Kiểm tra chữ ký
-        if ($checkSum !== $vnp_SecureHash) {
-            return redirect()->route('bookings.show', $id)
-                ->with('error', 'Chữ ký không hợp lệ! Thanh toán không được xác nhận.');
-        }
+            $payment = $booking->payments()->first();
+            $payment->status = 'completed';
+            $payment->transaction_id = $vnp_TxnRef;
+            $payment->save();
 
-        // Kiểm tra mã phản hồi
-        if ($vnp_ResponseCode == '00') {
-            try {
-                DB::transaction(function () use ($id, $vnp_TransactionNo, $vnp_Amount) {
-                    $booking = Booking::where('id', $id)->firstOrFail();
-                    $payment = Payment::where('booking_id', $id)->first();
-
-                    if ($payment) {
-                        // Cập nhật thông tin thanh toán
-                        $payment->update([
-                            'transaction_id' => $vnp_TransactionNo,
-                            'status' => 'completed',
-                        ]);
-
-                        // Cập nhật số tiền đã thanh toán
-                        $booking->update(['paid_amount' => $vnp_Amount]);
-
-                        // Kiểm tra xem đây có phải là thanh toán một phần không
-                        if ($payment->is_partial) {
-                            $booking->update(['status' => 'partial']);
-                        } else {
-                            $booking->update(['status' => 'paid']);
-                        }
-
-                        // Gửi email xác nhận
-                        Mail::to($booking->user->email)->send(new BookingSuccess($booking));
-                    }
-                });
-
-                return redirect()->route('bookings.show', $id)
-                    ->with('success', 'Thanh toán thành công! Thông tin đặt phòng đã được gửi qua email.');
-            } catch (\Throwable $th) {
-                return redirect()->route('bookings.show', $id)
-                    ->with('error', 'Đã có lỗi xảy ra trong quá trình cập nhật thanh toán: ' . $th->getMessage());
-            }
+            return redirect()->route('bookings.show', $id)->with('success', 'Thanh toán thành công!');
         } else {
-            return redirect()->route('bookings.show', $id)
-                ->with('error', 'Thanh toán không thành công! Mã lỗi: ' . $vnp_ResponseCode);
+            return redirect()->route('bookings.show', $id)->with('error', 'Thanh toán thất bại. Vui lòng thử lại.');
         }
     }
 
@@ -902,9 +760,9 @@ class BookingController extends Controller
         ]);
 
         $paymentAmount = $booking->total_price;
-        // // $deposit_percentage = $request->input('deposit_percentage');
         if ($validated['payment_amount_type'] == 'partial') {
-            // $paymentAmount = $paymentAmount * (intval($deposit_percentage) / 100);
+            $depositPercentage = PaymentSetting::first()->deposit_percentage ?? 0;
+            $paymentAmount = $paymentAmount * ($depositPercentage / 100);
         }
 
         $paymentData = [
@@ -921,8 +779,8 @@ class BookingController extends Controller
             $payment = Payment::create($paymentData);
             $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
             $vnp_Returnurl = route('bookings.return.vnpay', $booking->id);
-            $vnp_TmnCode = "6Q5Z9DG8";
-            $vnp_HashSecret = "NSEYDYAIT1XETEVUA24DF40DOCMC6NYE";
+            $vnp_TmnCode = env('VNP_TMNCODE', '6Q5Z9DG8');
+            $vnp_HashSecret = env('VNP_HASHSECRET', 'NSEYDYAIT1XETEVUA24DF40DOCMC6NYE');
 
             $vnp_TxnRef = $booking->booking_code . '-' . time();
             $vnp_OrderInfo = 'Thanh toán đặt phòng ' . $booking->booking_code;
@@ -955,7 +813,6 @@ class BookingController extends Controller
             }
 
             ksort($inputData);
-
             $hashdata = "";
             $first = true;
             foreach ($inputData as $key => $value) {
@@ -971,7 +828,6 @@ class BookingController extends Controller
             $vnp_Url .= "?" . $hashdata . "&vnp_SecureHash=" . $vnpSecureHash;
 
             $payment->update(['transaction_id' => $vnp_TxnRef]);
-
             DB::commit();
 
             return redirect($vnp_Url);

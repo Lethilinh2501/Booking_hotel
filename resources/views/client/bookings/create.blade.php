@@ -46,11 +46,13 @@
                                 <h4 class="lh-room-inner-heading">Chi tiết đặt phòng của bạn</h4>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong>Nhận phòng:</strong> {{ \App\Helpers\FormatHelper::FormatDate($checkIn) }}</p>
+                                        <p><strong>Nhận phòng:</strong>
+                                            {{ \App\Helpers\FormatHelper::FormatDate($checkIn) }}</p>
                                         <p>14:00 - 22:00</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>Trả phòng:</strong> {{ \App\Helpers\FormatHelper::FormatDate($checkOut) }}</p>
+                                        <p><strong>Trả phòng:</strong>
+                                            {{ \App\Helpers\FormatHelper::FormatDate($checkOut) }}</p>
                                         <p>Trước 12:00</p>
                                     </div>
                                 </div>
@@ -64,7 +66,9 @@
                                 @if (!empty($selectedServices))
                                     <p><strong>Dịch vụ bổ sung:</strong></p>
                                     @foreach ($selectedServices as $service)
-                                        <p>{{ $service['name'] }} ({{ $service['price'] == 0 ? 'Miễn phí' : \App\Helpers\FormatHelper::FormatPrice($service['price']) }}) x {{ $service['quantity'] }}</p>
+                                        <p>{{ $service['name'] }}
+                                            ({{ $service['price'] == 0 ? 'Miễn phí' : \App\Helpers\FormatHelper::FormatPrice($service['price']) }})
+                                            x {{ $service['quantity'] }}</p>
                                     @endforeach
                                 @endif
                             </div>
@@ -94,7 +98,8 @@
                                 <hr>
                                 <div class="d-flex justify-content-between">
                                     <h5 class="lh-room-inner-heading">Tổng cộng</h5>
-                                    <h5 class="lh-room-inner-heading text-danger" id="total_price_display">{{ \App\Helpers\FormatHelper::formatPrice($totalPrice) }}</h5>
+                                    <h5 class="lh-room-inner-heading text-danger" id="total_price_display">
+                                        {{ \App\Helpers\FormatHelper::formatPrice($totalPrice) }}</h5>
                                 </div>
                                 <p class="text-muted">Đã bao gồm thuế và phí</p>
                             </div>
@@ -112,7 +117,8 @@
                 <div class="col-lg-8 check-dash" data-aos="fade-up" data-aos-duration="2000">
                     <div class="lh-check-block-content">
                         <div class="lh-checkout-wrap mb-24">
-                            <form action="{{ route('bookings.confirm') }}" method="POST" id="booking-form" enctype="multipart/form-data">
+                            <form action="{{ route('bookings.confirm') }}" method="POST" id="booking-form"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="lh-checkout-wrap mb-24">
                                     <h3 class="lh-checkout-title">Thông tin người đặt</h3>
@@ -131,7 +137,8 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Họ và tên <span class="text-danger">*</span> </label>
+                                                    <label class="form-label">Họ và tên <span class="text-danger">*</span>
+                                                    </label>
                                                     <input type="text" name="guest[name]" class="form-control"
                                                         value="{{ old('guest.name', $user->name ?? '') }}"
                                                         placeholder="Nhập họ và tên" required />
@@ -143,7 +150,8 @@
 
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Email <span class="text-danger">*</span> </label>
+                                                    <label class="form-label">Email <span class="text-danger">*</span>
+                                                    </label>
                                                     <input type="email" name="guest[email]" class="form-control"
                                                         value="{{ old('guest.email', $user->email ?? '') }}"
                                                         placeholder="Nhập email" required />
@@ -155,7 +163,8 @@
 
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Số điện thoại <span class="text-danger">*</span> </label>
+                                                    <label class="form-label">Số điện thoại <span
+                                                            class="text-danger">*</span> </label>
                                                     <input type="text" name="guest[phone]" class="form-control"
                                                         value="{{ old('guest.phone', $user->phone ?? '') }}"
                                                         placeholder="Nhập số điện thoại" required />
@@ -167,12 +176,19 @@
 
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Vùng quốc gia <span class="text-danger">*</span> </label>
+                                                    <label class="form-label">Vùng quốc gia <span
+                                                            class="text-danger">*</span> </label>
                                                     <select name="guest[country]" class="form-control" required>
                                                         <option value="">Chọn quốc gia</option>
-                                                        <option value="Việt Nam" {{ old('guest.country', $user->country ?? '') == 'Việt Nam' ? 'selected' : '' }}>Việt Nam</option>
-                                                        <option value="United States" {{ old('guest.country', $user->country ?? '') == 'United States' ? 'selected' : '' }}>United States</option>
-                                                        <option value="Japan" {{ old('guest.country', $user->country ?? '') == 'Japan' ? 'selected' : '' }}>Japan</option>
+                                                        <option value="Việt Nam"
+                                                            {{ old('guest.country', $user->country ?? '') == 'Việt Nam' ? 'selected' : '' }}>
+                                                            Việt Nam</option>
+                                                        <option value="United States"
+                                                            {{ old('guest.country', $user->country ?? '') == 'United States' ? 'selected' : '' }}>
+                                                            United States</option>
+                                                        <option value="Japan"
+                                                            {{ old('guest.country', $user->country ?? '') == 'Japan' ? 'selected' : '' }}>
+                                                            Japan</option>
                                                     </select>
                                                     @error('guest.country')
                                                         <small class="text-danger">{{ $message }}</small>
@@ -192,9 +208,13 @@
                                                 $mainImage = $roomType->roomTypeImages->where('is_main', true)->first();
                                             @endphp
                                             @if ($mainImage)
-                                                <img src="{{ Storage::url($mainImage->image) }}" alt="{{ $roomType->name }}" class="rounded" style="width: 150px; height: 100px; object-fit: cover; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                                <img src="{{ Storage::url($mainImage->image) }}"
+                                                    alt="{{ $roomType->name }}" class="rounded"
+                                                    style="width: 150px; height: 100px; object-fit: cover; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
                                             @else
-                                                <img src="{{ asset('images/default-room.jpg') }}" alt="Default Room Image" class="rounded" style="width: 150px; height: 100px; object-fit: cover; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                                <img src="{{ asset('images/default-room.jpg') }}"
+                                                    alt="Default Room Image" class="rounded"
+                                                    style="width: 150px; height: 100px; object-fit: cover; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
                                             @endif
                                         </div>
                                         <div>
@@ -213,7 +233,8 @@
                                                     ];
                                                 @endphp
                                                 {{ $bedTypeMapping[$roomType->bed_type] ?? 'Không xác định' }} |
-                                                <i class="fas fa-users me-1"></i> Tối đa {{ $roomType->max_capacity }} người
+                                                <i class="fas fa-users me-1"></i> Tối đa {{ $roomType->max_capacity }}
+                                                người
                                             </p>
                                         </div>
                                     </div>
@@ -231,12 +252,15 @@
                                             <div class="row">
                                                 @foreach ($roomType->amenities as $amenity)
                                                     <div class="col-md-6 mb-2">
-                                                        <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i> {{ $amenity->name }}</p>
+                                                        <p class="mb-0"><i
+                                                                class="fas fa-check-circle text-success me-2"></i>
+                                                            {{ $amenity->name }}</p>
                                                     </div>
                                                 @endforeach
                                             </div>
                                         @else
-                                            <p class="text-muted"><i class="fas fa-info-circle me-2"></i> Chưa có tiện nghi</p>
+                                            <p class="text-muted"><i class="fas fa-info-circle me-2"></i> Chưa có tiện
+                                                nghi</p>
                                         @endif
                                     </div>
 
@@ -245,7 +269,9 @@
                                             <h3 class="lh-checkout-title">Quy tắc & quy định</h3>
                                             <ul class="list-unstyled">
                                                 @foreach ($roomType->rulesAndRegulations as $rule)
-                                                    <li class="mb-2"><i class="fas fa-exclamation-circle text-warning me-2"></i> {{ $rule->name }}</li>
+                                                    <li class="mb-2"><i
+                                                            class="fas fa-exclamation-circle text-warning me-2"></i>
+                                                        {{ $rule->name }}</li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -273,15 +299,19 @@
                                 <!-- Truyền dịch vụ và số lượng -->
                                 @if (!empty($selectedServices))
                                     @foreach ($selectedServices as $service)
-                                        <input type="hidden" name="services[{{ $service['id'] }}][id]" value="{{ $service['id'] }}">
-                                        <input type="hidden" name="services[{{ $service['id'] }}][quantity]" value="{{ $service['quantity'] }}">
-                                        <input type="hidden" name="services[{{ $service['id'] }}][price]" value="{{ $service['price'] }}">
+                                        <input type="hidden" name="services[{{ $service['id'] }}][id]"
+                                            value="{{ $service['id'] }}">
+                                        <input type="hidden" name="services[{{ $service['id'] }}][quantity]"
+                                            value="{{ $service['quantity'] }}">
+                                        <input type="hidden" name="services[{{ $service['id'] }}][price]"
+                                            value="{{ $service['price'] }}">
                                     @endforeach
                                 @endif
 
                                 <div class="lh-checkout-wrap mb-24">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
+                                        <input class="form-check-input" type="checkbox" name="terms" id="terms"
+                                            required>
                                         <label class="form-check-label" for="terms">
                                             Tôi đã đọc và đồng ý với các điều khoản và điều kiện.
                                         </label>
@@ -301,13 +331,57 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6-beta3/css/all.min.css">
     <style>
-        .progress-bar-custom { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .progress-step { display: flex; flex-direction: column; align-items: center; position: relative; width: 120px; }
-        .progress-step .step-circle { width: 30px; height: 30px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 5px; }
-        .progress-step.active .step-circle { background-color: #007bff; }
-        .progress-step:not(.active) .step-circle { background-color: #ccc; }
-        .progress-step .step-label { font-size: 14px; color: #333; text-align: center; }
-        .progress-line { flex: 1; height: 2px; background-color: #007bff; margin: 0 10px; }
-        .form-check { margin-bottom: 10px; }
+        .progress-bar-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 120px;
+        }
+
+        .progress-step .step-circle {
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .progress-step.active .step-circle {
+            background-color: #007bff;
+        }
+
+        .progress-step:not(.active) .step-circle {
+            background-color: #ccc;
+        }
+
+        .progress-step .step-label {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            background-color: #007bff;
+            margin: 0 10px;
+        }
+
+        .form-check {
+            margin-bottom: 10px;
+        }
     </style>
 @endsection
