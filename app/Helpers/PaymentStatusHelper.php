@@ -25,4 +25,4 @@ class PaymentStatusHelper
 
         return $statusClasses[$status] ?? 'badge bg-secondary';
     }
-}
+} 

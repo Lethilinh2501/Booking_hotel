@@ -174,26 +174,25 @@
                                             <input type="hidden" name="total_price" id="total_price_input"
                                                 value="{{ $totalPrice }}">
                                             <input type="hidden" name="special_request"
-                                                value="{{ $special_request ?? request('special_request') }}">
+                                                value="{{ request('special_request') }}">
                                             <input type="hidden" name="base_price" value="{{ $basePrice }}">
                                             <input type="hidden" name="service_total" value="{{ $serviceTotal }}">
                                             <input type="hidden" name="tax_fee" id="tax_fee_input"
                                                 value="{{ $taxFee }}">
                                             <input type="hidden" name="sub_total" value="{{ $subTotal }}">
                                             <input type="hidden" name="guests[0][name]"
-                                                value="{{ $guestData['name'] ?? '' }}">
+                                                value="{{ $guestData['name'] }}">
                                             <input type="hidden" name="guests[0][email]"
-                                                value="{{ $guestData['email'] ?? '' }}">
+                                                value="{{ $guestData['email'] }}">
                                             <input type="hidden" name="guests[0][phone]"
-                                                value="{{ $guestData['phone'] ?? '' }}">
+                                                value="{{ $guestData['phone'] }}">
                                             <input type="hidden" name="guests[0][country]"
-                                                value="{{ $guestData['country'] ?? '' }}">
+                                                value="{{ $guestData['country'] }}">
                                             <input type="hidden" name="guests[0][relationship]"
                                                 value="{{ $guestData['relationship'] ?? 'Người ở chính' }}">
                                             <input type="hidden" id="discount_amount_input" name="discount_amount"
                                                 value="{{ $discountAmount }}">
-                                            <input type="hidden" id="promotion_id" name="promotion_id"
-                                                value="{{ $promotion_id ?? '' }}">
+                                            <input type="hidden" id="promotion_id" name="promotion_id">
 
                                             @if (!empty($selectedServices))
                                                 @foreach ($selectedServices as $service)
@@ -218,6 +217,8 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio"
                                                         name="payment_amount_type" id="payment_partial" value="partial">
+                                                    <label class="form-check-label" for="payment_partial">Thanh toán trước
+                                                        {{ $deposit_percentage }}%</label>
                                                 </div>
                                             </div>
 
@@ -242,10 +243,6 @@
                                                         VNPay
                                                     </label>
                                                 </div>
-                                            </div>
-
-                                            <div id="payment-instruction" class="mt-3">
-                                                <p>Vui lòng lưu ý hiện thanh toán qua cổng thanh toán: VNPay</p>
                                             </div>
 
                                             <div class="d-flex justify-content-end mt-4">
@@ -347,7 +344,7 @@
                         $('#voucher-section').hide();
                         $('#promotion-message').html(
                             '<p class="text-danger">Đã có lỗi xảy ra. Vui lòng thử lại.</p>'
-                        );
+                            );
                     }
                 });
             });
@@ -376,30 +373,15 @@
                 $('#total_price_input').val(afterDefaultTotal);
                 $('#tax_fee_input').val(afterDefaultTax);
                 $('#discount_amount_input').val(defaultDiscount);
-
                 $('#promotion_id').val('');
                 voucherDiscount = 0;
             });
 
-            // $('.payment-method').on('change', function () {
-            //     const method = $(this).val();
-            //     if (method === 'cash') {
-            //         $('#online-payment-section').hide();
-            //         $('#payment-instruction p').text('Vui lòng thanh toán bằng tiền mặt khi nhận phòng.');
-            //         $('#momo-qr-section').hide();
-            //     } else {
-            //         $('#online-payment-section').show();
-            //         $('#payment-instruction p').text('Vui lòng lưu ý hiện thanh toán qua cổng thanh toán:');
-            //         $('#momo-qr-section').hide();
-            //     }
-            // });
             $('#payment2').on('click', function() {
                 const method = $(this).val();
-
                 $('#online-payment-section').show();
                 $('#payment-instruction p').text('Vui lòng lưu ý hiện thanh toán qua cổng thanh toán.');
                 $('#momo-qr-section').hide();
-
             });
 
             $('.online-payment-method').on('change', function() {
@@ -412,20 +394,21 @@
             });
 
             $('#confirm-form').on('submit', function(e) {
-                e.preventDefault();
-
                 const paymentMethod = $('input[name="payment_method"]:checked').val();
-                if (paymentMethod === 'online') {
-                    const onlineMethod = $('input[name="online_payment_method"]:checked').val();
-                    if (!onlineMethod) {
-                        alert('Vui lòng chọn một cổng thanh toán (VNPay).');
-                        return;
-                    }
+                const onlineMethod = $('input[name="online_payment_method"]:checked').val();
 
-                    this.submit();
-                } else {
-                    this.submit();
+                if (paymentMethod === 'online' && !onlineMethod) {
+                    alert('Vui lòng chọn một cổng thanh toán (VNPay).');
+                    e.preventDefault();
+                    return;
                 }
+
+                const totalPrice = parseFloat($('#total_price_display').text().replace(/[^0-9.-]+/g, '')) ||
+                    0;
+                const taxFee = parseFloat($('#tax_fee_display').text().replace(/[^0-9.-]+/g, '')) || 0;
+
+                $('#total_price_input').val(totalPrice);
+                $('#tax_fee_input').val(taxFee);
             });
         });
     </script>

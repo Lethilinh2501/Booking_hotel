@@ -377,14 +377,13 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('destroy');
     });
 });
-
 Route::prefix('bookings')
     ->as('bookings.')
     // ->middleware('auth') // Nếu client cần đăng nhập
     ->group(function () {
         Route::get('/', [ClientBookingController::class, 'index'])->name('index');
         Route::get('/create', [ClientBookingController::class, 'create'])->name('create');
-        Route::post('/confirm', [ClientBookingController::class, 'confirm'])->name('confirm'); // Chuyển từ create sang confirm
+        Route::post('/confirm', [ClientBookingController::class, 'confirm'])->name('confirm');
         Route::post('/store', [ClientBookingController::class, 'store'])->name('store'); // Lưu dữ liệu từ confirm
         Route::get('{id}/returnVnpay', [ClientBookingController::class, 'returnVnpay'])->name('return.vnpay');
         Route::get('{id}/show', [ClientBookingController::class, 'show'])->name('show');

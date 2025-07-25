@@ -27,7 +27,12 @@ class Booking extends Model
         'room_quantity',
         'status',
         'user_id',
+        'guest_id',
         'special_request',
+        'service_plus_status', // Thêm trường này
+        'paid_amount',
+        'service_plus_total'
+
     ];
 
     public function user()
@@ -67,16 +72,14 @@ class Booking extends Model
     {
         return $this->hasMany(BookingGuest::class);
     }
+        public function payments()
+    {
+        return $this->hasMany(Payment::class, 'booking_id');
+  
     public function refund()
     {
         return $this->hasOne(Refund::class);
     }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
     public function servicePlus()
     {
         return $this->belongsToMany(ServicePlus::class, 'booking_service_plus', 'booking_id', 'service_plus_id')
