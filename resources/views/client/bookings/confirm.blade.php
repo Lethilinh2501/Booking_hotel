@@ -244,7 +244,6 @@
                                                     </label>
                                                 </div>
                                             </div>
-
                                             <div id="payment-instruction" class="mt-3">
                                                 <p>Vui lòng thanh toán bằng tiền mặt khi nhận phòng.</p>
                                             </div>
@@ -258,7 +257,6 @@
                                                 <a id="momo-pay-link" href="#" class="btn btn-primary"
                                                     target="_blank">Thanh toán ngay</a>
                                             </div>
-
                                             <div class="d-flex justify-content-end mt-4">
                                                 <button type="submit" class="btn btn-primary" id="confirm-button">Hoàn
                                                     tất đặt phòng</button>
@@ -358,7 +356,7 @@
                         $('#voucher-section').hide();
                         $('#promotion-message').html(
                             '<p class="text-danger">Đã có lỗi xảy ra. Vui lòng thử lại.</p>'
-                        );
+                            );
                     }
                 });
             });
@@ -387,30 +385,15 @@
                 $('#total_price_input').val(afterDefaultTotal);
                 $('#tax_fee_input').val(afterDefaultTax);
                 $('#discount_amount_input').val(defaultDiscount);
-
                 $('#promotion_id').val('');
                 voucherDiscount = 0;
             });
 
-            // $('.payment-method').on('change', function () {
-            //     const method = $(this).val();
-            //     if (method === 'cash') {
-            //         $('#online-payment-section').hide();
-            //         $('#payment-instruction p').text('Vui lòng thanh toán bằng tiền mặt khi nhận phòng.');
-            //         $('#momo-qr-section').hide();
-            //     } else {
-            //         $('#online-payment-section').show();
-            //         $('#payment-instruction p').text('Vui lòng lưu ý hiện thanh toán qua cổng thanh toán:');
-            //         $('#momo-qr-section').hide();
-            //     }
-            // });
             $('#payment2').on('click', function() {
                 const method = $(this).val();
-
                 $('#online-payment-section').show();
                 $('#payment-instruction p').text('Vui lòng lưu ý hiện thanh toán qua cổng thanh toán.');
                 $('#momo-qr-section').hide();
-
             });
 
             $('.online-payment-method').on('change', function() {
@@ -423,20 +406,21 @@
             });
 
             $('#confirm-form').on('submit', function(e) {
-                e.preventDefault();
-
                 const paymentMethod = $('input[name="payment_method"]:checked').val();
-                if (paymentMethod === 'online') {
-                    const onlineMethod = $('input[name="online_payment_method"]:checked').val();
-                    if (!onlineMethod) {
-                        alert('Vui lòng chọn một cổng thanh toán (VNPay).');
-                        return;
-                    }
+                const onlineMethod = $('input[name="online_payment_method"]:checked').val();
 
-                    this.submit();
-                } else {
-                    this.submit();
+                if (paymentMethod === 'online' && !onlineMethod) {
+                    alert('Vui lòng chọn một cổng thanh toán (VNPay).');
+                    e.preventDefault();
+                    return;
                 }
+
+                const totalPrice = parseFloat($('#total_price_display').text().replace(/[^0-9.-]+/g, '')) ||
+                    0;
+                const taxFee = parseFloat($('#tax_fee_display').text().replace(/[^0-9.-]+/g, '')) || 0;
+
+                $('#total_price_input').val(totalPrice);
+                $('#tax_fee_input').val(taxFee);
             });
         });
     </script>
