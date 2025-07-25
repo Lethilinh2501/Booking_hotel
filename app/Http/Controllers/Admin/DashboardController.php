@@ -3,63 +3,204 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
+use App\Models\Review;
+use App\Models\Guest;
+use App\Models\Staff;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.dasboard');
-    }
+        // Lấy khoảng thời gian lọc
+        $dateRange = $request->input('date_range');
+        $startDate = null;
+        $endDate = null;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Nếu không có dateRange, mặc định là 30 ngày gần nhất
+        try {
+            if (!$dateRange) {
+                $endDate = Carbon::now();
+                $startDate = $endDate->copy()->subDays(29);
+                $dateRange = $startDate->format('d/m/Y') . ' - ' . $endDate->format('d/m/Y');
+            } else {
+                $dates = explode(' - ', $dateRange);
+                if (count($dates) === 2) {
+                    $startDate = Carbon::createFromFormat('d/m/Y', trim($dates[0]))->startOfDay();
+                    $endDate = Carbon::createFromFormat('d/m/Y', trim($dates[1]))->endOfDay();
+                } else {
+                    throw new \Exception('Invalid date range format');
+                }
+            }
+            Log::info('Date Range: ' . $startDate->toDateTimeString() . ' to ' . $endDate->toDateTimeString());
+        } catch (\Exception $e) {
+            Log::error('Date parsing error: ' . $e->getMessage());
+            $endDate = Carbon::now();
+            $startDate = $endDate->copy()->subDays(29);
+            $dateRange = $startDate->format('d/m/Y') . ' - ' . $endDate->format('d/m/Y');
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Query builder cơ bản cho đặt phòng, bao gồm cả bản ghi đã xóa mềm nếu có
+        $bookingQuery = Booking::withTrashed(); // Thêm vớiTrashed nếu model sử dụng soft deletes
+        if ($startDate && $endDate) {
+            $bookingQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        // Debug: Kiểm tra số lượng bản ghi
+        $bookingRecords = $bookingQuery->get();
+        Log::info('Booking records count: ' . $bookingRecords->count());
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // Tính toán các chỉ số chính
+        $bookingCount = $bookingQuery->count();
+        $revenueTotal = $bookingQuery->sum('total_price');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Tính chi phí (80% của doanh thu)
+        $expenseTotal = $revenueTotal * 0.8;
+        $profitTotal = $revenueTotal - $expenseTotal;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Thống kê theo loại phòng
+        $roomTypeStats = Room::join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
+            ->select('room_types.name as type', DB::raw('count(*) as total'))
+            ->groupBy('room_types.name')
+            ->get();
+
+        // Thống kê đặt phòng theo ngày trong tuần
+        $bookingByDay = Booking::select(
+            DB::raw('DAYOFWEEK(created_at) as day'),
+            DB::raw('count(*) as total')
+        )
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->groupBy('day')
+            ->orderBy('day')
+            ->get();
+
+        // Thống kê doanh thu theo giờ
+        $revenueByHour = Booking::select(
+            DB::raw('HOUR(created_at) as hour'),
+            DB::raw('sum(total_price) as total')
+        )
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get();
+
+        // Thống kê tỷ lệ hủy đặt phòng
+        $cancellationRate = Booking::when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+            ->selectRaw('
+                COUNT(*) as total_bookings,
+                SUM(CASE WHEN status = "cancelled" THEN 1 ELSE 0 END) as cancelled_bookings
+            ')
+            ->first();
+
+        $cancellationRate = $cancellationRate->total_bookings > 0
+            ? round(($cancellationRate->cancelled_bookings / $cancellationRate->total_bookings) * 100, 2)
+            : 0;
+
+        // Thống kê khách hàng
+        $customerStats = [
+            'total' => User::count(),
+            'new' => User::when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+                ->count(),
+            'loyal' => Booking::select('user_id', DB::raw('count(*) as booking_count'))
+                ->groupBy('user_id')
+                ->having('booking_count', '>', 3)
+                ->count()
+        ];
+
+        // Thống kê đánh giá
+        $reviewStats = Review::when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+            ->selectRaw('
+                COUNT(*) as total_reviews,
+                AVG(rating) as average_rating,
+                SUM(CASE WHEN rating >= 4 THEN 1 ELSE 0 END) as positive_reviews
+            ')
+            ->first();
+
+        // Dữ liệu cho biểu đồ mini (6 tháng gần nhất)
+        $miniChartData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $monthQuery = Booking::whereMonth('created_at', $month->month);
+
+            if ($startDate && $endDate) {
+                $monthQuery->whereBetween('created_at', [
+                    max($startDate, $month->copy()->startOfMonth()),
+                    min($endDate, $month->copy()->endOfMonth())
+                ]);
+            }
+
+            $monthBookings = $monthQuery->count();
+            $monthRevenue = $monthQuery->sum('total_price');
+
+            $miniChartData['booking'][] = $monthBookings;
+            $miniChartData['revenue'][] = $monthRevenue;
+            $miniChartData['rooms'][] = Room::whereMonth('updated_at', $month->month)
+                ->where('status', 'available')
+                ->count();
+            $miniChartData['labels'][] = $month->format('M');
+        }
+
+        // Dữ liệu cho biểu đồ tổng quan (12 tháng gần nhất)
+        $overviewData = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $monthQuery = Booking::whereMonth('created_at', $month->month);
+
+            if ($startDate && $endDate) {
+                $monthQuery->whereBetween('created_at', [
+                    max($startDate, $month->copy()->startOfMonth()),
+                    min($endDate, $month->copy()->endOfMonth())
+                ]);
+            }
+
+            $monthBookings = $monthQuery->count();
+            $monthRevenue = $monthQuery->sum('total_price');
+            $monthExpense = $monthRevenue * 0.8;
+            $monthProfit = $monthRevenue - $monthExpense;
+
+            $overviewData['bookings'][] = $monthBookings;
+            $overviewData['revenue'][] = $monthRevenue;
+            $overviewData['expense'][] = $monthExpense;
+            $overviewData['profit'][] = $monthProfit;
+            $overviewData['labels'][] = $month->format('M Y');
+        }
+
+        // Các chỉ số khác
+        $roomsAvailable = Room::where('status', 'available')->count();
+        $roomsTotal = Room::count();
+
+        return view('admin.dasboard', compact(
+            'bookingCount',
+            'revenueTotal',
+            'expenseTotal',
+            'profitTotal',
+            'roomsAvailable',
+            'roomsTotal',
+            'miniChartData',
+            'overviewData',
+            'dateRange',
+            'roomTypeStats',
+            'bookingByDay',
+            'revenueByHour',
+            'cancellationRate',
+            'customerStats',
+            'reviewStats'
+        ));
     }
 }
