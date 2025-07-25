@@ -264,11 +264,15 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::get('/', [BookingController::class, 'index'])->name('index');
         Route::get('/create', [BookingController::class, 'create'])->name('create');
         Route::post('/store', [BookingController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [BookingController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [BookingController::class, 'destroy'])->name('destroy');
-        Route::post('/update-status/{id}', [BookingController::class, 'updateStatus'])->name('updateStatus');
-        Route::get('/{id}', [BookingController::class, 'show'])->name('show');
+        Route::post('/checkin/store', [BookingController::class, 'storeCheckIn'])->name('checkin.store');
+        Route::post('/paid/store', [BookingController::class, 'storePaid'])->name('paid.store');
+        Route::get('{id}/returnVnpay', [BookingController::class, 'returnVnpay'])->name('return.vnpay');
+        Route::get('{id}/get-remaining-amount', [BookingController::class, 'getRemainingAmount'])->name('get-remaining-amount');
+        Route::get('{id}/show', [BookingController::class, 'show'])->name('show');
+        Route::post('{id}/service-plus', [BookingController::class, 'updateServicePlus'])->name('service_plus.update');
+        Route::get('{id}/edit', [BookingController::class, 'edit'])->name('edit');
+        Route::put('{id}/update', [BookingController::class, 'update'])->name('update');
+        Route::delete('{id}/destroy', [BookingController::class, 'destroy'])->name('destroy');
     });
 
     // Amenities

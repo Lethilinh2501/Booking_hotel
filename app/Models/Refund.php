@@ -9,15 +9,42 @@ class Refund extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payment_id', 'amount', 'status'];
+    protected $fillable = [
+        'booking_id',
+        'refund_policy_id',
+        'amount',
+        'cancellation_fee',
+        'status',
+        'reason',
+        'admin_notes',
+        'approved_by',
+        'approved_at',
+        'refund_method',
+        'transaction_id',
+    ];
 
-    public function payment()
+    public function booking()
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function refundPolicy()
+    {
+        return $this->belongsTo(RefundPolicy::class);
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function transactions()
     {
         return $this->hasMany(RefundTransaction::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
     }
 }

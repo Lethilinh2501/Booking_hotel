@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id(); // Khóa chính, tự tăng
-            $table->string('name'); // Tên phòng, ví dụ: "Phòng A101"
+            $table->string('room_number'); // Tên phòng, ví dụ: "Phòng A101"
             $table->unsignedBigInteger('room_type_id'); // FK tới bảng room_types
             $table->unsignedInteger('floor')->nullable(); // Tầng, có thể để trống
             $table->enum('status', ['available', 'booked', 'maintenance'])->default('available'); // Trạng thái phòng

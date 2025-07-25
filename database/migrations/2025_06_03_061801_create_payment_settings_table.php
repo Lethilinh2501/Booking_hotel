@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migration: create_payment_settings_table.php
         Schema::create('payment_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('gateway');
-            $table->boolean('is_enabled')->default(true);
-            $table->text('config')->nullable();
+            $table->integer('deposit_percentage')->default(50);
             $table->timestamps();
         });
     }

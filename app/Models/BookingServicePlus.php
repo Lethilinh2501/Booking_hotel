@@ -9,13 +9,17 @@ class BookingServicePlus extends Model
 {
     use HasFactory;
 
+    protected $table = 'booking_service_plus';
+
     protected $fillable = ['booking_id', 'service_plus_id', 'quantity'];
 
-    public function booking() {
+    public function booking()
+    {
         return $this->belongsTo(Booking::class);
     }
 
-    public function servicePlus() {
+    public function servicePlus()
+    {
         return $this->belongsTo(ServicePlus::class);
     }
 }
