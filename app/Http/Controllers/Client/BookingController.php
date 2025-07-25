@@ -189,8 +189,6 @@ class BookingController extends Controller
 
     public function confirm(Request $request)
     {
-        Log::info('Confirm method called with method: ' . $request->method(), $request->all());
-
         if ($request->isMethod('post')) {
             $validated = $request->validate([
                 'check_in' => 'required|date|after_or_equal:today',
@@ -217,64 +215,84 @@ class BookingController extends Controller
             $days = $checkOut->diffInDays($checkIn);
 
             $basePrice = (float) $request->base_price;
-            $discountAmount = (float) $request->discount_amount ?? 0;
+            $discountAmount = (float) $request->discount_amount;
             $totalGuests = (int) $request->total_guests;
             $childrenCount = (int) $request->children_count;
             $roomQuantity = (int) $request->room_quantity;
             $serviceTotal = (float) $request->service_total;
+            // dd($basePrice, $discountAmount, $totalGuests, $childrenCount, $roomQuantity, $serviceTotal);
+            // Debug dữ liệu services
+            Log::info('Services received in confirm:', ['services' => $request->services ?? []]);
 
-            $subTotal = $basePrice + $serviceTotal - $discountAmount;
-            $taxFee = $subTotal * 0.08;
-            $totalPrice = $subTotal + $taxFee;
-
-            $guestData = $request->input('guest');
+            // Lấy danh sách dịch vụ từ request
             $selectedServices = [];
             $serviceQuantities = [];
-
             if (!empty($request->services)) {
+                // Lấy danh sách id từ mảng services
                 $serviceIds = array_map(function ($service) {
                     return $service['id'];
                 }, $request->services);
 
+                // Truy vấn lại các dịch vụ từ database
                 $selectedServices = $roomType->services->whereIn('id', $serviceIds)->all();
 
+                // Lấy số lượng và giá từ request
                 foreach ($request->services as $serviceData) {
                     $serviceId = $serviceData['id'];
                     $quantity = (int) $serviceData['quantity'];
                     $serviceQuantities[$serviceId] = $quantity;
                 }
 
-                $serviceTotal = array_reduce($selectedServices, function ($carry, $service) use ($serviceQuantities) {
-                    return $carry + ($service->price * ($serviceQuantities[$service->id] ?? 1));
-                }, 0);
+                // Tính lại service_total để đảm bảo chính xác
+                $serviceTotal = 0;
+                foreach ($selectedServices as $service) {
+                    $quantity = $serviceQuantities[$service->id] ?? 1;
+                    $serviceTotal += ($service->price ?? 0) * $quantity;
+                }
             }
 
-            return view('client.bookings.confirm', compact(
-                'roomType',
-                'checkIn',
-                'checkOut',
-                'days',
-                'basePrice',
-                'serviceTotal',
-                'subTotal',
-                'taxFee',
-                'totalPrice',
-                'selectedServices',
-                'discountAmount',
-                'totalGuests',
-                'childrenCount',
-                'roomQuantity',
-                'serviceQuantities',
-                'guestData'
-            ));
+            // Debug selected services
+            Log::info('Selected services in confirm:', ['selectedServices' => $selectedServices, 'serviceQuantities' => $serviceQuantities]);
+
+            if ($discountAmount > 0) {
+                $subTotal = ($basePrice - $discountAmount) + $serviceTotal;
+                $taxFee = $subTotal * 0.08; // Thuế 8%
+                $totalPrice = $subTotal + $taxFee;
+            } else {
+                $subTotal = $basePrice + $serviceTotal;
+                $taxFee = $subTotal * 0.08; // Thuế 8%
+                $totalPrice = $subTotal + $taxFee - $discountAmount;
+            }
+
+            $guestData = $request->input('guest');
+            $paymentSetting = PaymentSetting::first();
+            return view('client.bookings.confirm', [
+                'roomType' => $roomType,
+                'checkIn' => $checkIn->toDateString(),
+                'checkOut' => $checkOut->toDateString(),
+                'days' => $days,
+                'basePrice' => $basePrice,
+                'serviceTotal' => $serviceTotal,
+                'subTotal' => $subTotal,
+                'taxFee' => $taxFee,
+                'totalPrice' => $totalPrice,
+                'selectedServices' => $selectedServices,
+                'discountAmount' => $discountAmount,
+                'totalGuests' => $totalGuests,
+                'childrenCount' => $childrenCount,
+                'roomQuantity' => $roomQuantity,
+                'serviceQuantities' => $serviceQuantities,
+                'guestData' => $guestData,
+                'deposit_percentage' => $paymentSetting->deposit_percentage,
+            ]);
         }
 
-        return redirect()->route('bookings.create')->with('error', 'Phương thức không được hỗ trợ. Vui lòng sử dụng form để xác nhận.');
+        return redirect()->route('bookings.create')->with('error', 'Vui lòng hoàn tất thông tin đặt phòng trước khi xác nhận.');
     }
 
     public function calculateDepositAmount($totalAmount)
     {
-        // $depositPercentage = PaymentSetting::first()->deposit_percentage;
+        $depositPercentage = PaymentSetting::first()->deposit_percentage;
         return $totalAmount * ($depositPercentage / 100);
     }
 
@@ -306,7 +324,6 @@ class BookingController extends Controller
                 'tax_fee' => 'required|numeric|min:0',
                 'sub_total' => 'required|numeric|min:0',
                 'total_price' => 'required|numeric|min:0',
-                'payment_amount_type' => 'required|in:full,partial',
             ]);
 
             $data = $request->all();
@@ -359,16 +376,6 @@ class BookingController extends Controller
                 'paid_amount' => 0,
             ]);
 
-            // Create Payment record immediately
-            $paymentData = [
-                'booking_id' => $booking->id,
-                'amount' => $totalPrice,
-                'method' => $paymentMethod == 'cash' ? 'cash' : $onlinePaymentMethod,
-                'status' => 'pending',
-            ];
-            $payment = Payment::create($paymentData);
-            Log::info('Payment created', $paymentData);
-
             if (!empty($validated['services']) && is_array($validated['services'])) {
                 foreach ($validated['services'] as $serviceId => $serviceData) {
                     if (!is_array($serviceData) || !isset($serviceData['id'])) {
@@ -398,6 +405,8 @@ class BookingController extends Controller
                         'price' => $price,
                     ]);
                 }
+            } else {
+                Log::info('Không có dịch vụ hợp lệ để lưu cho booking:', ['booking_id' => $booking->id]);
             }
 
             // Xử lý mã giảm giá (promotion)
@@ -473,21 +482,35 @@ class BookingController extends Controller
                 $booking->guests()->attach($guest->id);
             }
 
-            $isPartial = $request->input('payment_amount_type') === 'partial';
+            $isPartial = false;
+            // dd($totalPrice);
             $depositAmount = $this->calculateDepositAmount($totalPrice);
-            if ($isPartial) {
+            if ($request->payment_amount_type == 'partial') {
+                $isPartial = true;
                 $totalPrice = $depositAmount;
-                $payment->update(['amount' => $totalPrice]); // Update payment amount for partial payment
             }
 
             // Xử lý thanh toán
+            $paymentData = [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'amount' => $totalPrice,
+                'status' => 'pending',
+                'transaction_id' => null,
+                'is_partial' => $isPartial,
+            ];
+
             if ($paymentMethod == 'cash') {
-                $payment->update(['status' => 'pending']);
+                $paymentData['method'] = 'cash';
+                $payment = Payment::create($paymentData);
                 $message = 'Đặt phòng của bạn đã hoàn tất! Thông tin chi tiết đã được gửi qua email. Vui lòng thanh toán bằng tiền mặt khi đến nhận phòng.';
                 Mail::to($user->email)->send(new BookingSuccess($booking));
                 DB::commit();
                 return redirect()->route('bookings.show', $booking->id)->with('success', $message);
             } else {
+                $paymentData['method'] = $onlinePaymentMethod;
+                $payment = Payment::create($paymentData);
+
                 if ($onlinePaymentMethod == 'momo') {
                     $partnerCode = env('MOMO_PARTNER_CODE');
                     $accessKey = env('MOMO_ACCESS_KEY');
@@ -527,7 +550,6 @@ class BookingController extends Controller
 
                         if (isset($result['payUrl']) && isset($result['qrCodeUrl'])) {
                             $payment->update(['transaction_id' => $orderId]);
-                            DB::commit();
                             return response()->json([
                                 'success' => true,
                                 'qrCodeUrl' => $result['qrCodeUrl'],
@@ -546,7 +568,6 @@ class BookingController extends Controller
                         DB::rollBack();
                         $booking->delete();
                         $payment->delete();
-                        Log::error('MoMo API Error: ' . $e->getMessage());
                         return response()->json([
                             'success' => false,
                             'message' => 'Lỗi khi gọi API MoMo: ' . $e->getMessage(),
@@ -612,8 +633,8 @@ class BookingController extends Controller
             }
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Error in store method at ' . now() . ': ' . $exception->getMessage(), ['request' => $request->all()]);
-            return redirect()->route('bookings.create')->with('error', 'Đã xảy ra lỗi khi xử lý đặt phòng: ' . $exception->getMessage());
+            Log::error('Error in store method:', ['exception' => $exception->getMessage()]);
+            return redirect()->route('bookings.create')->with('error', $exception->getMessage());
         }
     }
     public function paymentCallback(Request $request)
@@ -676,17 +697,17 @@ class BookingController extends Controller
         ])->findOrFail($id);
 
         $paymentSetting = PaymentSetting::first();
-        // // $deposit_percentage = $paymentSetting->deposit_percentage;
+        $deposit_percentage = $paymentSetting->deposit_percentage;
         $refundPolicies = RefundPolicy::all();
 
         $title = 'Chi tiết đơn đặt phòng';
-        // return view('clients.bookings.show', compact('title', 'booking', 'deposit_percentage', 'refundPolicies'));
+        return view('client.bookings.show', compact('title', 'booking', 'deposit_percentage', 'refundPolicies'));
     }
 
     public function edit(string $id)
     {
         $booking = Booking::with(['rooms', 'rooms.roomType', 'servicePlus'])->findOrFail($id);
-        return view('clients.bookings.edit', compact('booking'));
+        return view('client.bookings.edit', compact('booking'));
     }
 
     public function update(Request $request, string $id)
@@ -902,9 +923,9 @@ class BookingController extends Controller
         ]);
 
         $paymentAmount = $booking->total_price;
-        // // $deposit_percentage = $request->input('deposit_percentage');
+        $deposit_percentage = $request->input('deposit_percentage');
         if ($validated['payment_amount_type'] == 'partial') {
-            // $paymentAmount = $paymentAmount * (intval($deposit_percentage) / 100);
+            $paymentAmount = $paymentAmount * (intval($deposit_percentage) / 100);
         }
 
         $paymentData = [

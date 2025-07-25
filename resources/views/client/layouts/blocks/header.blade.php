@@ -36,11 +36,8 @@
                                             <i class="mdi mdi-account"></i> Hồ sơ
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="ri-contacts-book-line"></i> Đơn đặt phòng
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('bookings.index') }}"><i
+                                                class="ri-contacts-book-line"></i> Đơn đặt phòng</a></li>
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <i class="ri-reply-all-line"></i> Lịch sử hoàn tiền

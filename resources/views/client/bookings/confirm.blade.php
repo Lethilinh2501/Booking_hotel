@@ -174,26 +174,25 @@
                                             <input type="hidden" name="total_price" id="total_price_input"
                                                 value="{{ $totalPrice }}">
                                             <input type="hidden" name="special_request"
-                                                value="{{ $special_request ?? request('special_request') }}">
+                                                value="{{ request('special_request') }}">
                                             <input type="hidden" name="base_price" value="{{ $basePrice }}">
                                             <input type="hidden" name="service_total" value="{{ $serviceTotal }}">
                                             <input type="hidden" name="tax_fee" id="tax_fee_input"
                                                 value="{{ $taxFee }}">
                                             <input type="hidden" name="sub_total" value="{{ $subTotal }}">
                                             <input type="hidden" name="guests[0][name]"
-                                                value="{{ $guestData['name'] ?? '' }}">
+                                                value="{{ $guestData['name'] }}">
                                             <input type="hidden" name="guests[0][email]"
-                                                value="{{ $guestData['email'] ?? '' }}">
+                                                value="{{ $guestData['email'] }}">
                                             <input type="hidden" name="guests[0][phone]"
-                                                value="{{ $guestData['phone'] ?? '' }}">
+                                                value="{{ $guestData['phone'] }}">
                                             <input type="hidden" name="guests[0][country]"
-                                                value="{{ $guestData['country'] ?? '' }}">
+                                                value="{{ $guestData['country'] }}">
                                             <input type="hidden" name="guests[0][relationship]"
                                                 value="{{ $guestData['relationship'] ?? 'Người ở chính' }}">
                                             <input type="hidden" id="discount_amount_input" name="discount_amount"
                                                 value="{{ $discountAmount }}">
-                                            <input type="hidden" id="promotion_id" name="promotion_id"
-                                                value="{{ $promotion_id ?? '' }}">
+                                            <input type="hidden" id="promotion_id" name="promotion_id">
 
                                             @if (!empty($selectedServices))
                                                 @foreach ($selectedServices as $service)
@@ -212,12 +211,14 @@
                                                     <input class="form-check-input" type="radio"
                                                         name="payment_amount_type" id="payment_full" value="full"
                                                         checked>
-                                                    <label class="form-check-label" for="payment_full">Thanh toán toàn
-                                                        bộ</label>
+                                                    <label class="form-check-label" for="payment_full" selected>Thanh toán
+                                                        toàn bộ</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio"
                                                         name="payment_amount_type" id="payment_partial" value="partial">
+                                                    <label class="form-check-label" for="payment_partial">Thanh toán trước
+                                                        {{ $deposit_percentage }}%</label>
                                                 </div>
                                             </div>
 
@@ -245,7 +246,17 @@
                                             </div>
 
                                             <div id="payment-instruction" class="mt-3">
-                                                <p>Vui lòng lưu ý hiện thanh toán qua cổng thanh toán: VNPay</p>
+                                                <p>Vui lòng thanh toán bằng tiền mặt khi nhận phòng.</p>
+                                            </div>
+
+                                            <div id="momo-qr-section" class="mt-3"
+                                                style="display: none; text-align: center;">
+                                                <h4>Thanh toán qua MoMo</h4>
+                                                <p>Quét mã QR bằng ứng dụng MoMo để thanh toán:</p>
+                                                <div id="momo-qr-code"></div>
+                                                <p>Hoặc nhấp vào liên kết để thanh toán:</p>
+                                                <a id="momo-pay-link" href="#" class="btn btn-primary"
+                                                    target="_blank">Thanh toán ngay</a>
                                             </div>
 
                                             <div class="d-flex justify-content-end mt-4">

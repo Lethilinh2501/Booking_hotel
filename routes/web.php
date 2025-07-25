@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
 use App\Http\Controllers\Admin\StaffShiftController;
 use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RefundController;
@@ -258,6 +259,12 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
 
     // Payments
     Route::resource('payment', PaymentController::class);
+
+    // PaymentSettings
+    Route::prefix('payment-settings')->as('payment-settings.')->group(function () {
+        Route::get('/', [PaymentSettingController::class, 'index'])->name('index');
+        Route::put('/', [PaymentSettingController::class, 'update'])->name('update');
+    });
 
     // Bookings
     Route::prefix('bookings')->as('bookings.')->group(function () {
