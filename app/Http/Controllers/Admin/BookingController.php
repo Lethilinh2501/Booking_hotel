@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\BookingStatusHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\User;
@@ -55,83 +56,119 @@ class BookingController extends Controller
         return view('admin.bookings.index', compact('bookings', 'title', 'filterData'));
     }
 
-    public function create()
+    public function storeCheckIn(Request $request)
     {
-        $users = User::all();
-        $roomTypes = RoomType::all();
-        return view('admin.bookings.create', compact('users', 'roomTypes'));
-    }
-
-    public function storeCheckIn(Request $request, $booking_id)
-    {
-        $booking = Booking::findOrFail($booking_id);
-
-        // Kiểm tra tổng số khách không vượt quá số lượng đặt phòng
-        if (count($request->guests) > $booking->total_guests) {
-            return response()->json([
-                'success' => false,
-                'message' => "Số lượng người ở vượt quá giới hạn đặt phòng (tối đa {$booking->total_guests} người)."
-            ], 400);
-        }
-
-        $rules = [
-            'guests' => 'required|array|min:1',
-            'guests.*.name' => 'required|string|min:3|max:255|regex:/^[\p{L}\s]+$/u',
-            'guests.*.gender' => 'required|in:male,female,other',
-            'guests.*.birth_date' => 'required|date|before:today',
-            'guests.*.id_number' => 'required|string|regex:/^[0-9]{9,12}$/',
-            'guests.*.phone' => 'nullable|string|max:15|regex:/^[0-9]{10,15}$/',
-            'guests.*.email' => 'nullable|email|max:255',
-            'guests.*.country' => 'nullable|string|max:100|regex:/^[\p{L}\s]+$/u',
-            'guests.*.relationship' => 'nullable|string|max:100|regex:/^[\p{L}\s]+$/u',
-        ];
-
-        $messages = [
-            'guests.required' => 'Vui lòng nhập thông tin khách ở.',
-            'guests.array' => 'Dữ liệu khách ở không hợp lệ.',
-            'guests.*.name.required' => 'Vui lòng nhập họ tên.',
-            'guests.*.name.regex' => 'Họ tên chỉ được chứa chữ cái và khoảng trắng.',
-            'guests.*.gender.required' => 'Vui lòng chọn giới tính.',
-            'guests.*.birth_date.required' => 'Vui lòng nhập ngày sinh.',
-            'guests.*.birth_date.date' => 'Ngày sinh không hợp lệ.',
-            'guests.*.birth_date.before' => 'Ngày sinh phải nhỏ hơn ngày hiện tại.',
-            'guests.*.id_number.required' => 'Vui lòng nhập số CCCD/CMND.',
-            'guests.*.id_number.regex' => 'Số CCCD/CMND không hợp lệ.',
-            'guests.*.phone.regex' => 'Số điện thoại không hợp lệ.',
-            'guests.*.email.email' => 'Email không hợp lệ.',
-            'guests.*.country.regex' => 'Quốc tịch chỉ được chứa chữ cái.',
-            'guests.*.relationship.regex' => 'Quan hệ chỉ được chứa chữ cái.',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        Log::info('storeCheckIn called', [
+            'url' => $request->url(),
+            'request' => $request->all()
+        ]);
 
         try {
+            // Validate request
+            $rules = [
+                'booking_id' => 'required|integer|exists:bookings,id',
+                'guests' => 'required|array|min:1',
+                'guests.*.name' => 'required|string|min:3|max:255|regex:/^[\p{L}\s]+$/u',
+                'guests.*.gender' => 'required|in:male,female,other',
+                'guests.*.birth_date' => 'required|date|before:today',
+                'guests.*.id_number' => 'required|string|regex:/^[0-9]{9,12}$/',
+                'guests.*.phone' => 'nullable|string|max:15|regex:/^[0-9]{10,15}$/',
+                'guests.*.email' => 'nullable|email|max:255',
+                'guests.*.country' => 'nullable|string|max:100|regex:/^[\p{L}\s]+$/u',
+                'guests.*.relationship' => 'nullable|string|max:100|regex:/^[\p{L}\s]+$/u',
+            ];
+
+            $messages = [
+                'booking_id.required' => 'Vui lòng cung cấp booking_id.',
+                'booking_id.integer' => 'Booking_id phải là số nguyên.',
+                'booking_id.exists' => 'Booking_id không tồn tại trong hệ thống.',
+                'guests.required' => 'Vui lòng nhập thông tin khách ở.',
+                'guests.array' => 'Dữ liệu khách ở không hợp lệ.',
+                'guests.*.name.required' => 'Vui lòng nhập họ tên.',
+                'guests.*.name.regex' => 'Họ tên chỉ được chứa chữ cái và khoảng trắng.',
+                'guests.*.gender.required' => 'Vui lòng chọn giới tính.',
+                'guests.*.birth_date.required' => 'Vui lòng nhập ngày sinh.',
+                'guests.*.birth_date.date' => 'Ngày sinh không hợp lệ.',
+                'guests.*.birth_date.before' => 'Ngày sinh phải nhỏ hơn ngày hiện tại.',
+                'guests.*.id_number.required' => 'Vui lòng nhập số CCCD/CMND.',
+                'guests.*.id_number.regex' => 'Số CCCD/CMND không hợp lệ.',
+                'guests.*.phone.regex' => 'Số điện thoại không hợp lệ.',
+                'guests.*.email.email' => 'Email không hợp lệ.',
+                'guests.*.country.regex' => 'Quốc tịch chỉ được chứa chữ cái.',
+                'guests.*.relationship.regex' => 'Quan hệ chỉ được chứa chữ cái.',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                Log::warning('Validation failed', ['errors' => $validator->errors()]);
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Lấy booking_id từ body
+            $booking_id = $request->input('booking_id');
+
+            // Tìm booking với quan hệ user
+            $booking = Booking::with('user')->find($booking_id);
+            if (!$booking) {
+                Log::error('Booking not found', ['booking_id' => $booking_id]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy booking.'
+                ], 404);
+            }
+
+            // Kiểm tra trạng thái booking
+            if ($booking->status !== 'paid') {
+                Log::warning('Invalid booking status', ['booking_id' => $booking_id, 'status' => $booking->status]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Booking không ở trạng thái cho phép check-in.'
+                ], 400);
+            }
+
+            // Kiểm tra số lượng khách
+            if (count($request->guests) > $booking->total_guests) {
+                Log::warning('Guest count exceeds limit', [
+                    'guest_count' => count($request->guests),
+                    'total_guests' => $booking->total_guests
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => "Số lượng người ở vượt quá giới hạn đặt phòng (tối đa {$booking->total_guests} người)."
+                ], 400);
+            }
+
+            // Bắt đầu giao dịch
             DB::beginTransaction();
 
+            // Tạo bản ghi Guest
             foreach ($request->guests as $guestData) {
+                Log::info('Creating guest', ['guest_data' => $guestData]);
                 $guestData['booking_id'] = $booking_id;
+                $guestData['user_id'] = $booking->user_id; // Thêm user_id từ booking
                 Guest::create($guestData);
             }
 
+            // Cập nhật trạng thái booking
+            $booking->update(['status' => 'check_in']);
+
             DB::commit();
 
+            Log::info('Check-in successful', ['booking_id' => $booking_id]);
             return response()->json([
                 'success' => true,
                 'message' => 'Thêm khách ở thành công!'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Lỗi thêm khách ở: ' . $e->getMessage());
+            Log::error('Lỗi thêm khách ở: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'success' => false,
-                'message' => 'Đã xảy ra lỗi khi lưu dữ liệu.'
+                'message' => 'Đã xảy ra lỗi khi lưu dữ liệu: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -157,7 +194,7 @@ class BookingController extends Controller
 
         $title = 'Chi tiết đơn đặt phòng';
         $availableServicePlus = ServicePlus::where('is_active', 1)->get();
-        return view('admin.bookings.detail', compact('title', 'booking', 'availableServicePlus'));
+        return view('admin.bookings.show', compact('title', 'booking', 'availableServicePlus'));
     }
 
     public function updateServicePlus($id, Request $request)
@@ -401,7 +438,7 @@ class BookingController extends Controller
             ];
 
             if (!in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
-                throw new \Exception('Không thể chuyển từ trạng thái "' . \App\Helpers\BookingStatusHelper::getStatusLabel($currentStatus) . '" sang trạng thái "' . \App\Helpers\BookingStatusHelper::getStatusLabel($newStatus) . '"');
+                throw new \Exception('Không thể chuyển từ trạng thái "' . BookingStatusHelper::getStatusLabel($currentStatus) . '" sang trạng thái "' . \App\Helpers\BookingStatusHelper::getStatusLabel($newStatus) . '"');
             }
 
             switch ($currentStatus) {

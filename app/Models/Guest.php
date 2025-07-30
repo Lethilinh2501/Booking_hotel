@@ -10,13 +10,29 @@ class Guest extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'full_name', 'phone', 'email', 'address'];
+    protected $fillable = [
+        'name',
+        'id_number',
+        'id_photo',
+        'birth_date',
+        'gender',
+        'phone',
+        'email',
+        'country',
+        'relationship',
+    ];
 
-    public function user() {
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function bookings() {
-        return $this->belongsToMany(Booking::class, 'booking_guest');
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_guests');
     }
 }

@@ -13,11 +13,15 @@ class GuestFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(), // Tạo user mới tương ứng
-            'full_name' => $this->faker->name,
+            'name' => $this->faker->name,
+            'id_number' => $this->faker->numerify('#########'),
+            'id_photo' => $this->faker->imageUrl(640, 480, 'people', true),
+            'birth_date' => $this->faker->date(),
+            'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             'phone' => $this->faker->phoneNumber,
-            'email' => $this->faker->unique()->safeEmail,
-            'address' => $this->faker->address,
+            'email' => $this->faker->safeEmail,
+            'country' => $this->faker->country,
+            'relationship' => $this->faker->randomElement(['friend', 'family', 'partner']),
         ];
     }
 }
