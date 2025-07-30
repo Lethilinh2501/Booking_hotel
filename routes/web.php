@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\SaleRoomTypeController;
 use App\Http\Controllers\Admin\RefundPolicyController;
 use App\Http\Controllers\Admin\StaffShiftController;
 use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RefundController;
@@ -259,6 +260,12 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
     // Payments
     Route::resource('payment', PaymentController::class);
 
+    // PaymentSettings
+    Route::prefix('payment-settings')->as('payment-settings.')->group(function () {
+        Route::get('/', [PaymentSettingController::class, 'index'])->name('index');
+        Route::put('/', [PaymentSettingController::class, 'update'])->name('update');
+    });
+
     // Bookings
     Route::prefix('bookings')->as('bookings.')->group(function () {
         Route::get('/', [BookingController::class, 'index'])->name('index');
@@ -383,7 +390,7 @@ Route::prefix('bookings')
     ->group(function () {
         Route::get('/', [ClientBookingController::class, 'index'])->name('index');
         Route::get('/create', [ClientBookingController::class, 'create'])->name('create');
-        Route::post('/confirm', [ClientBookingController::class, 'confirm'])->name('confirm');
+        Route::post('/confirm', [ClientBookingController::class, 'confirm'])->name('confirm'); // Dòng này cần chú ý
         Route::post('/store', [ClientBookingController::class, 'store'])->name('store'); // Lưu dữ liệu từ confirm
         Route::get('{id}/returnVnpay', [ClientBookingController::class, 'returnVnpay'])->name('return.vnpay');
         Route::get('{id}/show', [ClientBookingController::class, 'show'])->name('show');

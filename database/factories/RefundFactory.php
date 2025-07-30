@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Booking;
 use App\Models\RefundPolicy;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RefundFactory extends Factory
@@ -18,7 +19,7 @@ class RefundFactory extends Factory
             'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
             'reason' => $this->faker->optional()->sentence(),
             'admin_notes' => $this->faker->optional()->paragraph(),
-            'approved_by' => $this->faker->optional()->numberBetween(1, 5),
+            'approved_by' => User::factory(),
             'approved_at' => $this->faker->optional()->dateTime(),
             'refund_method' => $this->faker->optional()->randomElement(['vnpay', 'momo', 'cash']),
             'transaction_id' => $this->faker->optional()->uuid(),

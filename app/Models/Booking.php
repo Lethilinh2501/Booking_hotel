@@ -18,6 +18,7 @@ class Booking extends Model
         'actual_check_in',
         'actual_check_out',
         'total_price',
+        'paid_amount',
         'discount_amount',
         'base_price',
         'service_total',
@@ -25,14 +26,16 @@ class Booking extends Model
         'total_guests',
         'children_count',
         'room_quantity',
-        'status',
         'user_id',
-        'guest_id',
         'special_request',
-        'service_plus_status', // Thêm trường này
-        'paid_amount',
-        'service_plus_total'
+        'service_plus_status',
+        'status',
+        'service_plus_total',
+    ];
 
+    protected $casts = [
+        'check_in' => 'datetime',
+        'check_out' => 'datetime',
     ];
 
     public function user()
@@ -68,21 +71,25 @@ class Booking extends Model
     {
         return $this->belongsToMany(Room::class, 'booking_rooms', 'booking_id', 'room_id');
     }
+
     public function guests()
     {
-        return $this->hasMany(BookingGuest::class);
+        return $this->belongsToMany(Guest::class, 'booking_guests', 'booking_id', 'guest_id');
     }
-        public function payments()
-    {
-        return $this->hasMany(Payment::class, 'booking_id');
-  
+
     public function refund()
     {
         return $this->hasOne(Refund::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'booking_id');
+    }
+
     public function servicePlus()
     {
-        return $this->belongsToMany(ServicePlus::class, 'booking_service_plus', 'booking_id', 'service_plus_id')
-            ->withTimestamps(); // nếu bảng trung gian có cột created_at, updated_at
+        return $this->belongsToMany(ServicePlus::class, 'booking_service_plus')
+            ->withPivot('quantity');
     }
 }

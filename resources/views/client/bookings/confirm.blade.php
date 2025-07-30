@@ -211,8 +211,8 @@
                                                     <input class="form-check-input" type="radio"
                                                         name="payment_amount_type" id="payment_full" value="full"
                                                         checked>
-                                                    <label class="form-check-label" for="payment_full">Thanh toán toàn
-                                                        bộ</label>
+                                                    <label class="form-check-label" for="payment_full" selected>Thanh toán
+                                                        toàn bộ</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio"
@@ -244,7 +244,19 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <div id="payment-instruction" class="mt-3">
+                                                <p>Vui lòng thanh toán bằng tiền mặt khi nhận phòng.</p>
+                                            </div>
 
+                                            <div id="momo-qr-section" class="mt-3"
+                                                style="display: none; text-align: center;">
+                                                <h4>Thanh toán qua MoMo</h4>
+                                                <p>Quét mã QR bằng ứng dụng MoMo để thanh toán:</p>
+                                                <div id="momo-qr-code"></div>
+                                                <p>Hoặc nhấp vào liên kết để thanh toán:</p>
+                                                <a id="momo-pay-link" href="#" class="btn btn-primary"
+                                                    target="_blank">Thanh toán ngay</a>
+                                            </div>
                                             <div class="d-flex justify-content-end mt-4">
                                                 <button type="submit" class="btn btn-primary" id="confirm-button">Hoàn
                                                     tất đặt phòng</button>

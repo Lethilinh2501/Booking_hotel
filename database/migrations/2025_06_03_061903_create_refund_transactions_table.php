@@ -14,11 +14,11 @@ return new class extends Migration
         // Migration: create_refund_transactions_table.php
         Schema::create('refund_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('refund_id')->constrained()->onDelete('cascade');
-            $table->string('transaction_type'); // refund, refund_request, refund_reject
-            $table->decimal('amount', 15, 2)->default(0);
-            $table->string('status')->default('pending'); // pending, completed, failed
-            $table->string('payment_method')->nullable(); // vnpay, momo, none
+            $table->unsignedBigInteger('refund_id');
+            $table->enum('transaction_type', ['refund_request', 'refund', 'refund_reject']);
+            $table->decimal('amount', 15, 2);
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->string('payment_method')->nullable();
             $table->string('transaction_id')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

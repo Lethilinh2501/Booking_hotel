@@ -35,4 +35,3 @@ class BookingStatusHelper
 
         return $statusClasses[$status] ?? 'badge bg-secondary';
     }
-}

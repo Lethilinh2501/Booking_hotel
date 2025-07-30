@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
