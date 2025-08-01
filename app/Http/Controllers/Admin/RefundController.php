@@ -9,70 +9,54 @@ use Illuminate\Http\Request;
 
 class RefundController extends Controller
 {
-    // Danh sách refund
+    /**
+     * Hiển thị danh sách yêu cầu hoàn tiền.
+     */
     public function index()
     {
         $refunds = Refund::with('payment')->latest()->paginate(10);
         return view('admin.refunds.index', compact('refunds'));
     }
 
-    // Form tạo mới refund
-    public function create()
-    {
-        $payments = Payment::all();
-        return view('admin.refunds.create', compact('payments'));
-    }
-
-    // Lưu refund mới
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'payment_id' => 'required|exists:payments,id',
-            'amount'     => 'required|numeric|min:1',
-            'status'     => 'required|string|max:255',
-        ]);
-
-        Refund::create($validated);
-
-        return redirect()->route('admin.refunds.index')->with('success', 'Tạo refund thành công!');
-    }
-
-    // Xem chi tiết refund
-    public function show($id)
-    {
-        $refund = Refund::with('payment')->findOrFail($id);
-        return view('admin.refunds.show', compact('refund'));
-    }
-
-    // Form chỉnh sửa refund
+    /**
+     * Hiển thị form chỉnh sửa yêu cầu hoàn tiền.
+     */
     public function edit($id)
     {
-        $refund   = Refund::with('payment')->findOrFail($id);
-        $payments = Payment::all();
+        $refund = Refund::with('payment')->findOrFail($id);
+        $payments = Payment::latest()->get(); // có thể paginate hoặc limit nếu nhiều
+
         return view('admin.refunds.edit', compact('refund', 'payments'));
     }
 
-    // Cập nhật refund
+    /**
+     * Cập nhật yêu cầu hoàn tiền.
+     */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'payment_id' => 'required|exists:payments,id',
-            'amount'     => 'required|numeric|min:1',
-            'status'     => 'required|string|max:255',
+            'status' => 'required|in:pending,approved,rejected',
         ]);
 
         $refund = Refund::findOrFail($id);
-        $refund->update($validated);
+        $refund->payment_id = $request->payment_id;
+        $refund->status = $request->status;
+        $refund->save();
 
-        return redirect()->route('admin.refunds.index')->with('success', 'Cập nhật refund thành công!');
+        return redirect()
+            ->route('admin.refunds.index')
+            ->with('success', '✅ Cập nhật yêu cầu hoàn tiền thành công!');
     }
 
-    // Xóa refund
+    /**
+     * (Tuỳ chọn) Xoá yêu cầu hoàn tiền.
+     */
     public function destroy($id)
     {
         $refund = Refund::findOrFail($id);
         $refund->delete();
 
-        return redirect()->route('admin.refunds.index')->with('success', 'Xóa refund thành công!');
+        return back()->with('success', '🗑️ Đã xoá yêu cầu hoàn tiền!');
     }
 }

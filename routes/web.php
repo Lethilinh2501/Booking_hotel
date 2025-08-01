@@ -363,17 +363,17 @@ Route::prefix('admin')->as('admin.')->middleware('auth', CheckAdminAccess::class
         Route::delete('/delete/{id}', [SaleRoomTypeController::class, 'destroy'])->name('destroy');
     });
 
-    // refunds
-    Route::prefix('refunds')->as('refunds.')->group(function () {
-        Route::get('/', [RefundController::class, 'index'])->name('index');
-        Route::get('/create', [RefundController::class, 'create'])->name('create');
-        Route::post('/store', [RefundController::class, 'store'])->name('store');
-        Route::get('/{id}', [RefundController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [RefundController::class, 'edit'])->name('edit');
-        Route::patch('/update/{id}', [RefundController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [RefundController::class, 'destroy'])->name('destroy');
-    });
-
+  Route::prefix('refunds')->as('refunds.')->group(function () { 
+    Route::get('/', [RefundController::class, 'index'])->name('index');
+    Route::get('/create', [RefundController::class, 'create'])->name('create');
+    Route::post('/', [RefundController::class, 'store'])->name('store');
+    Route::get('/{id}', [RefundController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [RefundController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [RefundController::class, 'update'])->name('update');
+    Route::patch('/{id}/approve', [RefundController::class, 'approve'])->name('approve');
+    Route::patch('/{id}/reject', [RefundController::class, 'reject'])->name('reject');
+    Route::delete('/{id}', [RefundController::class, 'destroy'])->name('destroy');
+});
     // role
     Route::prefix('roles')->name('roles.')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('index');

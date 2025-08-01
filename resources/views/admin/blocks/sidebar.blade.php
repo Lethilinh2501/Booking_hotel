@@ -40,16 +40,21 @@
                         <i class="ri-refund-line"></i>
                         <span>Chính sách đền bù</span>
                     </a>
-                 <div class="sidebar-item">
-                        <a href="{{ route('admin.refunds.index') }}">
-                            <i class="ri-exchange-dollar-line"></i>
-                            <span>Đền bù </span> </a> </a></div> </li>
-                            <div class="sidebar-item">
-    <a href="{{ route('admin.roles.index') }}">
-        <i class="ri-user-settings-line"></i>
-        <span>Quyền hạn</span>
-    </a>
-</div>
+                </li>
+
+                <li class="lh-sb-item">
+                    <a href="{{ route('admin.refunds.index') }}">
+                        <i class="ri-exchange-dollar-line"></i>
+                        <span>Đền bù</span>
+                    </a>
+                </li>
+
+                <li class="lh-sb-item">
+                    <a href="{{ route('admin.roles.index') }}">
+                        <i class="ri-user-settings-line"></i>
+                        <span>Quyền hạn</span>
+                    </a>
+                </li>
 
                 {{-- Quản lý nội dung --}}
                 <li class="lh-sb-item-separator"></li>
@@ -128,7 +133,8 @@
                     </a>
                     <ul class="lh-sb-drop" style="display: none;">
                         <li><a href="{{ route('admin.staffs.listStaff') }}" class="lh-page-link drop">Nhân sự</a>
-                        <li><a href="{{ route('admin.staff_shifts.index') }}" class="lh-page-link drop">Ca làm việc</a>
+                        <li><a href="{{ route('admin.staff_shifts.index') }}" class="lh-page-link drop">Ca làm
+                                việc</a>
                         </li>
                         <li><a href="#" class="lh-page-link drop">Thùng rác</a></li>
                     </ul>
@@ -136,10 +142,11 @@
 
                 {{-- Quản lý khác --}}
                 <li class="lh-sb-item-separator"></li>
-                <li class="lh-sb-title">Khác</li>      
+                <li class="lh-sb-title">Khác</li>
                 <li class="lh-sb-item"><a href="{{ route('admin.users.index') }}"><i class="ri-user-2-fill"></i>
                         <span>khách hàng</span></a></li>
-                <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i class="ri-phone-line"></i>
+                <li class="lh-sb-item"><a href="{{ route('admin.admin_accounts.index') }}"><i
+                            class="ri-phone-line"></i>
                         <span>Quản trị viên</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.rules.index') }}"><i class="ri-phone-line"></i>
                         <span>Quy tắc - Quy định</span></a></li>
@@ -150,9 +157,9 @@
                 <li class="lh-sb-item"><a href="{{ route('admin.sale_room_types.index') }}"><i
                             class="ri-discount-percent-line"></i> <span>Khuyến mãi loại phòng</span></a></li>
                 <li class="lh-sb-item"><a href="{{ route('admin.payment.index') }}"><i class="ri-wallet-3-line"></i>
-                        <span>Thanh toán</span></a></li>   
+                        <span>Thanh toán</span></a></li>
 
-                
+
                 <li class="lh-sb-item sb-drop-item">
                     <a href="javascript:void(0)" class="lh-drop-toggle">
                         <i class="ri-contacts-book-line"></i><span class="condense">Quản lý tỷ lệ đặt cọc <i
@@ -164,7 +171,8 @@
                 </li>
                 <li class="lh-sb-item-separator"></li>
 
-                <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i class="fa-regular fa-star"></i>
+                <li class="lh-sb-item"><a href="{{ route('admin.reviews.index') }}"><i
+                            class="fa-regular fa-star"></i>
                         <span>Đánh giá</span></a></li>
 
                 {{-- Tài khoản --}}
